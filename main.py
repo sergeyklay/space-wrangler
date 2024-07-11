@@ -72,6 +72,6 @@ def save_pages_to_files(pages):
 
 
 if __name__ == "__main__":
-    result = get_all_pages_in_space('AIR')
+    result = get_all_pages_in_space(os.getenv('CONFLUENCE_SPACE_KEY'))
     save_pages_to_files(result)
     print(f"Total {len(result)} pages downloaded.")
