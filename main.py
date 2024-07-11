@@ -19,7 +19,7 @@ def get_all_pages_in_space(space_key):
     url = f"{base_url}/content"
     params = {
         'spaceKey': space_key,
-        'expand': 'body.storage',
+        'expand': 'body.storage,ancestors,history.lastUpdated,version',
         'limit': '100',
         'status': 'current'
     }
