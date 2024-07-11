@@ -1,3 +1,4 @@
+import json
 import os
 from urllib.parse import urlparse, parse_qs
 
@@ -46,17 +47,28 @@ def get_all_pages_in_space(space_key):
 
 def save_pages_to_files(pages):
     output_dir = os.path.join(os.path.dirname(__file__), 'output')
-    os.makedirs(output_dir, exist_ok=True)
+
+    html_dir = os.path.join(output_dir, 'html')
+    os.makedirs(html_dir, exist_ok=True)
+
+    json_dir = os.path.join(output_dir, 'json')
+    os.makedirs(json_dir, exist_ok=True)
 
     for page in pages:
-        page_id = page['id']
         title = page['title']
         content = page['body']['storage']['value']
 
-        filename = os.path.join(output_dir, f"{title}.html".replace('/', '-'))
-        with open(filename, 'w', encoding='utf-8') as file:
+        html_filename = os.path.join(html_dir, f"{title}.html".replace('/', '-'))
+        json_filename = os.path.join(json_dir, f"{title}.json".replace('/', '-'))
+
+        with open(html_filename, 'w', encoding='utf-8') as file:
             file.write(content)
-        print(f"Page '{title}' saved to {filename}")
+
+        with open(json_filename, 'w', encoding='utf-8') as file:
+            json.dump(page, file, ensure_ascii=False, indent=4)
+
+        print('.', end='', flush=True)
+    print('')
 
 
 if __name__ == "__main__":
