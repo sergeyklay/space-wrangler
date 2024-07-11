@@ -19,7 +19,8 @@ def get_all_pages_in_space(space_key):
     params = {
         'spaceKey': space_key,
         'expand': 'body.storage',
-        'limit': '100'
+        'limit': '100',
+        'status': 'current'
     }
 
     all_pages = []
