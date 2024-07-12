@@ -88,7 +88,7 @@ def parser_add_options(parser: ArgumentParser) -> ArgumentParser:
                         help='Export all pages from the specified Confluence space')
 
     ogroup.add_argument('-o', '--output-dir', type=str,
-                        default=os.getcwd(),
+                        default=os.path.join(os.getcwd(), 'output'),
                         help='Directory to save the output files (default: current working directory)')
 
     return parser
