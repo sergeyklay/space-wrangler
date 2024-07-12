@@ -64,6 +64,7 @@ def get_page_path(base_dir, page):
 
 def save_pages_to_files(pages):
     output_dir = os.path.join(os.path.dirname(__file__), 'output')
+    os.makedirs(output_dir, exist_ok=True)
 
     template_path = os.path.join(os.path.dirname(__file__), 'template.html')
     with open(template_path, 'r', encoding='utf-8') as template_file:
