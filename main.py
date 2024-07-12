@@ -1,7 +1,9 @@
 import json
 import os
+from datetime import datetime
 from urllib.parse import urlparse, parse_qs
 
+import pandas as pd
 import requests
 from dotenv import load_dotenv
 from requests.auth import HTTPBasicAuth
@@ -87,7 +89,43 @@ def save_pages_to_files(pages):
     print('')
 
 
+def format_date(date_str):
+    date_obj = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S.%fZ')
+    return date_obj.strftime('%m/%d/%Y')
+
+
+def save_pages_to_csv(pages):
+    output_dir = os.path.join(os.path.dirname(__file__), 'output')
+    csv_path = os.path.join(output_dir, 'all_pages.csv')
+
+    rows = []
+    for page in pages:
+        page_id = page['id']
+        title = page['title']
+        created_date = format_date(page['history']['createdDate'])
+        last_updated_date = format_date(page['history']['lastUpdated']['when'])
+        last_editor = page['history']['lastUpdated']['by']['displayName']
+        current_owner = page['version']['by']['displayName']
+        page_url = base_url.replace('/rest/api', '') + page['_links']['webui']
+
+        rows.append({
+            'Page ID': page_id,
+            'Page Title': title,
+            'Created Date': created_date,
+            'Last Updated Date': last_updated_date,
+            'Last Editor': last_editor,
+            'Current Owner': current_owner,
+            'Page URL': page_url
+        })
+
+    df = pd.DataFrame(rows)
+    os.makedirs(output_dir, exist_ok=True)
+    df.to_csv(csv_path, index=False)
+    print(f"CSV file saved to {csv_path}")
+
+
 if __name__ == "__main__":
     result = get_all_pages_in_space(os.getenv('CONFLUENCE_SPACE_KEY'))
     save_pages_to_files(result)
     print(f"Total {len(result)} pages downloaded.")
+    save_pages_to_csv(result)
