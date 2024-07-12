@@ -34,64 +34,36 @@ is in English or contains Cyrillic characters.
 
 ### Installing the Confluence Maintenance Tools
 
-Confluence Maintenance Tools is a Python-only package and the recommended
-installation method is installing into a virtualenv. The master of all the material
-is the Git repository at https://github.com/airslateinc/confluence-maintenance-tools.
-So, can also install the latest unreleased development version directly from the
-`main` branch on GitHub. It is a work-in-progress of a future stable release so
-the experience might be not as smooth.:
+We highly recommend using `virtualenv` for installing and running the Confluence
+Maintenance Tools to avoid dependency conflicts. Follow these steps:
+
+1. Clone the repository
+2. Create and activate a virtual environment
+3. Install the required dependencies
+4. Create a `.env` file with your Confluence API credentials
+
+#### Steps:
 
 ```shell
-# Without virtualenv
-$ pip install --user --upgrade git+ssh://git@github.com/airslateinc/confluence-maintenance-tools.git#egg=confluence
+# Clone the repository
+$ git clone git@github.com:airslateinc/confluence-maintenance-tools.git
+$ cd confluence-maintenance-tools
 
-# Or, with virtualenv
-$ pip install --upgrade git+ssh://git@github.com/airslateinc/confluence-maintenance-tools.git#egg=confluence
-```
+# Create and activate virtual environment
+$ python -m venv venv
+$ source venv/bin/activate  # On Windows use `venv\Scripts\activate`
 
-This command will download the latest version of `confluence` from the Git repo and install it to your system.
+# Install dependencies
+$ pip install -r requirements.txt
 
-Note: The `main` branch will always contain the latest unstable version, so the experience might be not as smooth.
-
-Verify that now we have the current development version identifier, for example:
-
-```shell
-$ confluence --version
-confluence 1.0.0
-Copyright (C) 2024 airSlate, Inc..
-This is free software; see the source for copying conditions. There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-```
-
-To install tagged release use command as follows (replace v1.0.0 in example bellow):
-
-```shell
-# Without virtualenv
-$ pip install --user --upgrade git+ssh://git@github.com/airslateinc/confluence-maintenance-tools.git@v1.0.0#egg=confluence
-
-# Or, with virtualenv
-$ pip install --upgrade git+ssh://git@github.com/airslateinc/confluence-maintenance-tools.git@v1.0.0#egg=confluence
-```
-
-Finally, create a `.env` file in the root directory of the project and add the following variables:
-```dotenv
-CONFLUENCE_API_USER=your-confluence-email
-CONFLUENCE_API_TOKEN=your-confluence-api-token
+# Create a .env file in the root directory and add the following variables:
+$ echo "CONFLUENCE_API_USER=your-confluence-email" > .env
+$ echo "CONFLUENCE_API_TOKEN=your-confluence-api-token" >> .env
 ```
 
 More information about pip and PyPI can be found here:
 
-- [Install pip](https://pip.pypa.io/en/latest/installation/)
-- [Python Packaging User Guide](https://packaging.python.org/)
-
-#### Installing Git version (not recommended)
-
-There is a way to use `confluence` CLI tool without pip.
-
-1. Clone the repository
-2. Go to project root
-3. Run `python -m pip install --user -r requirements.txt`
-4. To call `confluence` use `python -m confluence`
+- [venv — Creation of virtual environments](https://docs.python.org/3/library/venv.html)
 
 ## Usage
 
@@ -100,7 +72,7 @@ There is a way to use `confluence` CLI tool without pip.
 #### Quick Start
 
 ```shell
-$ confluence --help
+$ python -m confluence --help
 ```
 
 #### Synopsis
@@ -114,13 +86,13 @@ $ confluence [options]
 To export all pages from a specified Confluence space:
 
 ```shell
-$ confluence --export --space-key YOUR_SPACE_KEY
+$ python -m confluence --export --space-key YOUR_SPACE_KEY
 ```
 
 To specify the output directory:
 
 ```shell
-$ confluence --export --space-key YOUR_SPACE_KEY --output-dir /path/to/directory
+$ python -m confluence --export --space-key YOUR_SPACE_KEY --output-dir /path/to/directory
 ```
 
 If the --output-dir option is not specified, the `./output` directory in the
