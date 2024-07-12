@@ -8,6 +8,8 @@ import pandas as pd
 import requests
 from requests.auth import HTTPBasicAuth
 
+from .template import html_template
+
 base_url = 'https://pdffiller.atlassian.net/wiki/rest/api'
 
 
@@ -61,13 +63,6 @@ def get_page_path(base_dir, page):
 
 
 def save_pages_to_files(pages, output_dir='./output'):
-    # TODO: refactor to use inline template instead of reading from file.
-    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-    template_path = os.path.join(project_root, 'templates', 'template.html')
-
-    with open(template_path, 'r', encoding='utf-8') as template_file:
-        template = template_file.read()
-
     print('Render pages:')
     for page in pages:
         html_path = get_page_path(os.path.join(output_dir, 'html'), page)
@@ -76,7 +71,7 @@ def save_pages_to_files(pages, output_dir='./output'):
         os.makedirs(os.path.dirname(html_path), exist_ok=True)
         os.makedirs(os.path.dirname(json_path), exist_ok=True)
 
-        content = template.format(title=page['title'], content=page['body']['storage']['value'])
+        content = html_template(title=page['title'], content=page['body']['storage']['value'])
 
         with open(f"{html_path}.html", 'w', encoding='utf-8') as file:
             file.write(content)
@@ -141,11 +136,11 @@ def save_pages_to_csv(pages, output_dir):
     print(f"CSV file saved to {csv_path}")
 
 
-def export_space(output_dir):
+def export_space(space_key, output_dir):
     output_dir = os.path.abspath(output_dir)
     os.makedirs(output_dir, exist_ok=True)
 
-    result = get_all_pages_in_space(os.getenv('CONFLUENCE_SPACE_KEY'))
+    result = get_all_pages_in_space(space_key)
     save_pages_to_files(result, output_dir)
     print(f"Total {len(result)} pages downloaded.")
     save_pages_to_csv(result, output_dir)

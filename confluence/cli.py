@@ -31,7 +31,7 @@ def main() -> int:
     if args:
         try:
             if args.export:
-                export_space(args.output_dir)
+                export_space(args.space_key, args.output_dir)
         except KeyboardInterrupt:  # the user hit control-C
             sys.stderr.write('Received keyboard interrupt, terminating.\n')
             sys.stderr.flush()

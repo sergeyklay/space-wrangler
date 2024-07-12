@@ -89,7 +89,10 @@ def parser_add_options(parser: ArgumentParser) -> ArgumentParser:
 
     ogroup.add_argument('-o', '--output-dir', type=str,
                         default=os.path.join(os.getcwd(), 'output'),
-                        help='Directory to save the output files (default: current working directory)')
+                        help='Directory to save the output files (default: ./output)')
+
+    ogroup.add_argument('-s', '--space-key', type=str, required=True,
+                        help='Confluence space key to export')
 
     return parser
 

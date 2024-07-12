@@ -15,15 +15,7 @@ is in English or contains Cyrillic characters.
 
 - Downloads all pages from a specified Confluence space.
 - Saves pages as HTML and JSON files in a structured directory format.
-- Generates a CSV file with metadata about each page, including:
-  - Page ID
-  - Page Title
-  - Created Date
-  - Last Updated Date
-  - Last Editor
-  - Current Owner
-  - Page URL
-  - Content Language (English or contains Cyrillic)
+- Generates a CSV file with metadata about each page.
 
 ### Output Structure
 
@@ -33,15 +25,6 @@ is in English or contains Cyrillic characters.
   - The directory structure mirrors the hierarchy of pages in Confluence.
 - CSV File:
   - `output/all_pages.csv` contains metadata about each page
-  - Columns include:
-    - Page ID
-    - Page Title
-    - Created Date
-    - Last Updated Date
-    - Last Editor
-    - Current Owner
-    - Page URL
-    - Content Language (English or contains Cyrillic)
 
 ## Installation
 
@@ -68,7 +51,7 @@ $ pip install --upgrade git+ssh://git@github.com/airslateinc/confluence-maintena
 
 This command will download the latest version of `confluence` from the Git repo and install it to your system.
 
-Note: The main branch will always contain the latest unstable version, so the experience might be not as smooth.
+Note: The `main` branch will always contain the latest unstable version, so the experience might be not as smooth.
 
 Verify that now we have the current development version identifier, for example:
 
@@ -91,11 +74,10 @@ $ pip install --upgrade git+ssh://git@github.com/airslateinc/confluence-maintena
 ```
 
 Finally, create a `.env` file in the root directory of the project and add the following variables:
-  ```shell
-  CONFLUENCE_API_USER=your-confluence-email
-  CONFLUENCE_API_TOKEN=your-confluence-api-token
-  CONFLUENCE_SPACE_KEY=your-space-key
-  ```
+```dotenv
+CONFLUENCE_API_USER=your-confluence-email
+CONFLUENCE_API_TOKEN=your-confluence-api-token
+```
 
 More information about pip and PyPI can be found here:
 
@@ -118,13 +100,13 @@ There is a way to use `confluence` CLI tool without pip.
 #### Quick Start
 
 ```shell
-confluence --help
+$ confluence --help
 ```
 
 #### Synopsis
 
 ```shell
-confluence [options]
+$ confluence [options]
 ```
 
 #### Exporting Confluence Space
@@ -132,5 +114,14 @@ confluence [options]
 To export all pages from a specified Confluence space:
 
 ```shell
-confluence --export
+$ confluence --export --space-key YOUR_SPACE_KEY
 ```
+
+To specify the output directory:
+
+```shell
+$ confluence --export --space-key YOUR_SPACE_KEY --output-dir /path/to/directory
+```
+
+If the --output-dir option is not specified, the `./output` directory in the
+current working directory will be used.
