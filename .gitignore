@@ -18,6 +18,7 @@
 /htmlcov
 /build
 /output
+/venv
 
 # Python cache.
 *.py[cod]

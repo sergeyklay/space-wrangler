@@ -61,12 +61,17 @@ $ echo "CONFLUENCE_API_USER=your-confluence-email" > .env
 $ echo "CONFLUENCE_API_TOKEN=your-confluence-api-token" >> .env
 ```
 
-> Note: Using `python3 -m venv venv` instead of `python -m venv venv` ensures
+> [!NOTE]
+> Using `python3 -m venv venv` instead of `python -m venv venv` ensures
 > that you're explicitly using Python 3, which is necessary for compatibility
-> with this project. The command `source venv/bin/activate` activates the virtual
-> environment. This step is not only part of the installation process but also
-> mandatory for running the project. Remember to activate the virtual environment
-> once per terminal session.
+> with this project.
+
+
+> [!IMPORTANT]
+> The command `source venv/bin/activate` activates the virtual
+> environment. This step is not only part of the installation
+> process but also mandatory for running the project. Remember
+> to activate the virtual environment once per terminal session.
 
 You can create an API token in your Confluence account settings. For more information,
 see https://id.atlassian.com/manage-profile/security/api-tokens
@@ -76,21 +81,13 @@ https://docs.python.org/3/library/venv.html
 
 ## Usage
 
-### Command Line Options
-
-#### Quick Start
+### Quick Start
 
 ```shell
 $ python -m confluence --help
 ```
 
-#### Synopsis
-
-```shell
-$ confluence [options]
-```
-
-#### Exporting Confluence Space
+### Exporting Confluence Space
 
 To export all pages from a specified Confluence space:
 
