@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from datetime import datetime
 from urllib.parse import urlparse, parse_qs
 
@@ -94,6 +95,17 @@ def format_date(date_str):
     return date_obj.strftime('%m/%d/%Y')
 
 
+def contains_cyrillic(text):
+    return bool(re.search('[\u0400-\u04FF]', text))
+
+
+def get_structured_title(page):
+    ancestors = page['ancestors']
+    path_parts = ['/' + ancestor['title'].replace('/', '-') for ancestor in ancestors]
+    path_parts.append('/' + page['title'].replace('/', '-'))
+    return ''.join(path_parts)
+
+
 def save_pages_to_csv(pages):
     output_dir = os.path.join(os.path.dirname(__file__), 'output')
     csv_path = os.path.join(output_dir, 'all_pages.csv')
@@ -101,16 +113,22 @@ def save_pages_to_csv(pages):
     rows = []
     for page in pages:
         page_id = page['id']
-        title = page['title']
+        title = get_structured_title(page)
         created_date = format_date(page['history']['createdDate'])
         last_updated_date = format_date(page['history']['lastUpdated']['when'])
         last_editor = page['history']['lastUpdated']['by']['displayName']
         current_owner = page['version']['by']['displayName']
         page_url = base_url.replace('/rest/api', '') + page['_links']['webui']
 
+        content = page['body']['storage']['value']
+        content_is_english = not contains_cyrillic(content)
+        title_is_english = not contains_cyrillic(page['title'])
+
         rows.append({
             'Page ID': page_id,
             'Page Title': title,
+            'Title in English': title_is_english,
+            'Content in English': content_is_english,
             'Created Date': created_date,
             'Last Updated Date': last_updated_date,
             'Last Editor': last_editor,
