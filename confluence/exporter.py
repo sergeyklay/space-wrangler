@@ -9,10 +9,6 @@ import requests
 from requests.auth import HTTPBasicAuth
 
 base_url = 'https://pdffiller.atlassian.net/wiki/rest/api'
-auth = HTTPBasicAuth(
-    os.getenv('CONFLUENCE_API_USER'),
-    os.getenv('CONFLUENCE_API_TOKEN'),
-)
 
 
 def get_all_pages_in_space(space_key):
@@ -24,6 +20,11 @@ def get_all_pages_in_space(space_key):
         'limit': str(limit),
         'status': 'current'
     }
+
+    auth = HTTPBasicAuth(
+        os.getenv('CONFLUENCE_API_USER'),
+        os.getenv('CONFLUENCE_API_TOKEN'),
+    )
 
     all_pages = []
     print(f'Download pages ({limit} pages per request):')
@@ -104,8 +105,7 @@ def get_structured_title(page):
     return ''.join(path_parts)
 
 
-def save_pages_to_csv(pages):
-    output_dir = os.path.join(os.path.dirname(__file__), 'output')
+def save_pages_to_csv(pages, output_dir):
     csv_path = os.path.join(output_dir, 'all_pages.csv')
 
     rows = []
@@ -142,9 +142,10 @@ def save_pages_to_csv(pages):
 
 
 def export_space(output_dir):
+    output_dir = os.path.abspath(output_dir)
     os.makedirs(output_dir, exist_ok=True)
 
     result = get_all_pages_in_space(os.getenv('CONFLUENCE_SPACE_KEY'))
     save_pages_to_files(result, output_dir)
     print(f"Total {len(result)} pages downloaded.")
-    save_pages_to_csv(result)
+    save_pages_to_csv(result, output_dir)
