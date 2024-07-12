@@ -136,6 +136,8 @@ def save_pages_to_csv(pages):
             'Page URL': page_url
         })
 
+    rows.sort(key=lambda x: x['Page Title'])
+
     df = pd.DataFrame(rows)
     os.makedirs(output_dir, exist_ok=True)
     df.to_csv(csv_path, index=False)
