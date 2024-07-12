@@ -7,6 +7,7 @@
 
 """The CLI entry point. Invoke as `confluence' or `python -m confluence'."""
 
+import os
 import signal
 import sys
 
@@ -23,7 +24,11 @@ def main() -> int:
     :return: An exit code
     :rtype: int
     """
-    load_dotenv()
+    dotenv_path = os.path.join(os.getcwd(), '.env')
+    if os.path.exists(dotenv_path):
+        load_dotenv(dotenv_path)
+    else:
+        load_dotenv()
 
     args = parse_args()
     retval = int(args is None)
