@@ -61,9 +61,11 @@ $ echo "CONFLUENCE_API_USER=your-confluence-email" > .env
 $ echo "CONFLUENCE_API_TOKEN=your-confluence-api-token" >> .env
 ```
 
-More information about pip and PyPI can be found here:
+You can create an API token in your Confluence account settings. For more information,
+see https://id.atlassian.com/manage-profile/security/api-tokens
 
-- [venv — Creation of virtual environments](https://docs.python.org/3/library/venv.html)
+More information about Python virtualenv can be found here:
+https://docs.python.org/3/library/venv.html
 
 ## Usage
 
