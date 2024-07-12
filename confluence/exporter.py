@@ -6,10 +6,7 @@ from urllib.parse import urlparse, parse_qs
 
 import pandas as pd
 import requests
-from dotenv import load_dotenv
 from requests.auth import HTTPBasicAuth
-
-load_dotenv()
 
 base_url = 'https://pdffiller.atlassian.net/wiki/rest/api'
 auth = HTTPBasicAuth(
@@ -62,11 +59,11 @@ def get_page_path(base_dir, page):
     return full_path
 
 
-def save_pages_to_files(pages):
-    output_dir = os.path.join(os.path.dirname(__file__), 'output')
-    os.makedirs(output_dir, exist_ok=True)
+def save_pages_to_files(pages, output_dir='./output'):
+    # TODO: refactor to use inline template instead of reading from file.
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    template_path = os.path.join(project_root, 'templates', 'template.html')
 
-    template_path = os.path.join(os.path.dirname(__file__), 'template.html')
     with open(template_path, 'r', encoding='utf-8') as template_file:
         template = template_file.read()
 
@@ -140,13 +137,14 @@ def save_pages_to_csv(pages):
     rows.sort(key=lambda x: x['Page Title'])
 
     df = pd.DataFrame(rows)
-    os.makedirs(output_dir, exist_ok=True)
     df.to_csv(csv_path, index=False)
     print(f"CSV file saved to {csv_path}")
 
 
-if __name__ == "__main__":
+def export_space(output_dir):
+    os.makedirs(output_dir, exist_ok=True)
+
     result = get_all_pages_in_space(os.getenv('CONFLUENCE_SPACE_KEY'))
-    save_pages_to_files(result)
+    save_pages_to_files(result, output_dir)
     print(f"Total {len(result)} pages downloaded.")
     save_pages_to_csv(result)

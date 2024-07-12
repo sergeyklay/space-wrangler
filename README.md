@@ -121,8 +121,16 @@ There is a way to use `confluence` CLI tool without pip.
 confluence --help
 ```
 
-#### Synopsis:
+#### Synopsis
 
 ```shell
 confluence [options]
+```
+
+#### Exporting Confluence Space
+
+To export all pages from a specified Confluence space:
+
+```shell
+confluence --export
 ```

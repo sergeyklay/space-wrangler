@@ -7,6 +7,7 @@
 
 """Command line argument parsing methods for confluence."""
 
+import os
 import sys
 import textwrap as _textwrap
 from argparse import ArgumentParser, HelpFormatter, Namespace, SUPPRESS
@@ -82,6 +83,13 @@ def parser_add_options(parser: ArgumentParser) -> ArgumentParser:
                         'do anything else')
     ogroup.add_argument('-dumpversion', action='version',
                         help=dumpversion_help, version=__version__)
+
+    ogroup.add_argument('-e', '--export', action='store_true',
+                        help='Export all pages from the specified Confluence space')
+
+    ogroup.add_argument('-o', '--output-dir', type=str,
+                        default=os.getcwd(),
+                        help='Directory to save the output files (default: current working directory)')
 
     return parser
 

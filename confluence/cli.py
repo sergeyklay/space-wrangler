@@ -7,10 +7,14 @@
 
 """The CLI entry point. Invoke as `confluence' or `python -m confluence'."""
 
-from .args import parse_args
-from .exceptions import Error
 import signal
 import sys
+
+from dotenv import load_dotenv
+
+from .args import parse_args
+from .exceptions import Error
+from .exporter import export_space
 
 
 def main() -> int:
@@ -19,12 +23,15 @@ def main() -> int:
     :return: An exit code
     :rtype: int
     """
+    load_dotenv()
+
     args = parse_args()
     retval = int(args is None)
 
     if args:
         try:
-            pass
+            if args.export:
+                export_space(args.output_dir)
         except KeyboardInterrupt:  # the user hit control-C
             sys.stderr.write('Received keyboard interrupt, terminating.\n')
             sys.stderr.flush()
