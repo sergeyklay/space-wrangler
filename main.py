@@ -17,15 +17,18 @@ auth = HTTPBasicAuth(
 
 def get_all_pages_in_space(space_key):
     url = f"{base_url}/content"
+    limit = 100
     params = {
         'spaceKey': space_key,
         'expand': 'body.storage,ancestors,history.lastUpdated,version',
-        'limit': '100',
+        'limit': str(limit),
         'status': 'current'
     }
 
     all_pages = []
+    print(f'Download pages ({limit} pages per request):')
     while True:
+        print('.', end='', flush=True)
         response = requests.get(url, params=params, auth=auth)
         response.raise_for_status()
         data = response.json()
@@ -42,32 +45,45 @@ def get_all_pages_in_space(space_key):
         else:
             break
 
+    print('')
+    print('')
     return all_pages
+
+
+def get_page_path(base_dir, page):
+    ancestors = page['ancestors']
+    path_parts = [ancestor['title'].replace('/', '-') for ancestor in ancestors]
+    path_parts.append(page['title'].replace('/', '-'))
+
+    full_path = os.path.join(base_dir, *path_parts)
+    return full_path
 
 
 def save_pages_to_files(pages):
     output_dir = os.path.join(os.path.dirname(__file__), 'output')
 
-    html_dir = os.path.join(output_dir, 'html')
-    os.makedirs(html_dir, exist_ok=True)
+    template_path = os.path.join(os.path.dirname(__file__), 'template.html')
+    with open(template_path, 'r', encoding='utf-8') as template_file:
+        template = template_file.read()
 
-    json_dir = os.path.join(output_dir, 'json')
-    os.makedirs(json_dir, exist_ok=True)
-
+    print('Render pages:')
     for page in pages:
-        title = page['title']
-        content = page['body']['storage']['value']
+        html_path = get_page_path(os.path.join(output_dir, 'html'), page)
+        json_path = get_page_path(os.path.join(output_dir, 'json'), page)
 
-        html_filename = os.path.join(html_dir, f"{title}.html".replace('/', '-'))
-        json_filename = os.path.join(json_dir, f"{title}.json".replace('/', '-'))
+        os.makedirs(os.path.dirname(html_path), exist_ok=True)
+        os.makedirs(os.path.dirname(json_path), exist_ok=True)
 
-        with open(html_filename, 'w', encoding='utf-8') as file:
+        content = template.format(title=page['title'], content=page['body']['storage']['value'])
+
+        with open(f"{html_path}.html", 'w', encoding='utf-8') as file:
             file.write(content)
 
-        with open(json_filename, 'w', encoding='utf-8') as file:
+        with open(f"{json_path}.json", 'w', encoding='utf-8') as file:
             json.dump(page, file, ensure_ascii=False, indent=4)
 
         print('.', end='', flush=True)
+    print('')
     print('')
 
 
