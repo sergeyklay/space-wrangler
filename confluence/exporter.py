@@ -17,13 +17,15 @@ from requests.auth import HTTPBasicAuth
 
 from .template import html_template
 
-base_url = 'https://pdffiller.atlassian.net/wiki/rest/api'
+CONFLUENCE_BASE_URL = 'https://pdffiller.atlassian.net/wiki/rest/api'
 
 
 def get_all_pages_in_space(space_key):
     """Retrieve all pages for a given space key from Confluence."""
-    url = f"{base_url}/content"
+    url = f"{CONFLUENCE_BASE_URL}/content"
+
     limit = 100
+    timeout = 10
 
     headers = {
         'Accept': 'application/json',
@@ -45,7 +47,13 @@ def get_all_pages_in_space(space_key):
     print(f'Fetch space pages ({limit} pages per request):')
     while True:
         print('.', end='', flush=True)
-        response = requests.get(url, params=params, auth=auth, headers=headers)
+        response = requests.get(
+            url,
+            params=params,
+            auth=auth,
+            headers=headers,
+            timeout=timeout,
+        )
         response.raise_for_status()
         data = response.json()
 
@@ -125,28 +133,22 @@ def save_pages_to_csv(pages, output_dir):
 
     rows = []
     for page in pages:
-        page_id = page['id']
-        title = get_structured_title(page)
-        created_date = format_date(page['history']['createdDate'])
-        last_updated_date = format_date(page['history']['lastUpdated']['when'])
-        last_editor = page['history']['lastUpdated']['by']['displayName']
-        current_owner = page['version']['by']['displayName']
-        page_url = base_url.replace('/rest/api', '') + page['_links']['webui']
-
         content = page['body']['storage']['value']
         content_is_english = not contains_cyrillic(content)
         title_is_english = not contains_cyrillic(page['title'])
+        last_updated = page['history']['lastUpdated']
 
         rows.append({
-            'Page ID': page_id,
-            'Page Title': title,
+            'Page ID': page['id'],
+            'Page Title': get_structured_title(page),
             'Title in English': title_is_english,
             'Content in English': content_is_english,
-            'Created Date': created_date,
-            'Last Updated Date': last_updated_date,
-            'Last Editor': last_editor,
-            'Current Owner': current_owner,
-            'Page URL': page_url
+            'Created Date': format_date(page['history']['createdDate']),
+            'Last Updated Date': format_date(last_updated['when']),
+            'Last Editor': last_updated['by']['displayName'],
+            'Current Owner': page['version']['by']['displayName'],
+            'Page URL': CONFLUENCE_BASE_URL.replace(
+                '/rest/api', '') + page['_links']['webui']
         })
 
     rows.sort(key=lambda x: x['Page Title'])
