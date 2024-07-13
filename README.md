@@ -114,13 +114,13 @@ current working directory will be used.
 To export metadata of all pages from a specified Confluence space:
 
 ```shell
-$ python -m confluence metadata --space-key YOUR_SPACE_KEY
+$ python -m confluence pages-metadata --space-key YOUR_SPACE_KEY
 ```
 
 To specify the output directory:
 
 ```shell
-$ python -m confluence metadata --space-key YOUR_SPACE_KEY --output-dir /path/to/directory
+$ python -m confluence pages-metadata --space-key YOUR_SPACE_KEY --output-dir /path/to/directory
 ```
 
 If the `--output-dir` option is not specified, the `./output` directory in the
