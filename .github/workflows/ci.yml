@@ -85,6 +85,14 @@ jobs:
       - name: Combine coverage reports
         run: make ccov
 
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: matrix.python == '3.11'
+        with:
+          name: coverage
+          path: ./coverage.xml
+
+
   analize-with-sonarqube:
     name: Analyze with Sonarqube
     needs: [lint-and-test]
@@ -93,6 +101,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Download coverage report
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage
+          path: ./
 
       - name: Run Sonar Scanner
         uses: sonarsource/sonarqube-scan-action@master
