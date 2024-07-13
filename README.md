@@ -1,6 +1,6 @@
-# Confluence Maintenance Tools
+# Confluence Space Management Toolkit
 
-Welcome to the Confluence Maintenance Tools project! This repository is designed
+Welcome to the Confluence Space Management Toolkit! This repository is designed
 to help you manage and maintain your Confluence spaces more efficiently. Currently,
 we have tools for exporting Confluence spaces and exporting page metadata, and
 we plan to add more useful features in the future.
