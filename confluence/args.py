@@ -12,7 +12,7 @@ import sys
 import textwrap as _textwrap
 from argparse import ArgumentParser, HelpFormatter, Namespace, SUPPRESS
 
-from . import __copyright__, __version__
+from . import __copyright__, __description__, __version__
 
 
 class LineBreaksFormatter(HelpFormatter):
@@ -115,7 +115,7 @@ def parser_add_options(parser: ArgumentParser) -> ArgumentParser:
 
 def parse_args() -> Namespace or None:
     parser = ArgumentParser(
-        description='Confluence Space Management Toolkits.',
+        description=__description__,
         usage='%(prog)s [command] [options]',
         formatter_class=LineBreaksFormatter,
         add_help=False,
