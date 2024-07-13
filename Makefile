@@ -31,7 +31,7 @@ define rm-venv-link
 endef
 
 requirements/%.txt: requirements/%.in $(VENV_BIN)
-	$(VENV_BIN)/pip-compile --strip-extras --generate-hashes --output-file=$@ $<
+	$(VENV_BIN)/pip-compile --allow-unsafe --strip-extras --generate-hashes --output-file=$@ $<
 
 ## Public targets
 

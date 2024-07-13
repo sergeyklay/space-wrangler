@@ -64,6 +64,17 @@ jobs:
       - name: Install dependencies
         run: make install
 
+      - name: Setup pylint cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pylint
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/*.py') }}
+          restore-keys: |
+            ${{ runner.os }}-pylint-
+
+      - name: Lint code
+        run: make lint
+
       - name: Setuptools self-test
         run: |
           python setup.py --fullname
