@@ -64,8 +64,39 @@ def get_version_str() -> str:
 
 def parser_add_positionals(parser: ArgumentParser) -> ArgumentParser:
     """Add positional parameters group to a parser."""
-    # TODO: Add positional parameters here
+    subparsers = parser.add_subparsers(dest='command', title='Commands')
+
+    export_parser = subparsers.add_parser(
+        'export',
+        help='Export all pages from the specified Confluence space')
+    parser_add_export_options(export_parser)
+
+    metadata_parser = subparsers.add_parser(
+        'metadata',
+        help='Export metadata of pages from the specified Confluence space')
+    parser_add_metadata_options(metadata_parser)
+
     return parser
+
+
+def parser_add_export_options(subparser: ArgumentParser) -> ArgumentParser:
+    """Add options for the export command."""
+    subparser.add_argument('-s', '--space-key', type=str, required=True,
+                           help='Confluence space key to export pages')
+    subparser.add_argument('-o', '--output-dir', type=str,
+                           default=os.path.join(os.getcwd(), 'output'),
+                           help='Directory to save the output files (default: ./output)')
+    return subparser
+
+
+def parser_add_metadata_options(subparser: ArgumentParser) -> ArgumentParser:
+    """Add options for the metadata command."""
+    subparser.add_argument('-s', '--space-key', type=str, required=True,
+                           help='Confluence space key to export metadata')
+    subparser.add_argument('-o', '--output-dir', type=str,
+                           default=os.path.join(os.getcwd(), 'output'),
+                           help='Directory to save the output files (default: ./output)')
+    return subparser
 
 
 def parser_add_options(parser: ArgumentParser) -> ArgumentParser:
@@ -79,28 +110,13 @@ def parser_add_options(parser: ArgumentParser) -> ArgumentParser:
                         help="Print program's version information and quit",
                         version=get_version_str())
 
-    dumpversion_help = ("Print the version of the program and don't " +
-                        'do anything else')
-    ogroup.add_argument('-dumpversion', action='version',
-                        help=dumpversion_help, version=__version__)
-
-    ogroup.add_argument('-e', '--export', action='store_true',
-                        help='Export all pages from the specified Confluence space')
-
-    ogroup.add_argument('-o', '--output-dir', type=str,
-                        default=os.path.join(os.getcwd(), 'output'),
-                        help='Directory to save the output files (default: ./output)')
-
-    ogroup.add_argument('-s', '--space-key', type=str, required=True,
-                        help='Confluence space key to export')
-
     return parser
 
 
 def parse_args() -> Namespace or None:
     parser = ArgumentParser(
         description='Simple Confluence maintenance tools.',
-        usage='%(prog)s [options]',
+        usage='%(prog)s [command] [options]',
         formatter_class=LineBreaksFormatter,
         add_help=False,
     )

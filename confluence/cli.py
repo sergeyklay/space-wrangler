@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 
 from .args import parse_args
 from .exceptions import Error
-from .exporter import export_space
+from .exporter import export_metadata, export_space
 
 
 def main() -> int:
@@ -35,8 +35,10 @@ def main() -> int:
 
     if args:
         try:
-            if args.export:
+            if args.command == 'export':
                 export_space(args.space_key, args.output_dir)
+            elif args.command == 'metadata':
+                export_metadata(args.space_key, args.output_dir)
         except KeyboardInterrupt:  # the user hit control-C
             sys.stderr.write('Received keyboard interrupt, terminating.\n')
             sys.stderr.flush()

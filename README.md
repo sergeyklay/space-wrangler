@@ -2,29 +2,34 @@
 
 Welcome to the Confluence Maintenance Tools project! This repository is designed
 to help you manage and maintain your Confluence spaces more efficiently. Currently,
-we have a Space Exporter tool, and we plan to add more useful features in the future.
+we have tools for exporting Confluence spaces and exporting page metadata, and
+we plan to add more useful features in the future.
 
-## Space Exporter
+## Tools
+
+### Space Exporter
 
 The Space Exporter script downloads all pages from a specified Confluence space
-and saves them locally in both HTML and JSON formats. Additionally, it generates
-a CSV file with detailed information about each page, including whether the content
-is in English or contains Cyrillic characters.
+and saves them locally in both HTML and JSON formats.
 
-### Features
+#### Output Structure
 
-- Downloads all pages from a specified Confluence space.
-- Saves pages as HTML and JSON files in a structured directory format.
-- Generates a CSV file with metadata about each page.
+- The script saves HTML and JSON versions of each page in the `output/html`
+  and `output/json` directories, respectively.
+- The directory structure mirrors the hierarchy of pages in Confluence.
+- The `output` directory can be customized using the `--output-dir` option.
 
-### Output Structure
+### Metadata Exporter
 
-- HTML and JSON Files:
-  - The script saves HTML and JSON versions of each page in the `output/html`
-    and `output/json` directories, respectively.
-  - The directory structure mirrors the hierarchy of pages in Confluence.
-- CSV File:
-  - `output/all_pages.csv` contains metadata about each page
+The Metadata Exporter script generates a CSV file with metadata about each page
+in a specified Confluence space, including whether the content is in English or
+contains Cyrillic characters, creation and last modification dates, owner, and more.
+
+#### Output Structure
+
+- The script saves `all_pages.csv` CSV file with metadata about each page in the
+  `output` directory.
+- The `output` directory can be customized using the `--output-dir` option.
 
 ## Installation
 
@@ -73,8 +78,8 @@ $ echo "CONFLUENCE_API_TOKEN=your-confluence-api-token" >> .env
 > process but also mandatory for running the project. Remember
 > to activate the virtual environment once per terminal session.
 
-You can create an API token in your Confluence account settings. For more information,
-see https://id.atlassian.com/manage-profile/security/api-tokens
+You can create an API token in your Confluence account settings. For more
+information,  see https://id.atlassian.com/manage-profile/security/api-tokens
 
 More information about Python virtualenv can be found here:
 https://docs.python.org/3/library/venv.html
@@ -92,14 +97,31 @@ $ python -m confluence --help
 To export all pages from a specified Confluence space:
 
 ```shell
-$ python -m confluence --export --space-key YOUR_SPACE_KEY
+$ python -m confluence export --space-key YOUR_SPACE_KEY
 ```
 
 To specify the output directory:
 
 ```shell
-$ python -m confluence --export --space-key YOUR_SPACE_KEY --output-dir /path/to/directory
+$ python -m confluence export --space-key YOUR_SPACE_KEY --output-dir /path/to/directory
 ```
 
-If the --output-dir option is not specified, the `./output` directory in the
+If the `--output-dir` option is not specified, the `./output` directory in the
+current working directory will be used.
+
+### Exporting Page Metadata
+
+To export metadata of all pages from a specified Confluence space:
+
+```shell
+$ python -m confluence metadata --space-key YOUR_SPACE_KEY
+```
+
+To specify the output directory:
+
+```shell
+$ python -m confluence metadata --space-key YOUR_SPACE_KEY --output-dir /path/to/directory
+```
+
+If the `--output-dir` option is not specified, the `./output` directory in the
 current working directory will be used.

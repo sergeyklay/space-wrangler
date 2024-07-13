@@ -9,4 +9,4 @@
 
 
 class Error(Exception):
-    """Base class for exceptions in gstore module."""
+    """Base class for exceptions in confluence module."""

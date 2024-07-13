@@ -14,13 +14,19 @@ base_url = 'https://pdffiller.atlassian.net/wiki/rest/api'
 
 
 def get_all_pages_in_space(space_key):
+    """Retrieve all pages for a given space key from Confluence."""
     url = f"{base_url}/content"
     limit = 100
+
+    headers = {
+        'Accept': 'application/json',
+    }
+
     params = {
         'spaceKey': space_key,
         'expand': 'body.storage,ancestors,history.lastUpdated,version',
         'limit': str(limit),
-        'status': 'current'
+        'status': 'current',
     }
 
     auth = HTTPBasicAuth(
@@ -29,10 +35,10 @@ def get_all_pages_in_space(space_key):
     )
 
     all_pages = []
-    print(f'Download pages ({limit} pages per request):')
+    print(f'Fetch space pages ({limit} pages per request):')
     while True:
         print('.', end='', flush=True)
-        response = requests.get(url, params=params, auth=auth)
+        response = requests.get(url, params=params, auth=auth, headers=headers)
         response.raise_for_status()
         data = response.json()
 
@@ -143,4 +149,12 @@ def export_space(space_key, output_dir):
     result = get_all_pages_in_space(space_key)
     save_pages_to_files(result, output_dir)
     print(f"Total {len(result)} pages downloaded.")
+
+
+def export_metadata(space_key, output_dir):
+    output_dir = os.path.abspath(output_dir)
+    os.makedirs(output_dir, exist_ok=True)
+
+    result = get_all_pages_in_space(space_key)
     save_pages_to_csv(result, output_dir)
+    print(f"Metadata for {len(result)} pages downloaded and saved to CSV.")
