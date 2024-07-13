@@ -39,8 +39,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 5
 
       - name: Set up Python ${{ matrix.python }}
         uses: actions/setup-python@v5
@@ -81,9 +79,11 @@ jobs:
           python setup.py --long-description
           python setup.py --classifiers
 
-      - name: Success Reporting
-        if: success()
-        run: git log --format=fuller -5
+      - name: Run unit tests with coverage
+        run: make test
+
+      - name: Combine coverage reports
+        run: make ccov
 
   analize-with-sonarqube:
     name: Analyze with Sonarqube
