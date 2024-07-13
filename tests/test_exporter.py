@@ -74,7 +74,8 @@ def test_save_pages_to_csv(tmpdir, mock_response):
 
 
 def test_export_space(mocker, tmpdir):
-    mock_get_all_pages_in_space = mocker.patch('confluence.exporter.get_all_pages_in_space')
+    mock_get_all_pages_in_space = mocker.patch(
+        'confluence.exporter.get_all_pages_in_space')
     mock_get_all_pages_in_space.return_value = [{
         'id': '123',
         'title': 'Test Page',
@@ -99,7 +100,8 @@ def test_export_space(mocker, tmpdir):
 
 
 def test_export_pages_metadata(mocker, tmpdir):
-    mock_get_all_pages_in_space = mocker.patch('confluence.exporter.get_all_pages_in_space')
+    mock_get_all_pages_in_space = mocker.patch(
+        'confluence.exporter.get_all_pages_in_space')
     mock_get_all_pages_in_space.return_value = [{
         'id': '123',
         'title': 'Test Page',
