@@ -99,8 +99,8 @@ CLASSIFIERS = [
 
 # Dependencies that are downloaded by pip on installation and why.
 INSTALL_REQUIRES = [
-    'requests>=2.32.3',
     'python-dotenv>=1.0.1',
+    'requests>=2.32.3',
     'urllib3>=2.2.2',
 ]
 
