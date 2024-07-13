@@ -73,7 +73,7 @@ def parser_add_positionals(parser: ArgumentParser) -> ArgumentParser:
 
     metadata_parser = subparsers.add_parser(
         'pages-metadata',
-        help='Export pages metadata of pages from the specified Confluence space')
+        help='Export metadata of pages from the specified Confluence space')
     parser_add_metadata_options(metadata_parser)
 
     return parser
@@ -83,9 +83,10 @@ def parser_add_export_options(subparser: ArgumentParser) -> ArgumentParser:
     """Add options for the export command."""
     subparser.add_argument('-s', '--space-key', type=str, required=True,
                            help='Confluence space key to export pages')
-    subparser.add_argument('-o', '--output-dir', type=str,
-                           default=os.path.join(os.getcwd(), 'output'),
-                           help='Directory to save the output files (default: ./output)')
+    subparser.add_argument(
+        '-o', '--output-dir', type=str,
+        default=os.path.join(os.getcwd(), 'output'),
+        help='Directory to save the output files (default: ./output)')
     return subparser
 
 
@@ -93,9 +94,10 @@ def parser_add_metadata_options(subparser: ArgumentParser) -> ArgumentParser:
     """Add options for the metadata command."""
     subparser.add_argument('-s', '--space-key', type=str, required=True,
                            help='Confluence space key to export metadata')
-    subparser.add_argument('-o', '--output-dir', type=str,
-                           default=os.path.join(os.getcwd(), 'output'),
-                           help='Directory to save the output files (default: ./output)')
+    subparser.add_argument(
+        '-o', '--output-dir', type=str,
+        default=os.path.join(os.getcwd(), 'output'),
+        help='Directory to save the output files (default: ./output)')
     return subparser
 
 

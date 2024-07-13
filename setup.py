@@ -106,7 +106,7 @@ INSTALL_REQUIRES = [
 
 # Project's URLs
 PROJECT_URLS = {
-    'Bug Tracker': 'https://pdffiller.atlassian.net/jira/software/c/projects/ASP/boards/1337',
+    'Bug Tracker': 'https://pdffiller.atlassian.net/jira/software/c/projects/ASP/boards/1337',  # noqa: E501
     'Source Code': find_meta('url'),
 }
 

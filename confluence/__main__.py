@@ -16,10 +16,10 @@ from confluence.cli import main
 
 
 def init() -> None:
-    """Run confluence.cli.main() when current file is executed by an interpreter.
+    """Run confluence.cli.main() when the file is executed by an interpreter.
 
-    If the file is used as a module, the confluence.cli.main() function will not
-    automatically execute. The sys.exit() function is called with a return
+    If the file is used as a module, the confluence.cli.main() function will
+    not automatically execute. The sys.exit() function is called with a return
     value of confluence.cli.main(), as all good UNIX programs do.
     """
     if __name__ == '__main__':

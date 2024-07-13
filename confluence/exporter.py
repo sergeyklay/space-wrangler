@@ -10,7 +10,7 @@ import json
 import os
 import re
 from datetime import datetime
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import parse_qs, urlparse
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -68,7 +68,7 @@ def get_all_pages_in_space(space_key):
 
 def get_page_path(base_dir, page):
     ancestors = page['ancestors']
-    path_parts = [ancestor['title'].replace('/', '-') for ancestor in ancestors]
+    path_parts = [parent['title'].replace('/', '-') for parent in ancestors]
     path_parts.append(page['title'].replace('/', '-'))
 
     full_path = os.path.join(base_dir, *path_parts)
@@ -84,7 +84,9 @@ def save_pages_to_files(pages, output_dir='./output'):
         os.makedirs(os.path.dirname(html_path), exist_ok=True)
         os.makedirs(os.path.dirname(json_path), exist_ok=True)
 
-        content = html_template(title=page['title'], content=page['body']['storage']['value'])
+        content = html_template(
+            title=page['title'],
+            content=page['body']['storage']['value'])
 
         with open(f"{html_path}.html", 'w', encoding='utf-8') as file:
             file.write(content)
@@ -108,8 +110,13 @@ def contains_cyrillic(text):
 
 def get_structured_title(page):
     ancestors = page['ancestors']
-    path_parts = ['/' + ancestor['title'].replace('/', '-') for ancestor in ancestors]
+    path_parts = []
+
+    for parent in ancestors:
+        path_parts.append('/' + parent['title'].replace('/', '-'))
+
     path_parts.append('/' + page['title'].replace('/', '-'))
+
     return ''.join(path_parts)
 
 
