@@ -125,3 +125,7 @@ $ python -m confluence pages-metadata --space-key YOUR_SPACE_KEY --output-dir /p
 
 If the `--output-dir` option is not specified, the `./output` directory in the
 current working directory will be used.
+
+## Maintainers
+
+- [Serghei Iakovlev](https://github.com/sergeyklay)
