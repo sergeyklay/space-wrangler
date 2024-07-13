@@ -99,9 +99,9 @@ CLASSIFIERS = [
 
 # Dependencies that are downloaded by pip on installation and why.
 INSTALL_REQUIRES = [
-    'python-dotenv>=1.0.1',
-    'requests>=2.32.3',
-    'urllib3>=2.2.2',
+    'python-dotenv>=1.0.1',  # Get values from your .env file.
+    'requests>=2.32.3',  # Python HTTP for Humans.
+    'urllib3>=2.2.2',  # HTTP library with thread-safe connection pooling, file post, and more.  # noqa: E501
 ]
 
 # Project's URLs
@@ -118,7 +118,15 @@ DEPENDENCY_LINKS = []
 #    $ pip install -e .[testing,docs,develop]
 #
 EXTRAS_REQUIRE = {
-    'testing': [],
+    'testing': [
+        'coverage[toml]>=6.0',  # Code coverage measurement for Python
+        'flake8-blind-except>=0.2.0',  # Checks for blind except: statements
+        'flake8-import-order>=0.18.1',  # Checks the ordering of imports
+        'flake8>=6.0.0',  # The modular source code checker
+        'pylint>=2.6.2',  # Python code static checker
+        'pytest>=8.0.0',  # Our tests framework
+        'pytest-mock>=3.14.0',  # Thin-wrapper around the mock package for easier use with py.test  # noqa: E501
+    ],
     'docs': [],
 }
 
