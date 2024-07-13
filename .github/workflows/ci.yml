@@ -47,10 +47,14 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
+      - name: Makefile selftest
+        run: make help
+
+      - name: Set up virtualenv
+        run: make init
+
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install -r requirements.txt
+        run: make install
 
       - name: Setuptools self-test
         run: |
