@@ -140,28 +140,7 @@ def save_pages_to_csv(pages, output_dir):
     csv_path = os.path.join(output_dir, 'pages-metadata.csv')
 
     rows = []
-    for page in pages:
-        content = page['body']['storage']['value']
-        content_is_english = not contains_cyrillic(content)
-        title_is_english = not contains_cyrillic(page['title'])
-        last_updated = page['history']['lastUpdated']
-
-        rows.append({
-            'Page ID': page['id'],
-            'Page Title': get_structured_title(page),
-            'Title in English': title_is_english,
-            'Content in English': content_is_english,
-            'Created Date': format_date(page['history']['createdDate']),
-            'Last Updated Date': format_date(last_updated['when']),
-            'Last Editor': last_updated['by']['displayName'],
-            'Current Owner': page['version']['by']['displayName'],
-            'Page URL': CONFLUENCE_BASE_URL.replace(
-                '/rest/api', '') + page['_links']['webui']
-        })
-
-    rows.sort(key=lambda x: x['Page Title'])
-
-    fieldnames = [
+    fieldnames = (
         'Page ID',
         'Page Title',
         'Title in English',
@@ -171,7 +150,28 @@ def save_pages_to_csv(pages, output_dir):
         'Last Editor',
         'Current Owner',
         'Page URL',
-    ]
+    )
+
+    for page in pages:
+        content = page['body']['storage']['value']
+        content_is_english = not contains_cyrillic(content)
+        title_is_english = not contains_cyrillic(page['title'])
+        last_updated = page['history']['lastUpdated']
+
+        rows.append({
+            fieldnames[0]: page['id'],
+            fieldnames[1]: get_structured_title(page),
+            fieldnames[2]: title_is_english,
+            fieldnames[3]: content_is_english,
+            fieldnames[4]: format_date(page['history']['createdDate']),
+            fieldnames[5]: format_date(last_updated['when']),
+            fieldnames[6]: last_updated['by']['displayName'],
+            fieldnames[7]: page['version']['by']['displayName'],
+            fieldnames[8]: CONFLUENCE_BASE_URL.replace(
+                '/rest/api', '') + page['_links']['webui']
+        })
+
+    rows.sort(key=lambda x: x[fieldnames[1]])
 
     with open(csv_path, mode='w', encoding='utf-8', newline='') as file:
         writer = csv.DictWriter(file, fieldnames=fieldnames)
