@@ -1,0 +1,28 @@
+# This file is part of the confluence.
+#
+# Copyright (c) 2024 airSlate, Inc.
+#
+# For the full copyright and license information, please view
+# the LICENSE file that was distributed with this source code.
+
+# This file consists of commands, one per line, instructing setuptools to add
+# or remove some set of files from the sdist.
+
+# Include all files matching any of the listed patterns.
+include LICENSE README.md
+graft .github
+
+# The contents of the directory tree tests will first be added to the sdist.
+# Many OS distributions prefers provide an ability run the tests
+# during the package installation.
+recursive-include tests *.py
+
+# All files in the sdist with a .pyc, .pyo, or .pyd extension will be removed
+# from the sdist.
+global-exclude *.py[cod]
+
+# Exclude stuff for local development
+exclude .coveragerc .pylintrc Makefile default.mk requirements/*.in
+
+# Include requirements files for reproducible tests
+include requirements.txt requirements-dev.txt
