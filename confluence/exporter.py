@@ -107,7 +107,7 @@ def get_structured_title(page):
 
 
 def save_pages_to_csv(pages, output_dir):
-    csv_path = os.path.join(output_dir, 'all_pages.csv')
+    csv_path = os.path.join(output_dir, 'pages-metadata.csv')
 
     rows = []
     for page in pages:
@@ -151,7 +151,7 @@ def export_space(space_key, output_dir):
     print(f"Total {len(result)} pages downloaded.")
 
 
-def export_metadata(space_key, output_dir):
+def export_pages_metadata(space_key, output_dir):
     output_dir = os.path.abspath(output_dir)
     os.makedirs(output_dir, exist_ok=True)
 

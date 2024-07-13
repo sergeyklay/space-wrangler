@@ -27,8 +27,8 @@ contains Cyrillic characters, creation and last modification dates, owner, and m
 
 #### Output Structure
 
-- The script saves `all_pages.csv` CSV file with metadata about each page in the
-  `output` directory.
+- The script saves `pages-metadata.csv` CSV file with metadata about each page
+  in the `output` directory.
 - The `output` directory can be customized using the `--output-dir` option.
 
 ## Installation

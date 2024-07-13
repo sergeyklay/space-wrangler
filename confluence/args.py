@@ -72,8 +72,8 @@ def parser_add_positionals(parser: ArgumentParser) -> ArgumentParser:
     parser_add_export_options(export_parser)
 
     metadata_parser = subparsers.add_parser(
-        'metadata',
-        help='Export metadata of pages from the specified Confluence space')
+        'pages-metadata',
+        help='Export pages metadata of pages from the specified Confluence space')
     parser_add_metadata_options(metadata_parser)
 
     return parser
