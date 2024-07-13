@@ -5,6 +5,8 @@
 # For the full copyright and license information, please view
 # the LICENSE file that was distributed with this source code.
 
+"""Provides tools for exporting Confluence space pages and metadata."""
+
 import csv
 import json
 import os
@@ -75,6 +77,7 @@ def get_all_pages_in_space(space_key):
 
 
 def get_page_path(base_dir, page):
+    """Generate the full file path for a given page."""
     ancestors = page['ancestors']
     path_parts = [parent['title'].replace('/', '-') for parent in ancestors]
     path_parts.append(page['title'].replace('/', '-'))
@@ -84,6 +87,7 @@ def get_page_path(base_dir, page):
 
 
 def save_pages_to_files(pages, output_dir='./output'):
+    """Save Confluence pages to HTML and JSON files."""
     print('Render pages:')
     for page in pages:
         html_path = get_page_path(os.path.join(output_dir, 'html'), page)
@@ -108,15 +112,18 @@ def save_pages_to_files(pages, output_dir='./output'):
 
 
 def format_date(date_str):
+    """Format a date string to mm/dd/yyyy."""
     date_obj = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S.%fZ')
     return date_obj.strftime('%m/%d/%Y')
 
 
 def contains_cyrillic(text):
+    """Check if the given text contains Cyrillic characters."""
     return bool(re.search('[\u0400-\u04FF]', text))
 
 
 def get_structured_title(page):
+    """Construct a structured title for a page based on its ancestors."""
     ancestors = page['ancestors']
     path_parts = []
 
@@ -129,6 +136,7 @@ def get_structured_title(page):
 
 
 def save_pages_to_csv(pages, output_dir):
+    """Save metadata of Confluence pages to a CSV file."""
     csv_path = os.path.join(output_dir, 'pages-metadata.csv')
 
     rows = []
@@ -174,6 +182,7 @@ def save_pages_to_csv(pages, output_dir):
 
 
 def export_space(space_key, output_dir):
+    """Export all pages from a specified Confluence space."""
     output_dir = os.path.abspath(output_dir)
     os.makedirs(output_dir, exist_ok=True)
 
@@ -183,6 +192,7 @@ def export_space(space_key, output_dir):
 
 
 def export_pages_metadata(space_key, output_dir):
+    """Export metadata of pages from a specified Confluence space."""
     output_dir = os.path.abspath(output_dir)
     os.makedirs(output_dir, exist_ok=True)
 

@@ -116,6 +116,7 @@ def parser_add_options(parser: ArgumentParser) -> ArgumentParser:
 
 
 def parse_args() -> Namespace or None:
+    """Parse and return command line arguments."""
     parser = ArgumentParser(
         description=__description__,
         usage='%(prog)s [command] [options]',
