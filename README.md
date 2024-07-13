@@ -12,7 +12,7 @@ we plan to add more useful features in the future.
 The Space Exporter script downloads all pages from a specified Confluence space
 and saves them locally in both HTML and JSON formats.
 
-#### Output Structure
+**Output structure:**
 
 - The script saves HTML and JSON versions of each page in the `output/html`
   and `output/json` directories, respectively.
@@ -23,9 +23,10 @@ and saves them locally in both HTML and JSON formats.
 
 The Metadata Exporter script generates a CSV file with metadata about each page
 in a specified Confluence space, including whether the content is in English or
-contains Cyrillic characters, creation and last modification dates, owner, and more.
+contains Cyrillic characters, creation and last modification dates, owner, and
+more.
 
-#### Output Structure
+**Output structure:**
 
 - The script saves `pages-metadata.csv` CSV file with metadata about each page
   in the `output` directory.
