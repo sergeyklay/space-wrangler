@@ -115,7 +115,7 @@ def parser_add_options(parser: ArgumentParser) -> ArgumentParser:
 
 def parse_args() -> Namespace or None:
     parser = ArgumentParser(
-        description='Simple Confluence maintenance tools.',
+        description='Confluence Space Management Toolkits.',
         usage='%(prog)s [command] [options]',
         formatter_class=LineBreaksFormatter,
         add_help=False,

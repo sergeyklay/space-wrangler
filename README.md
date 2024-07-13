@@ -37,15 +37,15 @@ contains Cyrillic characters, creation and last modification dates, owner, and m
 
 - Python 3.10+
 
-### Installing the Confluence Maintenance Tools
+### Installing the Confluence Space Management Toolkits
 
-We highly recommend using `virtualenv` for installing and running the Confluence
-Maintenance Tools to avoid dependency conflicts. Follow these steps:
+To install Confluence Space Management Toolkits, follow these steps:
 
 1. Clone the repository
-2. Create and activate a virtual environment
-3. Install the required dependencies
-4. Create a `.env` file with your Confluence API credentials
+2. Set up the project
+3. Activate the virtual environment
+4. Install project and all its dependencies
+5. Create a `.env` file with your Confluence API credentials
 
 #### Steps:
 
