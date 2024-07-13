@@ -1,10 +1,17 @@
+# This file is part of the confluence.
+#
+# Copyright (c) 2024 airSlate, Inc.
+#
+# For the full copyright and license information, please view
+# the LICENSE file that was distributed with this source code.
+
+import csv
 import json
 import os
 import re
 from datetime import datetime
 from urllib.parse import urlparse, parse_qs
 
-import pandas as pd
 import requests
 from requests.auth import HTTPBasicAuth
 
@@ -137,8 +144,23 @@ def save_pages_to_csv(pages, output_dir):
 
     rows.sort(key=lambda x: x['Page Title'])
 
-    df = pd.DataFrame(rows)
-    df.to_csv(csv_path, index=False)
+    fieldnames = [
+        'Page ID',
+        'Page Title',
+        'Title in English',
+        'Content in English',
+        'Created Date',
+        'Last Updated Date',
+        'Last Editor',
+        'Current Owner',
+        'Page URL',
+    ]
+
+    with open(csv_path, mode='w', encoding='utf-8', newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
     print(f"CSV file saved to {csv_path}")
 
 
