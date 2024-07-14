@@ -6,7 +6,7 @@ your findings, and will make every effort to acknowledge your contributions.
 
 ### Reporting a Vulnerability
 
-If you discover a security vulnerability within Gstore, please send an e-mail 
+If you discover a security vulnerability within this project, please send an e-mail 
 to Serghei Iakovlev via serghei@airslate.com. All security vulnerabilities will 
 be promptly addressed.
 

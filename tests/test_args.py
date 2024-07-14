@@ -13,8 +13,8 @@ from confluence import args
 
 
 def test_none_args(monkeypatch):
-    """Show help message and return None if gstore was called without any
-    argument and environment variables were not enough to start gstore.
+    """Show help message and return None if confluence was called without any
+    argument and environment variables were not enough to start confluence.
     """
     monkeypatch.setattr('sys.argv', ['confluence'])
     with mock.patch.object(ArgumentParser, 'print_help') as mock_help:
