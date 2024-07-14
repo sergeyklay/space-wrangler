@@ -21,8 +21,10 @@
 Welcome to the Confluence Space Management Toolkit!
 
 This repository is designed to help you manage and maintain your Confluence spaces
-more efficiently. Currently, we have tools for exporting Confluence spaces and
-exporting page metadata, and we plan to add more useful features in the future.
+more efficiently. Currently, we have tools for exporting Confluence spaces,
+exporting page metadata, and exporting owner metadata, and we plan to add more
+useful features in the future.
+
 
 .. teaser-end
 
@@ -55,6 +57,22 @@ more.
 * The script saves ``pages-metadata.csv`` CSV file with metadata about each page
   in the ``output`` directory.
 * The ``output`` directory can be customized using the ``--output-dir`` option.
+
+
+Owner Metadata Exporter
+-----------------------
+
+The Owner Metadata Exporter script generates a CSV file with metadata about the
+owners of pages in a specified Confluence space, including information about
+whether the owner is unlicensed or deleted, the number of current and archived
+pages they own, the last contribution date, and a link to their profile.
+
+**Output structure:**
+
+* The script saves ``owners-metadata.csv`` CSV file with metadata about each
+  owner in the ``output`` directory.
+* The ``output`` directory can be customized using the ``--output-dir`` option.
+
 
 Getting Started
 ===============
@@ -157,6 +175,26 @@ To specify the output directory:
 
 If the ``--output-dir`` option is not specified, the ``./output`` directory in the
 current working directory will be used.
+
+Exporting Owner Metadata
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+To generate a CSV file with metadata about the owners of pages in a specified
+Confluence space:
+
+.. code-block:: console
+
+   $ confluence owners-metadata --space-key YOUR_SPACE_KEY
+
+To specify the output directory:
+
+.. code-block:: console
+
+   $ confluence owners-metadata --space-key YOUR_SPACE_KEY --output-dir YOUR_OUTPUT_DIR
+
+If the ``--output-dir`` option is not specified, the ``./output`` directory in the
+current working directory will be used.
+
 
 .. -project-information-
 
