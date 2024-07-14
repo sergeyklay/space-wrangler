@@ -25,13 +25,56 @@ PKG_DIR = path.abspath(path.dirname(__file__))
 META_PATH = path.join(PKG_DIR, PKG_NAME, '__init__.py')
 META_CONTENTS = read_file(META_PATH)
 
+# Version regex according to PEP 440
+VERSION_REGEX = (r'([1-9][0-9]*!)?(0|[1-9][0-9]*)(\.(0|[1-9][0-9]*))'
+                 r'*((a|b|rc)(0|[1-9][0-9]*))?(\.post(0|[1-9][0-9]*))'
+                 r'?(\.dev(0|[1-9][0-9]*))?')
+
+
+def load_long_description():
+    """Load long description from file README.rst."""
+    def changes():
+        changelog = path.join(PKG_DIR, 'CHANGELOG.rst')
+        pattern = (fr'({VERSION_REGEX} \(.*?\)\r?\n.*?)'
+                   r'\r?\n\r?\n\r?\n----\r?\n\r?\n\r?\n')
+        result = re.search(pattern, read_file(changelog), re.S)
+
+        return result.group(1) if result else ''
+
+    try:
+        title = f"{PKG_NAME}: {find_meta('description')}"
+        head = '=' * (len(title) - 1)
+
+        contents = (
+            head,
+            format(title.strip(' .')),
+            head,
+            read_file(path.join(PKG_DIR, 'README.rst')).split(
+                '.. teaser-begin'
+            )[1],
+            '',
+            read_file(path.join(PKG_DIR, 'CONTRIBUTING.rst')),
+            '',
+            'Release Information',
+            '===================\n',
+            changes(),
+            '',
+            f"`Full changelog <{find_meta('url')}/blob/main/CHANGELOG.rst>`_.",  # noqa: E501
+            '',
+            read_file(path.join(PKG_DIR, 'SECURITY.rst')),
+            '',
+            read_file(path.join(PKG_DIR, 'AUTHORS.rst')),
+        )
+
+        return '\n'.join(contents)
+    except (RuntimeError, FileNotFoundError) as read_error:
+        message = 'Long description could not be read from README.rst'
+        raise RuntimeError(f'{message}: {read_error}') from read_error
+
 
 def is_canonical_version(version):
     """Check if a version string is in the canonical format of PEP 440."""
-    pattern = (
-        r'^([1-9][0-9]*!)?(0|[1-9][0-9]*)(\.(0|[1-9][0-9]*))'
-        r'*((a|b|rc)(0|[1-9][0-9]*))?(\.post(0|[1-9][0-9]*))'
-        r'?(\.dev(0|[1-9][0-9]*))?$')
+    pattern = fr'^{VERSION_REGEX}$'
     return re.match(pattern, version) is not None
 
 
@@ -108,7 +151,9 @@ INSTALL_REQUIRES = [
 
 # Project's URLs
 PROJECT_URLS = {
-    'Bug Tracker': 'https://pdffiller.atlassian.net/jira/software/c/projects/ASP/boards/1337',  # noqa: E501
+    'Bug Tracker': 'https://github.com/airslateinc/confluence-maintenance-tools/issues',  # noqa: E501
+    'Changelog': f"{find_meta('url')}/blob/main/CHANGELOG.rst",
+    'Documentation': f"{find_meta('url')}?tab=readme-ov-file",
     'Source Code': find_meta('url'),
 }
 
@@ -157,8 +202,8 @@ if __name__ == '__main__':
         maintainer_email=find_meta('author_email'),
         license=find_meta('license'),
         description=find_meta('description'),
-        long_description=find_meta('description'),
-        long_description_content_type='text/markdown',
+        long_description=load_long_description(),
+        long_description_content_type='text/rst',
         keywords=KEYWORDS,
         url=find_meta('url'),
         project_urls=PROJECT_URLS,
