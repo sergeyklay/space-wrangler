@@ -15,6 +15,7 @@ from dotenv import load_dotenv
 
 from .args import argparse
 from .exceptions import Error
+from .owner_metadata import export_owners_metadata
 from .page_metadata import export_pages_metadata
 from .space_exporter import export_space
 
@@ -40,6 +41,8 @@ def main() -> int:
                 export_space(args.space_key, args.output_dir)
             elif args.command == 'pages-metadata':
                 export_pages_metadata(args.space_key, args.output_dir)
+            elif args.command == 'owners-metadata':
+                export_owners_metadata(args.space_key, args.output_dir)
         except KeyboardInterrupt:  # the user hit control-C
             sys.stderr.write('Received keyboard interrupt, terminating.\n')
             sys.stderr.flush()

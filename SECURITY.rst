@@ -9,7 +9,7 @@ Reporting a Vulnerability
 -------------------------
 
 If you discover a security vulnerability within Gstore, please send an e-mail
-to Serghei Iakovlev via egrep@protonmail.ch. All security vulnerabilities will
+to Serghei Iakovlev via serghei@airslate.com. All security vulnerabilities will
 be promptly addressed.
 
 When reporting a security issue, please include the following details:

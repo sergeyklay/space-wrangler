@@ -12,6 +12,62 @@ import requests
 
 
 @pytest.fixture
+def mock_response_with_account_id():
+    mock_resp = MagicMock(spec=requests.Response)
+    mock_resp.json.return_value = {
+        'results': [
+            {
+                'id': '123',
+                'title': 'Test Page',
+                'ancestors': [{'title': 'Parent Page'}],
+                'body': {'storage': {'value': '<p>Test Content</p>'}},
+                'history': {
+                    'createdDate': '2024-01-01T12:00:00.000Z',
+                    'lastUpdated': {
+                        'when': '2024-01-02T12:00:00.000Z',
+                        'by': {
+                            'displayName': 'John Doe',
+                            'accountId': '5b8e8643632a6b2c8f80b883',
+                        }
+                    }
+                },
+                'version': {'by': {
+                    'displayName': 'John Doe',
+                    'accountId': '5b8e8643632a6b2c8f80b883',
+                }},
+                '_links': {'webui': '/wiki/pages/viewpage.action?pageId=123'},
+                'status': 'current'
+            },
+            {
+                'id': '124',
+                'title': 'Archived Page',
+                'ancestors': [{'title': 'Parent Page'}],
+                'body': {'storage': {'value': '<p>Archived Content</p>'}},
+                'history': {
+                    'createdDate': '2024-01-03T12:00:00.000Z',
+                    'lastUpdated': {
+                        'when': '2024-01-04T12:00:00.000Z',
+                        'by': {
+                            'displayName': 'Jane Doe (Unlicensed)',
+                            'accountId': '5b8e8643632a6b2c8f80b884',
+                        }
+                    }
+                },
+                'version': {'by': {
+                    'displayName': 'Jane Doe (Unlicensed)',
+                    'accountId': '5b8e8643632a6b2c8f80b884',
+                }},
+                '_links': {'webui': '/wiki/pages/viewpage.action?pageId=124'},
+                'status': 'archived'
+            }
+        ],
+        '_links': {}
+    }
+    mock_resp.status_code = 200
+    return mock_resp
+
+
+@pytest.fixture
 def mock_response():
     mock_resp = MagicMock(spec=requests.Response)
     mock_resp.json.return_value = {

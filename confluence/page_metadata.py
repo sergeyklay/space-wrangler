@@ -55,8 +55,7 @@ def save_pages_to_csv(pages, output_dir):
             fieldnames[5]: format_date(last_updated['when']),
             fieldnames[6]: last_updated['by']['displayName'],
             fieldnames[7]: page['version']['by']['displayName'],
-            fieldnames[8]: CONFLUENCE_BASE_URL.replace(
-                '/rest/api', '') + page['_links']['webui']
+            fieldnames[8]: CONFLUENCE_BASE_URL + page['_links']['webui']
         })
 
     rows.sort(key=lambda x: x[fieldnames[1]])

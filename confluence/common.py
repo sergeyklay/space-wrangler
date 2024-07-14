@@ -18,12 +18,13 @@ from urllib.parse import parse_qs, urlparse
 import requests
 from requests.auth import HTTPBasicAuth
 
-CONFLUENCE_BASE_URL = 'https://pdffiller.atlassian.net/wiki/rest/api'
+CONFLUENCE_BASE_URL = 'https://pdffiller.atlassian.net/wiki'
+CONFLUENCE_BASE_API_URL = f"{CONFLUENCE_BASE_URL}/rest/api"
 
 
-def get_all_pages_in_space(space_key):
+def get_all_pages_in_space(space_key, status_filter=None):
     """Retrieve all pages for a given space key from Confluence."""
-    url = f"{CONFLUENCE_BASE_URL}/content"
+    url = f"{CONFLUENCE_BASE_API_URL}/content"
 
     limit = 100
     timeout = 10
@@ -36,7 +37,7 @@ def get_all_pages_in_space(space_key):
         'spaceKey': space_key,
         'expand': 'body.storage,ancestors,history.lastUpdated,version',
         'limit': str(limit),
-        'status': 'current',
+        'status': status_filter or 'current',
     }
 
     auth = HTTPBasicAuth(
@@ -73,6 +74,19 @@ def get_all_pages_in_space(space_key):
     print('')
     print('')
     return all_pages
+
+
+def check_unlicensed_or_deleted(owner_name):
+    """Check if the owner is unlicensed or deleted.
+
+    This function checks if the owner name ends with '(Unlicensed)' or '(Deleted)'.
+
+    :param owner_name: The name of the owner to check.
+    :type owner_name: str
+    :return: 'TRUE' if the owner is unlicensed or deleted, 'FALSE' otherwise.
+    :rtype: str
+    """
+    return 'TRUE' if re.search(r'\((Unlicensed|Deleted)\)$', owner_name) else 'FALSE'
 
 
 def get_page_path(base_dir, page):

@@ -5,7 +5,11 @@
 # For the full copyright and license information, please view
 # the LICENSE file that was distributed with this source code.
 
-from confluence.common import get_all_pages_in_space, get_page_path
+from confluence.common import (
+    check_unlicensed_or_deleted,
+    get_all_pages_in_space,
+    get_page_path,
+)
 
 
 def test_get_all_pages_in_space(mock_response, mocker):
@@ -36,3 +40,9 @@ def test_get_page_path():
     }
     path = get_page_path('/base/dir', page)
     assert path == '/base/dir/Parent Page/Test Page'
+
+
+def test_check_unlicensed_or_deleted():
+    assert check_unlicensed_or_deleted('John Doe (Unlicensed)') == 'TRUE'
+    assert check_unlicensed_or_deleted('Jane Doe (Deleted)') == 'TRUE'
+    assert check_unlicensed_or_deleted('John Doe') == 'FALSE'
