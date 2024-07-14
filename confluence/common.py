@@ -27,12 +27,7 @@ def get_all_pages_in_space(space_key, status_filter=None):
     url = f"{CONFLUENCE_BASE_API_URL}/content"
 
     limit = 100
-    timeout = 10
-
-    headers = {
-        'Accept': 'application/json',
-    }
-
+    headers = {'Accept': 'application/json'}
     params = {
         'spaceKey': space_key,
         'expand': 'body.storage,ancestors,history.lastUpdated,version',
@@ -54,7 +49,7 @@ def get_all_pages_in_space(space_key, status_filter=None):
             params=params,
             auth=auth,
             headers=headers,
-            timeout=timeout,
+            timeout=10,
         )
         response.raise_for_status()
         data = response.json()
@@ -79,14 +74,17 @@ def get_all_pages_in_space(space_key, status_filter=None):
 def check_unlicensed_or_deleted(owner_name):
     """Check if the owner is unlicensed or deleted.
 
-    This function checks if the owner name ends with '(Unlicensed)' or '(Deleted)'.
+    This function checks if the owner name ends with '(Unlicensed)'
+    or '(Deleted)'.
 
     :param owner_name: The name of the owner to check.
     :type owner_name: str
     :return: 'TRUE' if the owner is unlicensed or deleted, 'FALSE' otherwise.
     :rtype: str
     """
-    return 'TRUE' if re.search(r'\((Unlicensed|Deleted)\)$', owner_name) else 'FALSE'
+    if re.search(r'\((Unlicensed|Deleted)\)$', owner_name):
+        return 'TRUE'
+    return 'FALSE'
 
 
 def get_page_path(base_dir, page):

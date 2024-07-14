@@ -78,7 +78,7 @@ def parser_add_positionals(parser: ArgumentParser) -> ArgumentParser:
 
     owners_parser = subparsers.add_parser(
         'owners-metadata',
-        help='Export metadata of page owners from the specified Confluence space'
+        help='Export metadata of owners from the specified Confluence space'
     )
     parser_add_owners_options(owners_parser)
 
@@ -98,8 +98,9 @@ def parser_add_export_options(subparser: ArgumentParser) -> ArgumentParser:
 
 def parser_add_metadata_options(subparser: ArgumentParser) -> ArgumentParser:
     """Add options for the metadata command."""
-    subparser.add_argument('-s', '--space-key', type=str, required=True,
-                           help='Confluence space key to export metadata')
+    subparser.add_argument(
+        '-s', '--space-key', type=str, required=True,
+        help='Confluence space key to export metadata')
     subparser.add_argument(
         '-o', '--output-dir', type=str,
         default=os.path.join(os.getcwd(), 'output'),
@@ -109,8 +110,9 @@ def parser_add_metadata_options(subparser: ArgumentParser) -> ArgumentParser:
 
 def parser_add_owners_options(subparser: ArgumentParser) -> ArgumentParser:
     """Add options for the owners-metadata command."""
-    subparser.add_argument('-s', '--space-key', type=str, required=True,
-                           help='Confluence space key to export owner metadata')
+    subparser.add_argument(
+        '-s', '--space-key', type=str, required=True,
+        help='Confluence space key to export owner metadata')
     subparser.add_argument(
         '-o', '--output-dir', type=str,
         default=os.path.join(os.getcwd(), 'output'),
