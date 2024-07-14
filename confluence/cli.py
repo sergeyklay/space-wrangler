@@ -13,7 +13,7 @@ import sys
 
 from dotenv import load_dotenv
 
-from .args import parse_args
+from .args import argparse
 from .exceptions import Error
 from .exporter import export_pages_metadata, export_space
 
@@ -30,7 +30,7 @@ def main() -> int:
     else:
         load_dotenv()
 
-    args = parse_args()
+    args = argparse()
     retval = int(args is None)
 
     if args:
