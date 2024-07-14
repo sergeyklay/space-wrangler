@@ -41,55 +41,6 @@ VERSION_REGEX = (r'([1-9][0-9]*!)?(0|[1-9][0-9]*)(\.(0|[1-9][0-9]*))'
                  r'?(\.dev(0|[1-9][0-9]*))?')
 
 
-def load_long_description():
-    """Load long description from file README.rst.
-
-    Returns:
-        str: Long description for the package.
-
-    Raises:
-        RuntimeError: If the long description could not be read from
-            README.rst.
-    """
-    def changes():
-        changelog = path.join(PKG_DIR, 'CHANGELOG.rst')
-        pattern = (fr'({VERSION_REGEX} \(.*?\)\r?\n.*?)'
-                   r'\r?\n\r?\n\r?\n----\r?\n\r?\n\r?\n')
-        result = re.search(pattern, read_file(changelog), re.S)
-
-        return result.group(1) if result else ''
-
-    try:
-        title = f"{PKG_NAME}: {find_meta('description')}"
-        head = '=' * (len(title) - 1)
-
-        contents = (
-            head,
-            format(title.strip(' .')),
-            head,
-            read_file(path.join(PKG_DIR, 'README.rst')).split(
-                '.. teaser-begin'
-            )[1],
-            '',
-            read_file(path.join(PKG_DIR, 'CONTRIBUTING.rst')),
-            '',
-            'Release Information',
-            '===================\n',
-            changes(),
-            '',
-            f"`Full changelog <{find_meta('url')}/blob/main/CHANGELOG.rst>`_.",  # noqa: E501
-            '',
-            read_file(path.join(PKG_DIR, 'SECURITY.rst')),
-            '',
-            read_file(path.join(PKG_DIR, 'AUTHORS.rst')),
-        )
-
-        return '\n'.join(contents)
-    except (RuntimeError, FileNotFoundError) as read_error:
-        message = 'Long description could not be read from README.rst'
-        raise RuntimeError(f'{message}: {read_error}') from read_error
-
-
 def is_canonical_version(version):
     """Check if a version string is in the canonical format of PEP 440.
 
@@ -195,7 +146,7 @@ INSTALL_REQUIRES = [
 # Project's URLs
 PROJECT_URLS = {
     'Bug Tracker': 'https://github.com/airslateinc/confluence-maintenance-tools/issues',  # noqa: E501
-    'Changelog': f"{find_meta('url')}/blob/main/CHANGELOG.rst",
+    'Changelog': f"{find_meta('url')}/blob/main/CHANGELOG.md",
     'Documentation': f"{find_meta('url')}?tab=readme-ov-file",
     'Source Code': find_meta('url'),
 }
@@ -245,8 +196,8 @@ if __name__ == '__main__':
         maintainer_email=find_meta('author_email'),
         license=find_meta('license'),
         description=find_meta('description'),
-        long_description=load_long_description(),
-        long_description_content_type='text/rst',
+        long_description=find_meta('description'),
+        long_description_content_type='text/markdown',
         keywords=KEYWORDS,
         url=find_meta('url'),
         project_urls=PROJECT_URLS,
