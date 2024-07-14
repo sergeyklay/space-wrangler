@@ -70,8 +70,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pylint-
 
-      - name: Lint code
+      - name: Lint the code
         run: make lint
+
+      - name: Check MANIFEST.in in a source package
+        run: make manifest
 
       - name: Setuptools self-test
         run: |

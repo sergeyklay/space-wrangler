@@ -119,13 +119,14 @@ DEPENDENCY_LINKS = []
 #
 EXTRAS_REQUIRE = {
     'testing': [
+        'check-manifest>=0.45',  # Check MANIFEST.in file
         'coverage[toml]>=6.0',  # Code coverage measurement for Python
         'flake8-blind-except>=0.2.0',  # Checks for blind except: statements
         'flake8-import-order>=0.18.1',  # Checks the ordering of imports
         'flake8>=6.0.0',  # The modular source code checker
         'pylint>=2.6.2',  # Python code static checker
-        'pytest>=8.0.0',  # Our tests framework
         'pytest-mock>=3.14.0',  # Thin-wrapper around the mock package for easier use with py.test  # noqa: E501
+        'pytest>=8.0.0',  # Our tests framework
     ],
     'docs': [],
 }

@@ -9,7 +9,7 @@
 # or remove some set of files from the sdist.
 
 # Include all files matching any of the listed patterns.
-include LICENSE README.md
+include LICENSE README.md SECURITY.md
 graft .github
 
 # The contents of the directory tree tests will first be added to the sdist.
@@ -24,5 +24,11 @@ global-exclude *.py[cod]
 # Exclude stuff for local development
 exclude .coveragerc .pylintrc Makefile default.mk requirements/*.in
 
+# Exclude SonarQube configuration
+exclude sonar-project.properties
+
+# Include example materials
+include *.example
+
 # Include requirements files for reproducible tests
-include requirements.txt requirements-dev.txt
+recursive-include requirements *.txt

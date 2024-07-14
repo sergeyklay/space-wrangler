@@ -1,5 +1,10 @@
 # Confluence Space Management Toolkit
 
+[![Coverage](https://sonarqube.infrateam.xyz/api/project_badges/measure?project=airslateinc_confluence-maintenance-tools&metric=coverage&token=sqb_51b574060b2fa5e7fa6ac24f33e91fbbce7f2e73)](https://sonarqube.infrateam.xyz/dashboard?id=airslateinc_confluence-maintenance-tools)
+[![Quality Gate Status](https://sonarqube.infrateam.xyz/api/project_badges/measure?project=airslateinc_confluence-maintenance-tools&metric=alert_status&token=sqb_51b574060b2fa5e7fa6ac24f33e91fbbce7f2e73)](https://sonarqube.infrateam.xyz/dashboard?id=airslateinc_confluence-maintenance-tools)
+[![Security Rating](https://sonarqube.infrateam.xyz/api/project_badges/measure?project=airslateinc_confluence-maintenance-tools&metric=security_rating&token=sqb_51b574060b2fa5e7fa6ac24f33e91fbbce7f2e73)](https://sonarqube.infrateam.xyz/dashboard?id=airslateinc_confluence-maintenance-tools)
+[![Maintainability Rating](https://sonarqube.infrateam.xyz/api/project_badges/measure?project=airslateinc_confluence-maintenance-tools&metric=sqale_rating&token=sqb_51b574060b2fa5e7fa6ac24f33e91fbbce7f2e73)](https://sonarqube.infrateam.xyz/dashboard?id=airslateinc_confluence-maintenance-tools)
+
 Welcome to the Confluence Space Management Toolkit! This repository is designed
 to help you manage and maintain your Confluence spaces more efficiently. Currently,
 we have tools for exporting Confluence spaces and exporting page metadata, and
