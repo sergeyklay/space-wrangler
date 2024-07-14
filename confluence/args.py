@@ -15,6 +15,11 @@ from argparse import ArgumentParser, HelpFormatter, Namespace, SUPPRESS
 from . import __copyright__, __description__, __version__
 
 
+_OUTPUT_DIR = 'output'
+_OUTPUT_PATH = os.path.join(os.getcwd(), _OUTPUT_DIR)
+_OUTPUT_HELP = f'Directory to save the output files (default: ./{_OUTPUT_DIR})'
+
+
 class LineBreaksFormatter(HelpFormatter):
     """
     ArgParse help formatter that allows line breaks in the usage messages
@@ -89,22 +94,18 @@ def parser_add_export_options(subparser: ArgumentParser) -> ArgumentParser:
     """Add options for the export command."""
     subparser.add_argument('-s', '--space-key', type=str, required=True,
                            help='Confluence space key to export pages')
-    subparser.add_argument(
-        '-o', '--output-dir', type=str,
-        default=os.path.join(os.getcwd(), 'output'),
-        help='Directory to save the output files (default: ./output)')
+    subparser.add_argument('-o', '--output-dir',
+                           type=str, default=_OUTPUT_PATH, help=_OUTPUT_HELP)
     return subparser
 
 
 def parser_add_metadata_options(subparser: ArgumentParser) -> ArgumentParser:
-    """Add options for the metadata command."""
+    """Add options for the pages-metadata command."""
     subparser.add_argument(
         '-s', '--space-key', type=str, required=True,
-        help='Confluence space key to export metadata')
-    subparser.add_argument(
-        '-o', '--output-dir', type=str,
-        default=os.path.join(os.getcwd(), 'output'),
-        help='Directory to save the output files (default: ./output)')
+        help='Confluence space key to export pages metadata')
+    subparser.add_argument('-o', '--output-dir',
+                           type=str, default=_OUTPUT_PATH, help=_OUTPUT_HELP)
     return subparser
 
 
@@ -113,10 +114,8 @@ def parser_add_owners_options(subparser: ArgumentParser) -> ArgumentParser:
     subparser.add_argument(
         '-s', '--space-key', type=str, required=True,
         help='Confluence space key to export owner metadata')
-    subparser.add_argument(
-        '-o', '--output-dir', type=str,
-        default=os.path.join(os.getcwd(), 'output'),
-        help='Directory to save the output files (default: ./output)')
+    subparser.add_argument('-o', '--output-dir',
+                           type=str, default=_OUTPUT_PATH, help=_OUTPUT_HELP)
     return subparser
 
 

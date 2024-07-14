@@ -7,9 +7,18 @@
 
 from confluence.common import (
     check_unlicensed_or_deleted,
+    CONFLUENCE_BASE_URL,
     get_all_pages_in_space,
     get_page_path,
+    people_url,
 )
+
+
+def test_people_url():
+    """Test the people_url function."""
+    people_id = '5b8e8643632a6b2c8f80b883'
+    expected_url = f'{CONFLUENCE_BASE_URL}/people/{people_id}'
+    assert people_url(people_id) == expected_url
 
 
 def test_get_all_pages_in_space(mock_response, mocker):

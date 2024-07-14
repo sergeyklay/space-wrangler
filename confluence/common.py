@@ -22,6 +22,11 @@ CONFLUENCE_BASE_URL = 'https://pdffiller.atlassian.net/wiki'
 CONFLUENCE_BASE_API_URL = f"{CONFLUENCE_BASE_URL}/rest/api"
 
 
+def people_url(people_id):
+    """Generate a Confluence profile URL for a given user ID."""
+    return f'{CONFLUENCE_BASE_URL}/people/{people_id}'
+
+
 def get_all_pages_in_space(space_key, status_filter=None):
     """Retrieve all pages for a given space key from Confluence."""
     url = f"{CONFLUENCE_BASE_API_URL}/content"

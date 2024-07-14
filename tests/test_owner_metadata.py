@@ -7,16 +7,13 @@
 
 from collections import defaultdict
 
-from confluence.common import CONFLUENCE_BASE_URL
+from confluence.common import people_url
 from confluence.owner_metadata import (
     export_owners_metadata,
+    OwnerMetadata,
     process_pages,
     save_owners_to_csv,
 )
-
-
-def people_url(people_id):
-    return f'{CONFLUENCE_BASE_URL}/people/{people_id}'
 
 
 def test_process_pages():
@@ -54,48 +51,50 @@ def test_process_pages():
     ]
 
     owner_data = defaultdict(lambda: {
-        'Current Pages Owned': 0,
-        'Archived Pages Owned': 0,
-        'Last Contribution': '01/01/1970',
-        'Owner URL': ''
+        OwnerMetadata.CURRENT_PAGES_OWNED: 0,
+        OwnerMetadata.ARCHIVED_PAGES_OWNED: 0,
+        OwnerMetadata.LAST_CONTRIBUTION: '01/01/1970',
+        OwnerMetadata.OWNER_URL: ''
     })
 
     # Process current pages
     process_pages(current_pages, owner_data, 'current')
 
     owner_result = owner_data['John Doe']
-    assert owner_result['Current Pages Owned'] == 1
-    assert owner_result['Archived Pages Owned'] == 0
-    assert owner_result['Unlicensed'] == 'FALSE'
-    assert owner_result['Owner URL'] == people_url('5b8e8643632a6b2c8f80b883')
-    assert owner_result['Last Contribution'] == '01/02/2024'
+    assert owner_result[OwnerMetadata.CURRENT_PAGES_OWNED] == 1
+    assert owner_result[OwnerMetadata.ARCHIVED_PAGES_OWNED] == 0
+    assert owner_result[OwnerMetadata.UNLICENSED] == 'FALSE'
+    assert owner_result[OwnerMetadata.OWNER_URL] == \
+           people_url('5b8e8643632a6b2c8f80b883')
+    assert owner_result[OwnerMetadata.LAST_CONTRIBUTION] == '01/02/2024'
 
     # Process archived pages
     process_pages(archived_pages, owner_data, 'archived')
 
     owner_result = owner_data['Jane Doe (Unlicensed)']
-    assert owner_result['Current Pages Owned'] == 0
-    assert owner_result['Archived Pages Owned'] == 1
-    assert owner_result['Unlicensed'] == 'TRUE'
-    assert owner_result['Owner URL'] == people_url('5b8e8643632a6b2c8f80b884')
-    assert owner_result['Last Contribution'] == '01/04/2024'
+    assert owner_result[OwnerMetadata.CURRENT_PAGES_OWNED] == 0
+    assert owner_result[OwnerMetadata.ARCHIVED_PAGES_OWNED] == 1
+    assert owner_result[OwnerMetadata.UNLICENSED] == 'TRUE'
+    assert owner_result[OwnerMetadata.OWNER_URL] == \
+           people_url('5b8e8643632a6b2c8f80b884')
+    assert owner_result[OwnerMetadata.LAST_CONTRIBUTION] == '01/04/2024'
 
 
 def test_save_owners_to_csv(tmpdir):
     owner_data = {
         'John Doe': {
-            'Unlicensed': 'FALSE',
-            'Current Pages Owned': 2,
-            'Archived Pages Owned': 1,
-            'Last Contribution': '07/10/2024',
-            'Owner URL': people_url('5b8e8643632a6b2c8f80b883'),
+            OwnerMetadata.UNLICENSED: 'FALSE',
+            OwnerMetadata.CURRENT_PAGES_OWNED: 2,
+            OwnerMetadata.ARCHIVED_PAGES_OWNED: 1,
+            OwnerMetadata.LAST_CONTRIBUTION: '07/10/2024',
+            OwnerMetadata.OWNER_URL: people_url('5b8e8643632a6b2c8f80b883'),
         },
         'Jane Doe (Unlicensed)': {
-            'Unlicensed': 'TRUE',
-            'Current Pages Owned': 1,
-            'Archived Pages Owned': 0,
-            'Last Contribution': '07/11/2024',
-            'Owner URL': people_url('5b8e8643632a6b2c8f80b884'),
+            OwnerMetadata.UNLICENSED: 'TRUE',
+            OwnerMetadata.CURRENT_PAGES_OWNED: 1,
+            OwnerMetadata.ARCHIVED_PAGES_OWNED: 0,
+            OwnerMetadata.LAST_CONTRIBUTION: '07/11/2024',
+            OwnerMetadata.OWNER_URL: people_url('5b8e8643632a6b2c8f80b884'),
         }
     }
     output_dir = tmpdir.mkdir('output')

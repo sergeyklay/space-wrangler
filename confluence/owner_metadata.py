@@ -18,28 +18,55 @@ from datetime import datetime
 
 from .common import (
     check_unlicensed_or_deleted,
-    CONFLUENCE_BASE_URL,
     format_date,
     get_all_pages_in_space,
+    people_url,
 )
+
+
+class OwnerMetadata:
+    """Constants for owner metadata fields and utility methods."""
+
+    OWNER = 'Owner'
+    UNLICENSED = 'Unlicensed'
+    CURRENT_PAGES_OWNED = 'Current Pages Owned'
+    ARCHIVED_PAGES_OWNED = 'Archived Pages Owned'
+    LAST_CONTRIBUTION = 'Last Contribution'
+    OWNER_URL = 'Owner URL'
+
+    @classmethod
+    def get_fieldnames(cls):
+        """Get the fieldnames for the CSV file."""
+        return (
+            cls.OWNER,
+            cls.UNLICENSED,
+            cls.CURRENT_PAGES_OWNED,
+            cls.ARCHIVED_PAGES_OWNED,
+            cls.LAST_CONTRIBUTION,
+            cls.OWNER_URL
+        )
+
+    @classmethod
+    def to_dict(cls, owner, data):
+        """Convert owner data to a dictionary for CSV writing."""
+        return {
+            cls.OWNER: owner,
+            cls.UNLICENSED: data[cls.UNLICENSED],
+            cls.CURRENT_PAGES_OWNED: data[cls.CURRENT_PAGES_OWNED],
+            cls.ARCHIVED_PAGES_OWNED: data[cls.ARCHIVED_PAGES_OWNED],
+            cls.LAST_CONTRIBUTION: data[cls.LAST_CONTRIBUTION],
+            cls.OWNER_URL: data[cls.OWNER_URL]
+        }
 
 
 def save_owners_to_csv(owner_data, output_dir):
     """Save metadata of Confluence page owners to a CSV file."""
     csv_path = os.path.join(output_dir, 'owners-metadata.csv')
-
-    fieldnames = (
-        'Owner',
-        'Unlicensed',
-        'Current Pages Owned',
-        'Archived Pages Owned',
-        'Last Contribution',
-        'Owner URL'
-    )
+    fieldnames = OwnerMetadata.get_fieldnames()
 
     sorted_data = sorted(
         owner_data.items(),
-        key=lambda x: x[1][fieldnames[2]],
+        key=lambda x: x[1][OwnerMetadata.CURRENT_PAGES_OWNED],
         reverse=True,
     )
 
@@ -49,14 +76,7 @@ def save_owners_to_csv(owner_data, output_dir):
 
         for owner, data in sorted_data:
             if data[fieldnames[2]] > 0 or data[fieldnames[3]] > 0:
-                writer.writerow({
-                    fieldnames[0]: owner,
-                    fieldnames[1]: data[fieldnames[1]],
-                    fieldnames[2]: data[fieldnames[2]],
-                    fieldnames[3]: data[fieldnames[3]],
-                    fieldnames[4]: data[fieldnames[4]],
-                    fieldnames[5]: data[fieldnames[5]]
-                })
+                writer.writerow(OwnerMetadata.to_dict(owner, data))
 
     print(f"CSV file saved to {csv_path}")
 
@@ -66,26 +86,29 @@ def process_pages(pages, owner_data, status):
     for page in pages:
         owner = page['version']['by']['displayName']
         owner_id = page['version']['by']['accountId']
-        owner_url = f"{CONFLUENCE_BASE_URL}/people/{owner_id}"
+        owner_url = people_url(owner_id)
         unlicensed_or_deleted = check_unlicensed_or_deleted(owner)
         last_updated = page['history']['lastUpdated']['when']
         formatted_last_updated = format_date(last_updated)
 
-        if status == 'current':
-            owner_data[owner]['Current Pages Owned'] += 1
-        elif status == 'archived':
-            owner_data[owner]['Archived Pages Owned'] += 1
+        curr_owner = owner_data[owner]
 
-        owner_data[owner]['Unlicensed'] = unlicensed_or_deleted
-        owner_data[owner]['Owner URL'] = owner_url
+        if status == 'current':
+            curr_owner[OwnerMetadata.CURRENT_PAGES_OWNED] += 1
+        elif status == 'archived':
+            curr_owner[OwnerMetadata.ARCHIVED_PAGES_OWNED] += 1
+
+        curr_owner[OwnerMetadata.UNLICENSED] = unlicensed_or_deleted
+        curr_owner[OwnerMetadata.OWNER_URL] = owner_url
 
         parsed_last_updated = datetime.strptime(
             formatted_last_updated, '%m/%d/%Y')
         parsed_last_contribution = datetime.strptime(
-            owner_data[owner]['Last Contribution'], '%m/%d/%Y')
+            curr_owner[OwnerMetadata.LAST_CONTRIBUTION], '%m/%d/%Y')
 
         if parsed_last_updated > parsed_last_contribution:
-            owner_data[owner]['Last Contribution'] = formatted_last_updated
+            curr_owner[OwnerMetadata.LAST_CONTRIBUTION] = \
+                formatted_last_updated
 
 
 def export_owners_metadata(space_key, output_dir):
@@ -97,10 +120,10 @@ def export_owners_metadata(space_key, output_dir):
     archived_pages = get_all_pages_in_space(space_key, 'archived')
 
     owner_data = defaultdict(lambda: {
-        'Current Pages Owned': 0,
-        'Archived Pages Owned': 0,
-        'Last Contribution': '01/01/1970',
-        'Owner URL': ''
+        OwnerMetadata.CURRENT_PAGES_OWNED: 0,
+        OwnerMetadata.ARCHIVED_PAGES_OWNED: 0,
+        OwnerMetadata.LAST_CONTRIBUTION: '01/01/1970',
+        OwnerMetadata.OWNER_URL: ''
     })
 
     process_pages(current_pages, owner_data, 'current')
