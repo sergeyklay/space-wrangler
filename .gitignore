@@ -17,6 +17,7 @@
 /*.egg-info
 /htmlcov
 /build
+/dist
 /output
 /.venv
 
@@ -26,7 +27,6 @@ __pycache__
 
 # Ignore codecoverage stuff.
 coverage.*
-coverage.db
 
 # Application configuration.
 .env

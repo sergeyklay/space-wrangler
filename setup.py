@@ -132,7 +132,9 @@ EXTRAS_REQUIRE = {
 }
 
 # Dependencies that are required to develop package
-DEVELOP_REQUIRE = []
+DEVELOP_REQUIRE = [
+    'build>=1.2.0',  # A simple, correct Python build frontend
+]
 
 EXTRAS_REQUIRE['develop'] = \
     DEVELOP_REQUIRE + EXTRAS_REQUIRE['testing'] + EXTRAS_REQUIRE['docs']

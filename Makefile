@@ -144,7 +144,7 @@ test-dist: test-sdist test-wheel
 .PHONY: sdist
 sdist:
 	@echo $(CS)Creating source distribution$(CE)
-	$(VENV_PYTHON) setup.py sdist
+	$(VENV_PYTHON) -m build --sdist
 	@echo
 
 .PHONY: test-sdist
@@ -158,7 +158,7 @@ test-sdist: $(VENV_PYTHON) sdist
 .PHONY: wheel
 wheel: $(VENV_PYTHON)
 	@echo $(CS)Creating wheel distribution$(CE)
-	$(VENV_PYTHON) setup.py bdist_wheel
+	$(VENV_PYTHON) -m build --wheel
 	@echo
 
 .PHONY: test-wheel
