@@ -63,6 +63,12 @@ jobs:
       - name: Install dependencies
         run: make install
 
+      - name: Setuptools self-test
+        run: |
+          python setup.py --fullname
+          python setup.py --long-description
+          python setup.py --classifiers
+
       - name: Setup pylint cache
         uses: actions/cache@v4
         with:
