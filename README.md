@@ -186,11 +186,17 @@ To run the scripts with environment variables directly, use the following
 commands:
 
 ```shell
-$ CONFLUENCE_API_USER=your-confluence-email CONFLUENCE_API_TOKEN="your-confluence-api-token" confluence export --space-key YOUR_SPACE_KEY
+$ CONFLUENCE_API_USER=your-confluence-email \
+> CONFLUENCE_API_TOKEN="your-confluence-api-token" \
+> confluence export --space-key YOUR_SPACE_KEY
 
-$ CONFLUENCE_API_USER=your-confluence-email CONFLUENCE_API_TOKEN="your-confluence-api-token" confluence pages-metadata --space-key YOUR_SPACE_KEY
+$ CONFLUENCE_API_USER=your-confluence-email \
+> CONFLUENCE_API_TOKEN="your-confluence-api-token" \
+> confluence pages-metadata --space-key YOUR_SPACE_KEY
 
-$ CONFLUENCE_API_USER=your-confluence-email CONFLUENCE_API_TOKEN="your-confluence-api-token" confluence owners-metadata --space-key YOUR_SPACE_KEY
+$ CONFLUENCE_API_USER=your-confluence-email \
+> CONFLUENCE_API_TOKEN="your-confluence-api-token" \
+> confluence owners-metadata --space-key YOUR_SPACE_KEY
 ```
 
 > [!WARNING]  
