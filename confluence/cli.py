@@ -15,7 +15,8 @@ from dotenv import load_dotenv
 
 from .args import argparse
 from .exceptions import Error
-from .exporter import export_pages_metadata, export_space
+from .page_metadata import export_pages_metadata
+from .space_exporter import export_space
 
 
 def main() -> int:
