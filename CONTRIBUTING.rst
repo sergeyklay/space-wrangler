@@ -82,7 +82,7 @@ Function Example
 .. code-block:: python
 
    def example_function(param1, param2):
-       \"\"\"Function description.
+       """Function description.
 
        Args:
            param1 (int): Description of param1.
@@ -90,7 +90,7 @@ Function Example
 
        Returns:
            bool: Description of the return value.
-       \"\"\"
+       """
        return True
 
 Class Example
@@ -99,20 +99,20 @@ Class Example
 .. code-block:: python
 
    class ExampleClass:
-       \"\"\"Class description.
+       """Class description.
 
        Attributes:
            attr1 (int): Description of attr1.
            attr2 (str): Description of attr2.
-       \"\"\"
+       """
 
        def __init__(self, attr1, attr2):
-           \"\"\"Initialize ExampleClass.
+           """Initialize ExampleClass.
 
            Args:
                attr1 (int): Description of attr1.
                attr2 (str): Description of attr2.
-           \"\"\"
+           """
            self.attr1 = attr1
            self.attr2 = attr2
 

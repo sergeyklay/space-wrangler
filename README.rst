@@ -18,12 +18,10 @@
 
 .. teaser-begin
 
-Welcome to the Confluence Space Management Toolkit!
-
-This repository is designed to help you manage and maintain your Confluence spaces
-more efficiently. Currently, we have tools for exporting Confluence spaces,
-exporting page metadata, and exporting owner metadata, and we plan to add more
-useful features in the future.
+Welcome to the Confluence Space Management Toolkit! This repository is designed
+to help you manage and maintain your Confluence spaces more efficiently. Currently,
+we have tools for exporting Confluence spaces, exporting page metadata, and
+exporting owner metadata, and we plan to add more useful features in the future.
 
 
 .. teaser-end
@@ -44,12 +42,12 @@ and saves them locally in both HTML and JSON formats.
 * The directory structure mirrors the hierarchy of pages in Confluence.
 * The ``output`` directory can be customized using the ``--output-dir`` option.
 
-Metadata Exporter
------------------
+Pages Metadata Exporter
+-----------------------
 
-The Metadata Exporter script generates a CSV file with metadata about each page
-in a specified Confluence space, including whether the content is in English or
-contains Cyrillic characters, creation and last modification dates, owner, and
+The Pages Metadata Exporter script generates a CSV file with metadata about each
+page in a specified Confluence space, including whether the content is in English
+or contains Cyrillic characters, creation and last modification dates, owner, and
 more.
 
 **Output structure:**
@@ -195,6 +193,26 @@ To specify the output directory:
 If the ``--output-dir`` option is not specified, the ``./output`` directory in the
 current working directory will be used.
 
+Environment Variables
+---------------------
+
+Our toolkit can obtain the necessary API credentials from the current environment
+variables without reading from a ``.env`` file. This can be useful for avoiding
+the storage of secrets in the project directory.
+
+To run the scripts with environment variables directly, use the following
+commands:
+
+.. code-block:: console
+
+   $ CONFLUENCE_API_USER=your-confluence-email CONFLUENCE_API_TOKEN="your-confluence-api-token" confluence export --space-key YOUR_SPACE_KEY
+   $ CONFLUENCE_API_USER=your-confluence-email CONFLUENCE_API_TOKEN="your-confluence-api-token" confluence pages-metadata --space-key YOUR_SPACE_KEY
+   $ CONFLUENCE_API_USER=your-confluence-email CONFLUENCE_API_TOKEN="your-confluence-api-token" confluence owners-metadata --space-key YOUR_SPACE_KEY
+
+.. warning::
+   Using environment variables directly in commands might expose your API
+   credentials in the command history. Ensure to clear or manage your command
+   history appropriately to avoid exposing sensitive information.
 
 .. -project-information-
 
