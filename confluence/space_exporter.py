@@ -19,7 +19,13 @@ from .template import html_template
 
 
 def save_pages_to_files(pages, output_dir='./output'):
-    """Save Confluence pages to HTML and JSON files."""
+    """Save Confluence pages to HTML and JSON files.
+
+    Args:
+        pages (list): List of Confluence pages.
+        output_dir (str): Directory to save the output files.
+
+    """
     print('Render pages:')
     for page in pages:
         html_path = get_page_path(os.path.join(output_dir, 'html'), page)
@@ -44,7 +50,13 @@ def save_pages_to_files(pages, output_dir='./output'):
 
 
 def export_space(space_key, output_dir):
-    """Export all pages from a specified Confluence space."""
+    """Export all pages from a specified Confluence space.
+
+    Args:
+        space_key (str): The key of the Confluence space to export.
+        output_dir (str): Directory to save the output files.
+
+    """
     output_dir = os.path.abspath(output_dir)
     os.makedirs(output_dir, exist_ok=True)
 

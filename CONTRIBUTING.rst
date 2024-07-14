@@ -70,9 +70,60 @@ changes you submit.
 **By submitting a patch, you agree to allow the project owner to license your
 work under the same license as that used by the project.**
 
+Docstring Style Guide
+---------------------
+
+All docstrings in this project should follow the Google style guide. Here are
+some examples:
+
+Function Example
+~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   def example_function(param1, param2):
+       \"\"\"Function description.
+
+       Args:
+           param1 (int): Description of param1.
+           param2 (str): Description of param2.
+
+       Returns:
+           bool: Description of the return value.
+       \"\"\"
+       return True
+
+Class Example
+~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   class ExampleClass:
+       \"\"\"Class description.
+
+       Attributes:
+           attr1 (int): Description of attr1.
+           attr2 (str): Description of attr2.
+       \"\"\"
+
+       def __init__(self, attr1, attr2):
+           \"\"\"Initialize ExampleClass.
+
+           Args:
+               attr1 (int): Description of attr1.
+               attr2 (str): Description of attr2.
+           \"\"\"
+           self.attr1 = attr1
+           self.attr2 = attr2
+
+Make sure to include all relevant details in your docstrings, such as parameter
+descriptions and return values. This helps maintain consistency and readability
+throughout the codebase.
+
 Resources
 ---------
 
 * `How to Contribute to Open Source <https://opensource.guide/how-to-contribute/>`_
 * `Using Pull Requests <https://help.github.com/articles/about-pull-requests/>`_
 * `Writing good commit messages <http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html>`_
+* `Google Python Style Guide: 3.8 Comments and Docstrings <https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings>`_

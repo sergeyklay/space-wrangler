@@ -36,7 +36,11 @@ class OwnerMetadata:
 
     @classmethod
     def get_fieldnames(cls):
-        """Get the fieldnames for the CSV file."""
+        """Get the fieldnames for the CSV file.
+
+        Returns:
+            tuple: Fieldnames for the CSV file.
+        """
         return (
             cls.OWNER,
             cls.UNLICENSED,
@@ -48,7 +52,15 @@ class OwnerMetadata:
 
     @classmethod
     def to_dict(cls, owner, data):
-        """Convert owner data to a dictionary for CSV writing."""
+        """Convert owner data to a dictionary for CSV writing.
+
+        Args:
+            owner (str): Owner name.
+            data (dict): Owner metadata.
+
+        Returns:
+            dict: Dictionary representation of the owner metadata.
+        """
         return {
             cls.OWNER: owner,
             cls.UNLICENSED: data[cls.UNLICENSED],
@@ -60,7 +72,13 @@ class OwnerMetadata:
 
 
 def save_owners_to_csv(owner_data, output_dir):
-    """Save metadata of Confluence page owners to a CSV file."""
+    """Save metadata of Confluence page owners to a CSV file.
+
+    Args:
+        owner_data (dict): Dictionary containing owner metadata.
+        output_dir (str): Directory to save the CSV file.
+
+    """
     csv_path = os.path.join(output_dir, 'owners-metadata.csv')
     fieldnames = OwnerMetadata.get_fieldnames()
 
@@ -82,7 +100,14 @@ def save_owners_to_csv(owner_data, output_dir):
 
 
 def process_pages(pages, owner_data, status):
-    """Process a list of pages and update owner metadata."""
+    """Process a list of pages and update owner metadata.
+
+    Args:
+        pages (list): List of Confluence pages.
+        owner_data (dict): Dictionary to store owner metadata.
+        status (str): Status of the pages ('current' or 'archived').
+
+    """
     for page in pages:
         owner = page['version']['by']['displayName']
         owner_id = page['version']['by']['accountId']
@@ -112,7 +137,13 @@ def process_pages(pages, owner_data, status):
 
 
 def export_owners_metadata(space_key, output_dir):
-    """Export metadata of page owners from a specified Confluence space."""
+    """Export metadata of page owners from a specified Confluence space.
+
+    Args:
+        space_key (str): The key of the Confluence space.
+        output_dir (str): Directory to save the output files.
+
+    """
     output_dir = os.path.abspath(output_dir)
     os.makedirs(output_dir, exist_ok=True)
 

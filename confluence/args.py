@@ -52,7 +52,11 @@ class LineBreaksFormatter(HelpFormatter):
 
 
 def get_version_str() -> str:
-    """A helper function to format version info."""
+    """A helper function to format version info.
+
+    Returns:
+        str: Formatted version information.
+    """
     # pylint: disable=consider-using-f-string
     version = '''
     {prog}s {version}|n
@@ -68,7 +72,14 @@ def get_version_str() -> str:
 
 
 def parser_add_positionals(parser: ArgumentParser) -> ArgumentParser:
-    """Add positional parameters group to a parser."""
+    """Add positional parameters group to a parser.
+
+    Args:
+        parser (ArgumentParser): The argument parser instance.
+
+    Returns:
+        ArgumentParser: The argument parser with added positionals.
+    """
     subparsers = parser.add_subparsers(dest='command', title='Commands')
 
     export_parser = subparsers.add_parser(
@@ -91,7 +102,14 @@ def parser_add_positionals(parser: ArgumentParser) -> ArgumentParser:
 
 
 def parser_add_export_options(subparser: ArgumentParser) -> ArgumentParser:
-    """Add options for the export command."""
+    """Add options for the export command.
+
+    Args:
+        subparser (ArgumentParser): The subparser for the export command.
+
+    Returns:
+        ArgumentParser: The subparser with added options.
+    """
     subparser.add_argument('-s', '--space-key', type=str, required=True,
                            help='Confluence space key to export pages')
     subparser.add_argument('-o', '--output-dir',
@@ -100,7 +118,15 @@ def parser_add_export_options(subparser: ArgumentParser) -> ArgumentParser:
 
 
 def parser_add_metadata_options(subparser: ArgumentParser) -> ArgumentParser:
-    """Add options for the pages-metadata command."""
+    """Add options for the pages-metadata command.
+
+    Args:
+        subparser (ArgumentParser): The subparser for the pages-metadata
+            command.
+
+    Returns:
+        ArgumentParser: The subparser with added options.
+    """
     subparser.add_argument(
         '-s', '--space-key', type=str, required=True,
         help='Confluence space key to export pages metadata')
@@ -110,7 +136,15 @@ def parser_add_metadata_options(subparser: ArgumentParser) -> ArgumentParser:
 
 
 def parser_add_owners_options(subparser: ArgumentParser) -> ArgumentParser:
-    """Add options for the owners-metadata command."""
+    """Add options for the owners-metadata command.
+
+    Args:
+        subparser (ArgumentParser): The subparser for the owners-metadata
+            command.
+
+    Returns:
+        ArgumentParser: The subparser with added options.
+    """
     subparser.add_argument(
         '-s', '--space-key', type=str, required=True,
         help='Confluence space key to export owner metadata')
@@ -120,7 +154,14 @@ def parser_add_owners_options(subparser: ArgumentParser) -> ArgumentParser:
 
 
 def parser_add_options(parser: ArgumentParser) -> ArgumentParser:
-    """Add options group to a parser."""
+    """Add options group to a parser.
+
+    Args:
+        parser (ArgumentParser): The argument parser instance.
+
+    Returns:
+        ArgumentParser: The argument parser with added options.
+    """
     ogroup = parser.add_argument_group('Options')
 
     ogroup.add_argument('-h', '--help', action='help', default=SUPPRESS,
@@ -134,7 +175,11 @@ def parser_add_options(parser: ArgumentParser) -> ArgumentParser:
 
 
 def argparse() -> Namespace or None:
-    """Parse and return command line arguments."""
+    """Parse and return command line arguments.
+
+    Returns:
+        Namespace: Parsed command line arguments if any, otherwise None.
+    """
     parser = ArgumentParser(
         description=__description__,
         usage='%(prog)s [command] [options]',

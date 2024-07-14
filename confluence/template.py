@@ -9,7 +9,15 @@
 
 
 def html_template(title, content):
-    """Generate an HTML template for a Confluence page."""
+    """Generate an HTML template for a Confluence page.
+
+    Args:
+        title (str): Title of the Confluence page.
+        content (str): Content of the Confluence page.
+
+    Returns:
+        str: HTML template for the Confluence page.
+    """
     return f"""
     <!DOCTYPE html>
     <html lang="en">

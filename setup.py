@@ -5,7 +5,10 @@
 # For the full copyright and license information, please view
 # the LICENSE file that was distributed with this source code.
 
-"""Setup module for confluence."""
+"""Setup module for confluence.
+
+This module contains the setup configuration for the confluence package.
+"""
 
 import codecs
 import re
@@ -15,7 +18,14 @@ from setuptools import find_packages, setup
 
 
 def read_file(filepath):
-    """Read content from a UTF-8 encoded text file."""
+    """Read content from a UTF-8 encoded text file.
+
+    Args:
+        filepath (str): Path to the file.
+
+    Returns:
+        str: Content of the file.
+    """
     with codecs.open(filepath, 'rb', 'utf-8') as file_handle:
         return file_handle.read()
 
@@ -32,7 +42,15 @@ VERSION_REGEX = (r'([1-9][0-9]*!)?(0|[1-9][0-9]*)(\.(0|[1-9][0-9]*))'
 
 
 def load_long_description():
-    """Load long description from file README.rst."""
+    """Load long description from file README.rst.
+
+    Returns:
+        str: Long description for the package.
+
+    Raises:
+        RuntimeError: If the long description could not be read from
+            README.rst.
+    """
     def changes():
         changelog = path.join(PKG_DIR, 'CHANGELOG.rst')
         pattern = (fr'({VERSION_REGEX} \(.*?\)\r?\n.*?)'
@@ -73,13 +91,31 @@ def load_long_description():
 
 
 def is_canonical_version(version):
-    """Check if a version string is in the canonical format of PEP 440."""
+    """Check if a version string is in the canonical format of PEP 440.
+
+    Args:
+        version (str): Version string to check.
+
+    Returns:
+        bool: True if the version string is in canonical format, False
+            otherwise.
+    """
     pattern = fr'^{VERSION_REGEX}$'
     return re.match(pattern, version) is not None
 
 
 def find_meta(meta):
-    """Extract __*meta*__ from META_CONTENTS."""
+    """Extract __*meta*__ from META_CONTENTS.
+
+    Args:
+        meta (str): Metadata key to find.
+
+    Returns:
+        str: Value of the metadata key.
+
+    Raises:
+        RuntimeError: If the metadata key is not found.
+    """
     meta_match = re.search(
         r"^__{meta}__\s+=\s+['\"]([^'\"]*)['\"]".format(meta=meta),
         META_CONTENTS,
@@ -93,7 +129,14 @@ def find_meta(meta):
 
 
 def get_version_string():
-    """Return package version as listed in `__version__` in meta file."""
+    """Return package version as listed in `__version__` in meta file.
+
+    Returns:
+        str: Package version string.
+
+    Raises:
+        ValueError: If the detected version string is not in canonical format.
+    """
     # Parse version string
     version_string = find_meta('version')
 

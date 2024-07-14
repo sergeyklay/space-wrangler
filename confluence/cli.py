@@ -23,8 +23,8 @@ from .space_exporter import export_space
 def main() -> int:
     """Entrypoint function to call confluence from the command line.
 
-    :return: An exit code
-    :rtype: int
+    Returns:
+        int: An exit code
     """
     dotenv_path = os.path.join(os.getcwd(), '.env')
     if os.path.exists(dotenv_path):

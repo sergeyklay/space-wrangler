@@ -23,12 +23,27 @@ CONFLUENCE_BASE_API_URL = f"{CONFLUENCE_BASE_URL}/rest/api"
 
 
 def people_url(people_id):
-    """Generate a Confluence profile URL for a given user ID."""
+    """Generate a Confluence profile URL for a given user ID.
+
+    Args:
+        people_id (str): User ID of the Confluence user.
+
+    Returns:
+        str: URL to the user's Confluence profile.
+    """
     return f'{CONFLUENCE_BASE_URL}/people/{people_id}'
 
 
 def get_all_pages_in_space(space_key, status_filter=None):
-    """Retrieve all pages for a given space key from Confluence."""
+    """Retrieve all pages for a given space key from Confluence.
+
+    Args:
+        space_key (str): The key of the Confluence space.
+        status_filter (str, optional): Filter for the status of the pages.
+
+    Returns:
+        list: List of pages in the specified Confluence space.
+    """
     url = f"{CONFLUENCE_BASE_API_URL}/content"
 
     limit = 100
@@ -79,13 +94,11 @@ def get_all_pages_in_space(space_key, status_filter=None):
 def check_unlicensed_or_deleted(owner_name):
     """Check if the owner is unlicensed or deleted.
 
-    This function checks if the owner name ends with '(Unlicensed)'
-    or '(Deleted)'.
+    Args:
+        owner_name (str): The name of the owner to check.
 
-    :param owner_name: The name of the owner to check.
-    :type owner_name: str
-    :return: 'TRUE' if the owner is unlicensed or deleted, 'FALSE' otherwise.
-    :rtype: str
+    Returns:
+        str: 'TRUE' if the owner is unlicensed or deleted, 'FALSE' otherwise.
     """
     if re.search(r'\((Unlicensed|Deleted)\)$', owner_name):
         return 'TRUE'
@@ -93,7 +106,15 @@ def check_unlicensed_or_deleted(owner_name):
 
 
 def get_page_path(base_dir, page):
-    """Generate the full file path for a given page."""
+    """Generate the full file path for a given page.
+
+    Args:
+        base_dir (str): Base directory for the file path.
+        page (dict): Confluence page data.
+
+    Returns:
+        str: Full file path for the given page.
+    """
     ancestors = page['ancestors']
     path_parts = [parent['title'].replace('/', '-') for parent in ancestors]
     path_parts.append(page['title'].replace('/', '-'))
@@ -103,18 +124,39 @@ def get_page_path(base_dir, page):
 
 
 def format_date(date_str):
-    """Format a date string to mm/dd/yyyy."""
+    """Format a date string to mm/dd/yyyy.
+
+    Args:
+        date_str (str): Date string in ISO format.
+
+    Returns:
+        str: Formatted date string.
+    """
     date_obj = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S.%fZ')
     return date_obj.strftime('%m/%d/%Y')
 
 
 def contains_cyrillic(text):
-    """Check if the given text contains Cyrillic characters."""
+    """Check if the given text contains Cyrillic characters.
+
+    Args:
+        text (str): Text to check.
+
+    Returns:
+        bool: True if the text contains Cyrillic characters, False otherwise.
+    """
     return bool(re.search('[\u0400-\u04FF]', text))
 
 
 def get_structured_title(page):
-    """Construct a structured title for a page based on its ancestors."""
+    """Construct a structured title for a page based on its ancestors.
+
+    Args:
+        page (dict): Confluence page data.
+
+    Returns:
+        str: Structured title for the page.
+    """
     ancestors = page['ancestors']
     path_parts = []
 

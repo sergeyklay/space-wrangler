@@ -24,7 +24,13 @@ from .common import (
 
 
 def save_pages_to_csv(pages, output_dir):
-    """Save metadata of Confluence pages to a CSV file."""
+    """Save metadata of Confluence pages to a CSV file.
+
+    Args:
+        pages (list): List of Confluence pages.
+        output_dir (str): Directory to save the CSV file.
+
+    """
     csv_path = os.path.join(output_dir, 'pages-metadata.csv')
 
     rows = []
@@ -69,7 +75,13 @@ def save_pages_to_csv(pages, output_dir):
 
 
 def export_pages_metadata(space_key, output_dir):
-    """Export metadata of pages from a specified Confluence space."""
+    """Export metadata of pages from a specified Confluence space.
+
+    Args:
+        space_key (str): The key of the Confluence space.
+        output_dir (str): Directory to save the output files.
+
+    """
     output_dir = os.path.abspath(output_dir)
     os.makedirs(output_dir, exist_ok=True)
 
