@@ -73,7 +73,7 @@ def save_pages_to_csv(pages, output_dir):
         writer.writeheader()
         writer.writerows(rows)
 
-    logger.info('CSV file saved to {}'.format(csv_path))
+    logger.info(f'CSV file saved to {csv_path}')
 
 
 def export_pages_metadata(space_key, output_dir):
@@ -88,6 +88,5 @@ def export_pages_metadata(space_key, output_dir):
 
     result = get_all_pages_in_space(space_key)
     save_pages_to_csv(result, output_dir)
-    logger.info('Metadata for {} pages downloaded and saved to CSV'.format(
-        len(result)
-    ))
+    logger.info(
+        f'Metadata for {len(result)} pages downloaded and saved to CSV')

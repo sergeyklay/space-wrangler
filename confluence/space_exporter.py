@@ -59,6 +59,4 @@ def export_space(space_key, output_dir):
 
     result = get_all_pages_in_space(space_key)
     save_pages_to_files(result, output_dir)
-    logger.info('Total {} pages downloaded.'.format(
-        len(result)
-    ))
+    logger.info(f'Total {len(result)} pages downloaded.')

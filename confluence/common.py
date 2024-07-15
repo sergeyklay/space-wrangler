@@ -65,9 +65,8 @@ def get_all_pages_in_space(space_key, status_filter=None):
     )
 
     all_pages = []
-    logger.info('Fetch space {} pages ({} pages per request)...'.format(
-        status_filter, limit
-    ))
+    logger.info(
+        f'Fetch space {status_filter} pages ({limit} pages per request)...')
     while True:
         response = requests.get(
             url,

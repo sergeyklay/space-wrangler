@@ -88,8 +88,6 @@ jobs:
 
       - name: Lint the code
         run: make lint
-        env:
-          PYLINT_FLAGS: --rcfile=setup.cfg
 
       - name: Check MANIFEST.in in a source package
         run: make manifest

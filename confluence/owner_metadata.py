@@ -98,7 +98,7 @@ def save_owners_to_csv(owner_data, output_dir):
             if data[fieldnames[2]] > 0 or data[fieldnames[3]] > 0:
                 writer.writerow(OwnerMetadata.to_dict(owner, data))
 
-    logger.info('CSV file saved to {}'.format(csv_path))
+    logger.info(f'CSV file saved to {csv_path}')
 
 
 def process_pages(pages, owner_data, status):
