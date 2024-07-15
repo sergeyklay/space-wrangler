@@ -244,18 +244,18 @@ Confluence Space Management Toolkit is released under the
 rigorously tested on Python 3.9+.
 
 > [!NOTE]
-> While this project might hypothetically work with Python 3.8 or earlier versions,
-> I have not tested it on those versions. As such, I cannot guarantee its
-> functionality on these older versions of Python. Given the age of these versions,
-> if issues arise, I do not plan to address them.
+> While this project might hypothetically work with Python 3.8 or earlier
+> versions, I have not tested it on those versions. As such, I cannot guarantee
+> its functionality on these older versions of Python. Given the age of these
+> versions, if issues arise, I do not plan to address them.
 
-
-If you'd like to contribute to Consumer API Example you're most welcome!
+If you'd like to contribute to Confluence Space Management Toolkit you're most
+welcome!
 
 ## Support
 
 Should you have any question, any remark, or if you find a bug, or if there is
-something you can't do with the Consumer API Example, please
+something you can't do with the Confluence Space Management Toolkit, please
 [open an issue](https://github.com/sergeyklay/confluence-maintenance-tools/issues).
 
 ## Credits
