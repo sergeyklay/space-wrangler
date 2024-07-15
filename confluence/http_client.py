@@ -11,6 +11,7 @@ This module provides a client for interacting with the Confluence API,
 handling authentication and HTTP requests.
 """
 
+import logging
 import os
 from urllib.parse import parse_qs, urlparse
 
@@ -18,10 +19,11 @@ import requests
 from dotenv import load_dotenv
 from requests.auth import HTTPBasicAuth
 
-load_dotenv()
-
 CONFLUENCE_BASE_URL = 'https://pdffiller.atlassian.net/wiki'
 CONFLUENCE_BASE_API_URL = f"{CONFLUENCE_BASE_URL}/rest/api"
+
+load_dotenv()
+logger = logging.getLogger('confluence')
 
 
 class ConfluenceClient:
@@ -97,7 +99,12 @@ class ConfluenceClient:
             'limit': str(limit),
             'status': status_filter,
         }
+
         all_pages = []
+        logger.info(
+            f'Fetch space {status_filter} pages '
+            f'({limit} pages per request)...'
+        )
         while True:
             data = self.get(endpoint, params=params)
             all_pages.extend(data['results'])
