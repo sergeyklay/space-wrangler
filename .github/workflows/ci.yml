@@ -78,16 +78,18 @@ jobs:
           python setup.py --long-description
           python setup.py --classifiers
 
-#      - name: Setup pylint cache
-#        uses: actions/cache@v4
-#        with:
-#          path: ~/.cache/pylint
-#          key: ${{ runner.os }}-pylint-${{ hashFiles('**/*.py') }}
-#          restore-keys: |
-#            ${{ runner.os }}-pylint-
+      - name: Setup pylint cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pylint
+          key: ${{ runner.os }}-pylint-${{ hashFiles('**/*.py') }}
+          restore-keys: |
+            ${{ runner.os }}-pylint-
 
       - name: Lint the code
         run: make lint
+        env:
+          PYLINT_FLAGS: --rcfile=setup.cfg
 
       - name: Check MANIFEST.in in a source package
         run: make manifest
