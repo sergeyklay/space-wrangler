@@ -48,6 +48,20 @@ def test_main_pages_metadata(monkeypatch, mocker):
     mock_export_pages_metadata.assert_called_once_with('TEST', 'output')
 
 
+def test_main_owners_metadata(monkeypatch, mocker):
+    """Test calling main with owners-metadata command."""
+    monkeypatch.setattr(
+        'sys.argv',
+        ['confluence', 'owners-metadata', '-s', 'TEST', '-o', 'output']
+    )
+    mock_export_owners_metadata = mocker.patch(
+        'confluence.cli.export_owners_metadata')
+    mock_export_owners_metadata.return_value = None
+
+    assert main() == 0
+    mock_export_owners_metadata.assert_called_once_with('TEST', 'output')
+
+
 def test_main_keyboard_interrupt(monkeypatch, mocker):
     """Test handling of KeyboardInterrupt."""
     monkeypatch.setattr(
