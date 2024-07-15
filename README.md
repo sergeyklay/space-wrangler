@@ -67,8 +67,23 @@ profile.
 
 What kind of things you need to install on your workstation to start:
 
-* [Python](https://www.python.org/) >= 3.10
+* [Python](https://www.python.org/) >= 3.9
 * [Git](https://git-scm.com/) >= 1.7.0
+
+> [!NOTE]
+> While this project might hypothetically work with Python 3.8 or earlier
+> versions, I have not tested it on those versions. As such, I cannot guarantee
+> its functionality on these older versions of Python. Given the age of these
+> versions, if issues arise, I do not plan to address them.
+>
+> Though Python 3.9 is also somewhat outdated, I support it because it remains
+> the default version on macOS. However, I do not recommend relying on continued
+> support for Python 3.9. It is advisable to install a more recent version of
+> Python, which is a straightforward process on both Linux and macOS.
+>
+> As for Windows users, with all the various issues and hacks they usually deal
+> with, it’s safe to assume they already have the latest version of Python and
+> likely work within WSL or maintain a native POSIX terminal environment.
 
 ### Installing
 
@@ -242,12 +257,6 @@ Confluence Space Management Toolkit is released under the
 [MIT License](https://choosealicense.com/licenses/mit/), and its code lives at
 [GitHub](https://github.com/airslateinc/confluence-maintenance-tools). It’s
 rigorously tested on Python 3.9+.
-
-> [!NOTE]
-> While this project might hypothetically work with Python 3.8 or earlier
-> versions, I have not tested it on those versions. As such, I cannot guarantee
-> its functionality on these older versions of Python. Given the age of these
-> versions, if issues arise, I do not plan to address them.
 
 If you'd like to contribute to Confluence Space Management Toolkit you're most
 welcome!
