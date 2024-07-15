@@ -46,15 +46,10 @@ class ConfluenceClient:
                 environment variables.
         """
         self.base_url = CONFLUENCE_BASE_API_URL
-        user = os.getenv('CONFLUENCE_API_USER')
-        token = os.getenv('CONFLUENCE_API_TOKEN')
-
-        if user is None or token is None:
-            raise ValueError(
-                'Confluence API user or token not set in environment variables'
-            )
-
-        self.auth = HTTPBasicAuth(user, token)
+        self.auth = HTTPBasicAuth(
+            os.getenv('CONFLUENCE_API_USER', ''),
+            os.getenv('CONFLUENCE_API_TOKEN', ''),
+        )
         self.headers = {'Accept': 'application/json'}
         self.timeout = timeout
 
