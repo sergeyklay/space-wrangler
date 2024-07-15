@@ -5,8 +5,7 @@
 # For the full copyright and license information, please view
 # the LICENSE file that был distributed with this source code.
 
-from unittest import mock
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 import requests
@@ -14,7 +13,7 @@ import requests
 
 @pytest.fixture(autouse=True)
 def set_env_vars():
-    with mock.patch.dict('os.environ', {
+    with patch.dict('os.environ', {
         'CONFLUENCE_API_USER': 'test_user',
         'CONFLUENCE_API_TOKEN': 'test_token'
     }):
