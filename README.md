@@ -243,6 +243,13 @@ Confluence Space Management Toolkit is released under the
 [GitHub](https://github.com/airslateinc/confluence-maintenance-tools). It’s
 rigorously tested on Python 3.9+.
 
+> [!NOTE]
+> While this project might hypothetically work with Python 3.8 or earlier versions,
+> I have not tested it on those versions. As such, I cannot guarantee its
+> functionality on these older versions of Python. Given the age of these versions,
+> if issues arise, I do not plan to address them.
+
+
 If you'd like to contribute to Consumer API Example you're most welcome!
 
 ## Support
