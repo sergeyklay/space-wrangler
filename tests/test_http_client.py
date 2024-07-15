@@ -5,6 +5,8 @@
 # For the full copyright and license information, please view
 # the LICENSE file that was distributed with this source code.
 
+import pytest
+
 from confluence.http_client import ConfluenceClient
 
 
@@ -45,3 +47,12 @@ def test_get_all_pages_in_space_with_next_2(mock_response_with_next_2, mocker):
     assert pages[1]['title'] == 'Test Page 2'
     params = mock_get.call_args_list[1][1]['params']
     assert params['key'] == 'value1,value2'
+
+
+def test_http_client_initialization_error(monkeypatch):
+    monkeypatch.delenv('CONFLUENCE_API_USER', raising=False)
+    monkeypatch.delenv('CONFLUENCE_API_TOKEN', raising=False)
+
+    message = 'Confluence API user or token not set in environment variables'
+    with pytest.raises(ValueError, match=message):
+        ConfluenceClient()

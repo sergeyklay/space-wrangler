@@ -26,7 +26,6 @@ from .common import (
 from .http_client import ConfluenceClient
 
 logger = logging.getLogger('confluence')
-client = ConfluenceClient()
 
 
 class OwnerMetadata:
@@ -150,6 +149,7 @@ def export_owners_metadata(space_key: str, output_dir: str) -> None:
         space_key (str): The key of the Confluence space.
         output_dir (str): Directory to save the output files.
     """
+    client = ConfluenceClient()
     output_dir = os.path.abspath(output_dir)
     os.makedirs(output_dir, exist_ok=True)
 

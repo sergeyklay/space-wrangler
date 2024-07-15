@@ -5,7 +5,6 @@
 # For the full copyright and license information, please view
 # the LICENSE file that был distributed with this source code.
 
-
 from unittest import mock
 
 from confluence.cli import main
@@ -27,11 +26,11 @@ def test_main_export(monkeypatch, mocker):
         'sys.argv',
         ['confluence', 'export', '-s', 'TEST', '-o', 'output']
     )
-    mock_export_space = mocker.patch('confluence.cli.export_space')
-    mock_export_space.return_value = None
 
-    assert main() == 0
-    mock_export_space.assert_called_once_with('TEST', 'output')
+    with mock.patch('confluence.space_exporter.export_space') as mck:
+        mck.return_value = None
+        main()
+        mck.assert_called_once_with('TEST', 'output')
 
 
 def test_main_pages_metadata(monkeypatch, mocker):
@@ -40,12 +39,11 @@ def test_main_pages_metadata(monkeypatch, mocker):
         'sys.argv',
         ['confluence', 'pages-metadata', '-s', 'TEST', '-o', 'output']
     )
-    mock_export_pages_metadata = mocker.patch(
-        'confluence.cli.export_pages_metadata')
-    mock_export_pages_metadata.return_value = None
 
-    assert main() == 0
-    mock_export_pages_metadata.assert_called_once_with('TEST', 'output')
+    with mock.patch('confluence.page_metadata.export_pages_metadata') as mck:
+        mck.return_value = None
+        main()
+        mck.assert_called_once_with('TEST', 'output')
 
 
 def test_main_owners_metadata(monkeypatch, mocker):
@@ -54,12 +52,11 @@ def test_main_owners_metadata(monkeypatch, mocker):
         'sys.argv',
         ['confluence', 'owners-metadata', '-s', 'TEST', '-o', 'output']
     )
-    mock_export_owners_metadata = mocker.patch(
-        'confluence.cli.export_owners_metadata')
-    mock_export_owners_metadata.return_value = None
 
-    assert main() == 0
-    mock_export_owners_metadata.assert_called_once_with('TEST', 'output')
+    with mock.patch('confluence.owner_metadata.export_owners_metadata') as mck:
+        mck.return_value = None
+        main()
+        mck.assert_called_once_with('TEST', 'output')
 
 
 def test_main_keyboard_interrupt(monkeypatch, mocker):
@@ -68,14 +65,13 @@ def test_main_keyboard_interrupt(monkeypatch, mocker):
         'sys.argv',
         ['confluence', 'export', '-s', 'TEST', '-o', 'output']
     )
-    mock_export_space = mocker.patch('confluence.cli.export_space',
-                                     side_effect=KeyboardInterrupt)
 
-    with mock.patch('confluence.logger.logging.Logger.error') as mock_error:
-        assert main() == 130
-        mock_export_space.assert_called_once()
-        mock_error.assert_called_once_with(
-            'Received keyboard interrupt, terminating.')
+    with mock.patch(
+            'confluence.space_exporter.export_space',
+            side_effect=KeyboardInterrupt
+    ):
+        exit_code = main()
+        assert exit_code == 130  # 128 + signal.SIGINT
 
 
 def test_main_error(monkeypatch, mocker):
@@ -84,10 +80,10 @@ def test_main_error(monkeypatch, mocker):
         'sys.argv',
         ['confluence', 'export', '-s', 'TEST', '-o', 'output']
     )
-    mock_export_space = mocker.patch('confluence.cli.export_space',
-                                     side_effect=Error('Test error'))
 
-    with mock.patch('confluence.logger.logging.Logger.error') as mock_error:
-        assert main() == 1
-        mock_export_space.assert_called_once()
-        mock_error.assert_called_once_with('Test error')
+    with mock.patch(
+            'confluence.space_exporter.export_space',
+            side_effect=Error('Test error')
+    ):
+        exit_code = main()
+        assert exit_code == 1

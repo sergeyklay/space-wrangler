@@ -17,13 +17,11 @@ from typing import Any, Dict, List, Optional, Union
 from urllib.parse import parse_qs, urlparse
 
 import requests
-from dotenv import load_dotenv
 from requests.auth import HTTPBasicAuth
 
 CONFLUENCE_BASE_URL = 'https://pdffiller.atlassian.net/wiki'
 CONFLUENCE_BASE_API_URL = f"{CONFLUENCE_BASE_URL}/rest/api"
 
-load_dotenv()
 logger = logging.getLogger('confluence')
 
 
@@ -46,10 +44,14 @@ class ConfluenceClient:
                 environment variables.
         """
         self.base_url = CONFLUENCE_BASE_API_URL
-        self.auth = HTTPBasicAuth(
-            os.getenv('CONFLUENCE_API_USER', ''),
-            os.getenv('CONFLUENCE_API_TOKEN', ''),
-        )
+        user = os.getenv('CONFLUENCE_API_USER')
+        token = os.getenv('CONFLUENCE_API_TOKEN')
+
+        if user is None or token is None:
+            raise ValueError('Confluence API user or token not '
+                             'set in environment variables.')
+
+        self.auth = HTTPBasicAuth(user, token)
         self.headers = {'Accept': 'application/json'}
         self.timeout = timeout
 

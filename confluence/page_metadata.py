@@ -24,7 +24,6 @@ from .common import (
 from .http_client import CONFLUENCE_BASE_URL, ConfluenceClient
 
 logger = logging.getLogger('confluence')
-client = ConfluenceClient()
 
 
 def save_pages_to_csv(pages: List[Dict[str, Any]], output_dir: str) -> None:
@@ -84,6 +83,8 @@ def export_pages_metadata(space_key: str, output_dir: str) -> None:
         space_key (str): The key of the Confluence space.
         output_dir (str): Directory to save the output files.
     """
+    client = ConfluenceClient()
+
     output_dir = os.path.abspath(output_dir)
     os.makedirs(output_dir, exist_ok=True)
 

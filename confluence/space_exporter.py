@@ -21,7 +21,6 @@ from .http_client import ConfluenceClient
 from .template import html_template
 
 logger = logging.getLogger('confluence')
-client = ConfluenceClient()
 
 
 def save_pages_to_files(
@@ -60,6 +59,8 @@ def export_space(space_key: str, output_dir: str) -> None:
         space_key (str): The key of the Confluence space to export.
         output_dir (str): Directory to save the output files.
     """
+    client = ConfluenceClient()
+
     output_dir = os.path.abspath(output_dir)
     os.makedirs(output_dir, exist_ok=True)
 
