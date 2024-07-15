@@ -145,26 +145,6 @@ To export all pages from a specified Confluence space:
 $ confluence export --space-key YOUR_SPACE_KEY
 ```
 
-To specify the output directory:
-
-```shell
-$ confluence export --space-key YOUR_SPACE_KEY --output-dir YOUR_OUTPUT_DIR
-```
-
-If the `--output-dir` option is not specified, the `output` directory in the
-current working directory will be used.
-
-To suppress informational messages, use the `-q`, `--quiet` or `--silent`
-option:
-
-```shell
-$ confluence -q export --space-key YOUR_SPACE_KEY
-# or
-$ confluence --quiet export --space-key YOUR_SPACE_KEY
-# or
-$ confluence --silent export --space-key YOUR_SPACE_KEY
-```
-
 ### Exporting Page Metadata
 
 To generate a CSV file with metadata about each page in a specified Confluence
@@ -172,26 +152,6 @@ space:
 
 ```shell
 $ confluence pages-metadata --space-key YOUR_SPACE_KEY
-```
-
-To specify the output directory:
-
-```shell
-$ confluence pages-metadata --space-key YOUR_SPACE_KEY --output-dir YOUR_OUTPUT_DIR
-```
-
-If the `--output-dir` option is not specified, the `output` directory in the
-current working directory will be used.
-
-To suppress informational messages, use the `-q`, `--quiet` or `--silent`
-option:
-
-```shell
-$ confluence -q pages-metadata --space-key YOUR_SPACE_KEY
-# or
-$ confluence --quiet pages-metadata --space-key YOUR_SPACE_KEY
-# or
-$ confluence --silent pages-metadata --space-key YOUR_SPACE_KEY
 ```
 
 ### Exporting Owner Metadata
@@ -203,10 +163,14 @@ Confluence space:
 $ confluence owners-metadata --space-key YOUR_SPACE_KEY
 ```
 
+## Common Options
+
+There are common options that can be used with all commands.
+
 To specify the output directory:
 
 ```shell
-$ confluence owners-metadata --space-key YOUR_SPACE_KEY --output-dir YOUR_OUTPUT_DIR
+$ confluence COMMAND --space-key YOUR_SPACE_KEY --output-dir YOUR_OUTPUT_DIR
 ```
 
 If the `--output-dir` option is not specified, the `output` directory in the
@@ -216,11 +180,7 @@ To suppress informational messages, use the `-q`, `--quiet` or `--silent`
 option:
 
 ```shell
-$ confluence -q owners-metadata --space-key YOUR_SPACE_KEY
-# or
-$ confluence --quiet owners-metadata --space-key YOUR_SPACE_KEY
-# or
-$ confluence --silent owners-metadata --space-key YOUR_SPACE_KEY
+$ confluence -q <command> --space-key YOUR_SPACE_KEY
 ```
 
 ## Environment Variables
