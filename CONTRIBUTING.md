@@ -11,63 +11,57 @@ and work on it.
 *Before raising an issue, please ensure that you are using the latest version 
 of Confluence Space Management Toolkit.*
 
-Please provide the following information with your issue to enable me to 
-respond as quickly as possible.
+Please provide the following information with your issue to enable a quick
+response:
 
 * The relevant versions of the packages you are using.
 * The steps to recreate your issue.
 * The full stacktrace if there is an exception.
-* An executable code example where possible
-
-Guidelines for bug reports:
-
-* **Use the GitHub issue search** — check if the issue has already been 
-  reported.
-* **Check if the issue has been fixed** — try to reproduce it using the latest 
-  `main` branch in the repository.
-* **Isolate the problem** — create a reduced test case and a live example.
-
-A good bug report shouldn't leave others needing to chase you up for more 
-information. Please try to be as detailed as possible in your report. What is 
-your environment? What steps will reproduce the issue? What OS experience the 
-problem? What would you expect to be the outcome? All these details will help 
-people to fix any potential bugs.
+* An executable code example where possible.
 
 ### Feature requests
 
-Feature requests are welcome. But take a moment to find out whether your idea 
-fits with the scope and aims of the project. It's up to *you* to make a strong 
-case to convince the project's developers of the merits of this feature. Please 
-provide as much detail and context as possible.
+Feature requests are welcome. Ensure your idea fits within the scope and aims of
+the project. Provide as much detail and context as possible.
 
 ### Pull requests
 
-Good pull requests - patches, improvements, new features - are a fantastic 
-help. They should remain focused in scope and avoid containing unrelated 
-commits.
+To have your work considered for inclusion in the project:
 
-Follow this process if you'd like your work considered for inclusion in the 
-project:
-
-1. Check for open issues or open a fresh issue to start a discussion around a 
+1. Check for open issues or open a new issue to start a discussion around a
    feature idea or a bug.
-2. Clone the repository on GitHub to start making your changes to the `main` 
+2. Clone the repository on GitHub to start making your changes to the `main`
    branch (or branch off of it).
-3. Write a test which shows that the bug was fixed or that the feature works as 
+3. Write a test to show that the bug was fixed or that the feature works as
    expected.
-4. Send a pull request and bug the maintainer until it gets merged and published.
-
-If you are intending to implement a fairly large feature I'd appreciate if you 
-open an issue with GitHub detailing your use case and intended solution to 
-discuss how it might impact other work that is in flight.
-
-I also appreciate it if you take the time to update and write tests for any 
-changes you submit.
+4. Send a pull request.
 
 **By submitting a patch, you agree to allow the project owner to license your 
 work under the same license as that used by the project.**
 
-## Docstring Style Guide
+## Coding Standards
+
+### Supported Systems and Python Versions
+
+All contributions must ensure compatibility with Linux and macOS. The code should
+support all currently supported Python versions as listed in the project's GitHub
+workflow.
+
+### Line Length
+
+In both code and documentation, we avoid using lines longer than 79 characters
+unless there is a clear, obvious, and justified reason to do otherwise. For
+documentation, the line length can be 80 characters or slightly varied, but
+it's best to aim for 79 characters. This helps maintain readability and
+consistency throughout the project.
+
+### Language
+
+All comments in the code, any user-facing text such as log output, and all
+docstrings must be written in English. This ensures consistency and
+accessibility for all contributors and users of the project.
+
+### Docstring Style Guide
 
 All docstrings in this project should follow the Google style guide. Here are 
 some examples:
@@ -87,7 +81,6 @@ def example_function(param1, param2):
     """
     return True
 ```
-
 
 ### Class Example
 
