@@ -102,6 +102,12 @@ lint: $(VENV_PYTHON)
 	$(VENV_BIN)/pylint $(PYLINT_FLAGS) ./$(PKG_NAME)
 	@echo
 
+.PHONY: typecheck
+typecheck: $(VENV_PYTHON)
+	@echo $(CS)Type check with mypy$(CE)
+	$(VENV_BIN)/mypy $(MYPY_FLAGS) ./$(PKG_NAME)
+	@echo
+
 .PHONY: test
 test: $(VENV_PYTHON)
 	@echo $(CS)Running tests$(CE)
@@ -136,7 +142,7 @@ check-dist: $(VENV_PYTHON)
 	@echo
 
 .PHONY: test-all
-test-all: uninstall clean install test test-dist lint
+test-all: uninstall clean install test test-dist lint typecheck
 
 .PHONY: test-dist
 test-dist: test-sdist test-wheel
@@ -192,6 +198,7 @@ help:
 	@echo '  check-dist:   Check integrity of the distribution files and validate package'
 	@echo '  manifest:     Check MANIFEST.in in a source package'
 	@echo '  lint:         Lint the code'
+	@echo '  typecheck:    Type check with mypy'
 	@echo '  test:         Run unit tests with coverage'
 	@echo '  test-dist:    Testing package distribution and installation'
 	@echo '  test-sdist:   Testing source distribution and installation'
@@ -213,6 +220,7 @@ help:
 	@echo '  FLAKE8_FLAGS: $(FLAKE8_FLAGS)'
 	@echo '  PYTEST_FLAGS: $(PYTEST_FLAGS)'
 	@echo '  PYLINT_FLAGS: $(PYLINT_FLAGS)'
+	@echo '  MYPY_FLAGS:   $(MYPY_FLAGS)'
 	@echo
 	@echo 'Environment variables:'
 	@echo

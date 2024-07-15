@@ -14,6 +14,7 @@ JSON files.
 import json
 import logging
 import os
+from typing import Any, Dict, List
 
 from .common import get_page_path
 from .http_client import ConfluenceClient
@@ -23,7 +24,10 @@ logger = logging.getLogger('confluence')
 client = ConfluenceClient()
 
 
-def save_pages_to_files(pages, output_dir='./output'):
+def save_pages_to_files(
+        pages: List[Dict[str, Any]],
+        output_dir: str = './output'
+) -> None:
     """Save Confluence pages to HTML and JSON files.
 
     Args:
@@ -49,7 +53,7 @@ def save_pages_to_files(pages, output_dir='./output'):
             json.dump(page, file, ensure_ascii=False, indent=4)
 
 
-def export_space(space_key, output_dir):
+def export_space(space_key: str, output_dir: str) -> None:
     """Export all pages from a specified Confluence space.
 
     Args:

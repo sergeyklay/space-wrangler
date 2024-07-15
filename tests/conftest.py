@@ -144,3 +144,55 @@ def mock_response_with_next():
     mock_resp2.status_code = 200
 
     return [mock_resp1, mock_resp2]
+
+
+@pytest.fixture
+def mock_response_with_next_2():
+    mock_resp1 = MagicMock(spec=requests.Response)
+    mock_resp1.json.return_value = {
+        'results': [
+            {
+                'id': '123',
+                'title': 'Test Page 1',
+                'ancestors': [{'title': 'Parent Page'}],
+                'body': {'storage': {'value': '<p>Test Content 1</p>'}},
+                'history': {
+                    'createdDate': '2024-01-01T12:00:00.000Z',
+                    'lastUpdated': {
+                        'when': '2024-01-02T12:00:00.000Z',
+                        'by': {'displayName': 'Test User 1'}
+                    }
+                },
+                'version': {'by': {'displayName': 'Test User 1'}},
+                '_links': {'webui': '/wiki/pages/viewpage.action?pageId=123'}
+            }
+        ],
+        '_links': {'next': ('https://pdffiller.atlassian.net'
+                            '/wiki/rest/api/content?key=value1&key=value2')}
+    }
+    mock_resp1.status_code = 200
+
+    mock_resp2 = MagicMock(spec=requests.Response)
+    mock_resp2.json.return_value = {
+        'results': [
+            {
+                'id': '124',
+                'title': 'Test Page 2',
+                'ancestors': [{'title': 'Parent Page'}],
+                'body': {'storage': {'value': '<p>Test Content 2</p>'}},
+                'history': {
+                    'createdDate': '2024-01-01T12:00:00.000Z',
+                    'lastUpdated': {
+                        'when': '2024-01-02T12:00:00.000Z',
+                        'by': {'displayName': 'Test User 2'}
+                    }
+                },
+                'version': {'by': {'displayName': 'Test User 2'}},
+                '_links': {'webui': '/wiki/pages/viewpage.action?pageId=124'}
+            }
+        ],
+        '_links': {}
+    }
+    mock_resp2.status_code = 200
+
+    return [mock_resp1, mock_resp2]

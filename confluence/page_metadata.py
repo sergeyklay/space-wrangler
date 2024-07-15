@@ -14,6 +14,7 @@ file.
 import csv
 import logging
 import os
+from typing import Any, Dict, List
 
 from .common import (
     contains_cyrillic,
@@ -26,7 +27,7 @@ logger = logging.getLogger('confluence')
 client = ConfluenceClient()
 
 
-def save_pages_to_csv(pages, output_dir):
+def save_pages_to_csv(pages: List[Dict[str, Any]], output_dir: str) -> None:
     """Save metadata of Confluence pages to a CSV file.
 
     Args:
@@ -76,7 +77,7 @@ def save_pages_to_csv(pages, output_dir):
     logger.info(f'CSV file saved to {csv_path}')
 
 
-def export_pages_metadata(space_key, output_dir):
+def export_pages_metadata(space_key: str, output_dir: str) -> None:
     """Export metadata of pages from a specified Confluence space.
 
     Args:

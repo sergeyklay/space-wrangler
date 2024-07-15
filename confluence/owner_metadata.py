@@ -16,6 +16,7 @@ import logging
 import os
 from collections import defaultdict
 from datetime import datetime
+from typing import Any, DefaultDict, Dict, List, Tuple
 
 from .common import (
     check_unlicensed_or_deleted,
@@ -31,15 +32,15 @@ client = ConfluenceClient()
 class OwnerMetadata:
     """Constants for owner metadata fields and utility methods."""
 
-    OWNER = 'Owner'
-    UNLICENSED = 'Unlicensed'
-    CURRENT_PAGES_OWNED = 'Current Pages Owned'
-    ARCHIVED_PAGES_OWNED = 'Archived Pages Owned'
-    LAST_CONTRIBUTION = 'Last Contribution'
-    OWNER_URL = 'Owner URL'
+    OWNER: str = 'Owner'
+    UNLICENSED: str = 'Unlicensed'
+    CURRENT_PAGES_OWNED: str = 'Current Pages Owned'
+    ARCHIVED_PAGES_OWNED: str = 'Archived Pages Owned'
+    LAST_CONTRIBUTION: str = 'Last Contribution'
+    OWNER_URL: str = 'Owner URL'
 
     @classmethod
-    def get_fieldnames(cls):
+    def get_fieldnames(cls) -> Tuple[str, str, str, str, str, str]:
         """Get the fieldnames for the CSV file.
 
         Returns:
@@ -55,7 +56,7 @@ class OwnerMetadata:
         )
 
     @classmethod
-    def to_dict(cls, owner, data):
+    def to_dict(cls, owner: str, data: Dict[str, Any]) -> Dict[str, Any]:
         """Convert owner data to a dictionary for CSV writing.
 
         Args:
@@ -75,7 +76,7 @@ class OwnerMetadata:
         }
 
 
-def save_owners_to_csv(owner_data, output_dir):
+def save_owners_to_csv(owner_data: Dict[str, Any], output_dir: str) -> None:
     """Save metadata of Confluence page owners to a CSV file.
 
     Args:
@@ -102,7 +103,11 @@ def save_owners_to_csv(owner_data, output_dir):
     logger.info(f'CSV file saved to {csv_path}')
 
 
-def process_pages(pages, owner_data, status):
+def process_pages(
+        pages: List[Dict[str, Any]],
+        owner_data: Dict[str, Any],
+        status: str
+) -> None:
     """Process a list of pages and update owner metadata.
 
     Args:
@@ -138,7 +143,7 @@ def process_pages(pages, owner_data, status):
                 formatted_last_updated
 
 
-def export_owners_metadata(space_key, output_dir):
+def export_owners_metadata(space_key: str, output_dir: str) -> None:
     """Export metadata of page owners from a specified Confluence space.
 
     Args:
@@ -151,7 +156,7 @@ def export_owners_metadata(space_key, output_dir):
     current_pages = client.get_all_pages_in_space(space_key, 'current')
     archived_pages = client.get_all_pages_in_space(space_key, 'archived')
 
-    owner_data = defaultdict(lambda: {
+    owner_data: DefaultDict[str, Dict[str, Any]] = defaultdict(lambda: {
         OwnerMetadata.CURRENT_PAGES_OWNED: 0,
         OwnerMetadata.ARCHIVED_PAGES_OWNED: 0,
         OwnerMetadata.LAST_CONTRIBUTION: '01/01/1970',

@@ -12,7 +12,7 @@ package info used by various functions within confluence.
 """
 
 __copyright__ = 'Copyright (C) 2024 airSlate, Inc.'
-__version__ = '1.1.0'
+__version__ = '1.2.0'
 __license__ = 'MIT'
 __author__ = 'Serghei Iakovlev'
 __author_email__ = 'serghei@airslate,com'

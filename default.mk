@@ -13,6 +13,7 @@ PKG_NAME = confluence
 
 PYLINT_FLAGS ?=
 FLAKE8_FLAGS ?=
+MYPY_FLAGS ?=
 
 ifneq ($(TERM),)
 	GREEN := $(shell tput setaf 2)

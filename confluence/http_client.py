@@ -13,6 +13,7 @@ handling authentication and HTTP requests.
 
 import logging
 import os
+from typing import Any, Dict, List, Optional, Union
 from urllib.parse import parse_qs, urlparse
 
 import requests
@@ -33,22 +34,35 @@ class ConfluenceClient:
     various API requests to the Confluence server.
     """
 
-    def __init__(self, timeout=10):
+    def __init__(self, timeout: int = 10) -> None:
         """Initialize the ConfluenceClient with authentication and base URL.
 
         Args:
             timeout (int, optional): Timeout for HTTP requests in seconds
                (default is 10).
+
+        Raises:
+            ValueError: If the Confluence API user or token is not set in
+                environment variables.
         """
         self.base_url = CONFLUENCE_BASE_API_URL
-        self.auth = HTTPBasicAuth(
-            os.getenv('CONFLUENCE_API_USER'),
-            os.getenv('CONFLUENCE_API_TOKEN')
-        )
+        user = os.getenv('CONFLUENCE_API_USER')
+        token = os.getenv('CONFLUENCE_API_TOKEN')
+
+        if user is None or token is None:
+            raise ValueError(
+                'Confluence API user or token not set in environment variables'
+            )
+
+        self.auth = HTTPBasicAuth(user, token)
         self.headers = {'Accept': 'application/json'}
         self.timeout = timeout
 
-    def get(self, endpoint, params=None):
+    def get(
+            self,
+            endpoint: str,
+            params: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
         """Perform a GET request to the Confluence API.
 
         Args:
@@ -76,10 +90,10 @@ class ConfluenceClient:
 
     def get_all_pages_in_space(
             self,
-            space_key,
-            status_filter='current',
-            limit=100
-    ):
+            space_key: str,
+            status_filter: str = 'current',
+            limit: int = 100
+    ) -> List[Dict[str, Any]]:
         """Retrieve all pages for a given space key from Confluence.
 
         Args:
@@ -93,7 +107,7 @@ class ConfluenceClient:
             list: List of pages in the specified Confluence space.
         """
         endpoint = '/content'
-        params = {
+        params: Dict[str, Union[str, int]] = {
             'spaceKey': space_key,
             'expand': 'body.storage,ancestors,history.lastUpdated,version',
             'limit': str(limit),
@@ -113,9 +127,10 @@ class ConfluenceClient:
                 parsed_url = urlparse(next_url)
                 query_params = parse_qs(parsed_url.query)
                 for key, value in query_params.items():
-                    params.update(
-                        {key: value[0] if len(value) == 1 else value}
-                    )
+                    if len(value) == 1:
+                        params[key] = value[0]
+                    else:
+                        params[key] = ','.join(value)
             else:
                 break
         return all_pages

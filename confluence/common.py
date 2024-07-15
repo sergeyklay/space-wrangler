@@ -14,11 +14,12 @@ import logging
 import os
 import re
 from datetime import datetime
+from typing import Any, Dict
 
 logger = logging.getLogger('confluence')
 
 
-def people_url(people_id):
+def people_url(people_id: str) -> str:
     """Generate a Confluence profile URL for a given user ID.
 
     Args:
@@ -31,7 +32,7 @@ def people_url(people_id):
     return f'{CONFLUENCE_BASE_URL}/people/{people_id}'
 
 
-def check_unlicensed_or_deleted(owner_name):
+def check_unlicensed_or_deleted(owner_name: str) -> str:
     """Check if the owner is unlicensed or deleted.
 
     Args:
@@ -45,7 +46,7 @@ def check_unlicensed_or_deleted(owner_name):
     return 'FALSE'
 
 
-def get_page_path(base_dir, page):
+def get_page_path(base_dir: str, page: Dict[str, Any]) -> str:
     """Generate the full file path for a given page.
 
     Args:
@@ -63,7 +64,7 @@ def get_page_path(base_dir, page):
     return full_path
 
 
-def format_date(date_str):
+def format_date(date_str: str) -> str:
     """Format a date string to mm/dd/yyyy.
 
     Args:
@@ -76,7 +77,7 @@ def format_date(date_str):
     return date_obj.strftime('%m/%d/%Y')
 
 
-def contains_cyrillic(text):
+def contains_cyrillic(text: str) -> bool:
     """Check if the given text contains Cyrillic characters.
 
     Args:
@@ -88,7 +89,7 @@ def contains_cyrillic(text):
     return bool(re.search('[\u0400-\u04FF]', text))
 
 
-def get_structured_title(page):
+def get_structured_title(page: Dict[str, Any]) -> str:
     """Construct a structured title for a page based on its ancestors.
 
     Args:

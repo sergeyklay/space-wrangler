@@ -22,7 +22,7 @@ class StdOutFilter(logging.Filter):
     This filter is used to direct DEBUG and INFO messages to stdout.
     """
 
-    def filter(self, record):
+    def filter(self, record: logging.LogRecord) -> bool:
         """Determines if the specified record is to be logged.
 
         Args:
@@ -41,7 +41,7 @@ class StdErrFilter(logging.Filter):
     to stderr.
     """
 
-    def filter(self, record):
+    def filter(self, record: logging.LogRecord) -> bool:
         """Determines if the specified record is to be logged.
 
         Args:
@@ -58,7 +58,7 @@ class StdErrFilter(logging.Filter):
         )
 
 
-def setup_logger(quiet=False):
+def setup_logger(quiet: bool = False) -> logging.Logger:
     """Configures and returns the logger for the application.
 
     This function sets up a logger that directs DEBUG and INFO messages to

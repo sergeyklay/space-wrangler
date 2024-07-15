@@ -11,9 +11,9 @@ import os
 import sys
 import textwrap as _textwrap
 from argparse import ArgumentParser, HelpFormatter, Namespace, SUPPRESS
+from typing import List, Optional
 
 from . import __copyright__, __description__, __version__
-
 
 _OUTPUT_DIR = 'output'
 _OUTPUT_PATH = os.path.join(os.getcwd(), _OUTPUT_DIR)
@@ -32,9 +32,9 @@ class LineBreaksFormatter(HelpFormatter):
 
     This help formatter allows for you to optional enable/toggle raw text on
     individual menu items by prefixing the help string with 'n|'."""
-    def _fill_text(self, text, width, indent) -> str:
+    def _fill_text(self, text: str, width: int, indent: str) -> str:
         text = self._whitespace_matcher.sub(' ', text).strip()
-        paragraphs = text.split('|n ')
+        paragraphs: List[str] = text.split('|n ')
 
         multiline_text = ''
 
@@ -180,7 +180,7 @@ def parser_add_options(parser: ArgumentParser) -> ArgumentParser:
     return parser
 
 
-def argparse() -> Namespace or None:
+def argparse() -> Optional[Namespace]:
     """Parse and return command line arguments.
 
     Returns:

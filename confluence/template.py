@@ -8,7 +8,7 @@
 """Provides HTML templates for rendering Confluence pages."""
 
 
-def html_template(title, content):
+def html_template(title: str, content: str) -> str:
     """Generate an HTML template for a Confluence page.
 
     Args:

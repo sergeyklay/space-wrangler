@@ -90,6 +90,9 @@ jobs:
       - name: Lint the code
         run: make lint
 
+      - name: Type check with mypy
+        run: make typecheck
+
       - name: Check MANIFEST.in in a source package
         run: make manifest
 

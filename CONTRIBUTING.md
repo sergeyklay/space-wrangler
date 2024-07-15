@@ -34,7 +34,8 @@ To have your work considered for inclusion in the project:
    branch (or branch off of it).
 3. Write a test to show that the bug was fixed or that the feature works as
    expected.
-4. Send a pull request.
+4. Ensure that all new code is properly type-annotated.
+5. Send a pull request.
 
 **By submitting a patch, you agree to allow the project owner to license your 
 work under the same license as that used by the project.**
@@ -61,6 +62,33 @@ All comments in the code, any user-facing text such as log output, and all
 docstrings must be written in English. This ensures consistency and
 accessibility for all contributors and users of the project.
 
+### Documentation and Testing Requirements
+
+No code can be without documentation. Please provide documentation for any new
+functionality you propose. Additionally, no functionality can be left untested.
+Ensure that you write tests covering both negative and positive cases.
+
+### Typing Requirements
+
+All new code must be properly type-annotated. This includes:
+
+- Function signatures (both parameters and return types)
+- Class attributes
+- Any complex data structures used within functions or methods
+
+Using type annotations helps improve code readability, maintainability, and
+correctness by:
+
+- **Improving code clarity:** Type annotations make it immediately clear what
+  type of data is expected, reducing misunderstandings and errors.
+- **Enhancing IDE support:** Many modern IDEs use type annotations to provide
+  better code completion, error checking, and refactoring tools.
+- **Facilitating static analysis:** Tools like `mypy` can use type annotations
+  to detect potential bugs before runtime, ensuring more robust and error-free code.
+- **Promoting better documentation:** Type annotations serve as an inline form
+  of documentation, providing valuable information to other developers working
+  on the project.
+
 ### Docstring Style Guide
 
 All docstrings in this project should follow the Google style guide. Here are 
@@ -69,7 +97,7 @@ some examples:
 ### Function Example
 
 ```python
-def example_function(param1, param2):
+def example_function(param1: int, param2: str) -> bool:
     """Function description.
 
     Args:
@@ -93,7 +121,7 @@ class ExampleClass:
         attr2 (str): Description of attr2.
     """
 
-    def __init__(self, attr1, attr2):
+    def __init__(self, attr1: int, attr2: str) -> None:
         """Initialize ExampleClass.
 
         Args:
@@ -114,3 +142,5 @@ throughout the codebase.
 * [Using Pull Requests](https://help.github.com/articles/about-pull-requests/)
 * [Writing good commit messages](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
 * [Google Python Style Guide: 3.8 Comments and Docstrings](https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings)
+* [PEP 484: Type Hints](https://www.python.org/dev/peps/pep-0484/)
+* [Mypy: Optional Types](https://mypy.readthedocs.io/en/stable/kinds_of_types.html#optional-types)

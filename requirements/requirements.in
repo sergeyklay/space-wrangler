@@ -7,4 +7,5 @@
 
 python-dotenv
 requests
+types-requests
 urllib3
