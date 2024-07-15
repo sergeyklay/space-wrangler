@@ -9,12 +9,12 @@
 
 import os
 import signal
-import sys
 
 from dotenv import load_dotenv
 
 from .args import argparse
 from .exceptions import Error
+from .logger import setup_logger
 from .owner_metadata import export_owners_metadata
 from .page_metadata import export_pages_metadata
 from .space_exporter import export_space
@@ -36,6 +36,8 @@ def main() -> int:
     retval = int(args is None)
 
     if args:
+        logger = setup_logger(args.quiet)
+
         try:
             if args.command == 'export':
                 export_space(args.space_key, args.output_dir)
@@ -44,13 +46,12 @@ def main() -> int:
             elif args.command == 'owners-metadata':
                 export_owners_metadata(args.space_key, args.output_dir)
         except KeyboardInterrupt:  # the user hit control-C
-            sys.stderr.write('Received keyboard interrupt, terminating.\n')
-            sys.stderr.flush()
+            logger.error('Received keyboard interrupt, terminating.')
             # Control-C is fatal error signal 2, for more see
             # https://tldp.org/LDP/abs/html/exitcodes.html
             retval = 128 + signal.SIGINT
         except Error as err:
-            sys.stderr.write(f'{err}\n')
+            logger.error(str(err))
             retval = 1
 
     return retval

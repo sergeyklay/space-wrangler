@@ -10,6 +10,7 @@
 This module provides shared functions and constants used by other modules.
 """
 
+import logging
 import os
 import re
 from datetime import datetime
@@ -20,6 +21,8 @@ from requests.auth import HTTPBasicAuth
 
 CONFLUENCE_BASE_URL = 'https://pdffiller.atlassian.net/wiki'
 CONFLUENCE_BASE_API_URL = f"{CONFLUENCE_BASE_URL}/rest/api"
+
+logger = logging.getLogger('confluence')
 
 
 def people_url(people_id):
@@ -48,11 +51,12 @@ def get_all_pages_in_space(space_key, status_filter=None):
 
     limit = 100
     headers = {'Accept': 'application/json'}
+    status_filter = status_filter or 'current'
     params = {
         'spaceKey': space_key,
         'expand': 'body.storage,ancestors,history.lastUpdated,version',
         'limit': str(limit),
-        'status': status_filter or 'current',
+        'status': status_filter,
     }
 
     auth = HTTPBasicAuth(
@@ -61,9 +65,10 @@ def get_all_pages_in_space(space_key, status_filter=None):
     )
 
     all_pages = []
-    print(f'Fetch space pages ({limit} pages per request):')
+    logger.info('Fetch space {} pages ({} pages per request)...'.format(
+        status_filter, limit
+    ))
     while True:
-        print('.', end='', flush=True)
         response = requests.get(
             url,
             params=params,
@@ -86,8 +91,6 @@ def get_all_pages_in_space(space_key, status_filter=None):
         else:
             break
 
-    print('')
-    print('')
     return all_pages
 
 

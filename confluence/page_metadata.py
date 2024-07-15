@@ -12,6 +12,7 @@ file.
 """
 
 import csv
+import logging
 import os
 
 from .common import CONFLUENCE_BASE_URL
@@ -22,6 +23,8 @@ from .common import (
     get_structured_title,
 )
 
+logger = logging.getLogger('confluence')
+
 
 def save_pages_to_csv(pages, output_dir):
     """Save metadata of Confluence pages to a CSV file.
@@ -29,7 +32,6 @@ def save_pages_to_csv(pages, output_dir):
     Args:
         pages (list): List of Confluence pages.
         output_dir (str): Directory to save the CSV file.
-
     """
     csv_path = os.path.join(output_dir, 'pages-metadata.csv')
 
@@ -71,7 +73,7 @@ def save_pages_to_csv(pages, output_dir):
         writer.writeheader()
         writer.writerows(rows)
 
-    print(f"CSV file saved to {csv_path}")
+    logger.info('CSV file saved to {}'.format(csv_path))
 
 
 def export_pages_metadata(space_key, output_dir):
@@ -80,11 +82,12 @@ def export_pages_metadata(space_key, output_dir):
     Args:
         space_key (str): The key of the Confluence space.
         output_dir (str): Directory to save the output files.
-
     """
     output_dir = os.path.abspath(output_dir)
     os.makedirs(output_dir, exist_ok=True)
 
     result = get_all_pages_in_space(space_key)
     save_pages_to_csv(result, output_dir)
-    print(f"Metadata for {len(result)} pages downloaded and saved to CSV.")
+    logger.info('Metadata for {} pages downloaded and saved to CSV'.format(
+        len(result)
+    ))

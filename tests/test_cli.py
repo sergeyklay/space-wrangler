@@ -71,11 +71,11 @@ def test_main_keyboard_interrupt(monkeypatch, mocker):
     mock_export_space = mocker.patch('confluence.cli.export_space',
                                      side_effect=KeyboardInterrupt)
 
-    with mock.patch('sys.stderr.write') as mock_stderr:
+    with mock.patch('confluence.logger.logging.Logger.error') as mock_error:
         assert main() == 130
         mock_export_space.assert_called_once()
-        mock_stderr.assert_called_once_with(
-            'Received keyboard interrupt, terminating.\n')
+        mock_error.assert_called_once_with(
+            'Received keyboard interrupt, terminating.')
 
 
 def test_main_error(monkeypatch, mocker):
@@ -87,7 +87,7 @@ def test_main_error(monkeypatch, mocker):
     mock_export_space = mocker.patch('confluence.cli.export_space',
                                      side_effect=Error('Test error'))
 
-    with mock.patch('sys.stderr.write') as mock_stderr:
+    with mock.patch('confluence.logger.logging.Logger.error') as mock_error:
         assert main() == 1
         mock_export_space.assert_called_once()
-        mock_stderr.assert_called_once_with('Test error\n')
+        mock_error.assert_called_once_with('Test error')

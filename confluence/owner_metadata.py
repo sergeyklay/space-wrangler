@@ -12,6 +12,7 @@ a CSV file.
 """
 
 import csv
+import logging
 import os
 from collections import defaultdict
 from datetime import datetime
@@ -22,6 +23,8 @@ from .common import (
     get_all_pages_in_space,
     people_url,
 )
+
+logger = logging.getLogger('confluence')
 
 
 class OwnerMetadata:
@@ -77,7 +80,6 @@ def save_owners_to_csv(owner_data, output_dir):
     Args:
         owner_data (dict): Dictionary containing owner metadata.
         output_dir (str): Directory to save the CSV file.
-
     """
     csv_path = os.path.join(output_dir, 'owners-metadata.csv')
     fieldnames = OwnerMetadata.get_fieldnames()
@@ -96,7 +98,7 @@ def save_owners_to_csv(owner_data, output_dir):
             if data[fieldnames[2]] > 0 or data[fieldnames[3]] > 0:
                 writer.writerow(OwnerMetadata.to_dict(owner, data))
 
-    print(f"CSV file saved to {csv_path}")
+    logger.info('CSV file saved to {}'.format(csv_path))
 
 
 def process_pages(pages, owner_data, status):
@@ -106,7 +108,6 @@ def process_pages(pages, owner_data, status):
         pages (list): List of Confluence pages.
         owner_data (dict): Dictionary to store owner metadata.
         status (str): Status of the pages ('current' or 'archived').
-
     """
     for page in pages:
         owner = page['version']['by']['displayName']
@@ -142,7 +143,6 @@ def export_owners_metadata(space_key, output_dir):
     Args:
         space_key (str): The key of the Confluence space.
         output_dir (str): Directory to save the output files.
-
     """
     output_dir = os.path.abspath(output_dir)
     os.makedirs(output_dir, exist_ok=True)
@@ -161,4 +161,4 @@ def export_owners_metadata(space_key, output_dir):
     process_pages(archived_pages, owner_data, 'archived')
 
     save_owners_to_csv(owner_data, output_dir)
-    print('Metadata for page owners downloaded and saved to CSV.')
+    logger.info('Metadata for page owners downloaded and saved to CSV.')

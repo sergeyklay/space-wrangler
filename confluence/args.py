@@ -171,6 +171,12 @@ def parser_add_options(parser: ArgumentParser) -> ArgumentParser:
                         help="Print program's version information and quit",
                         version=get_version_str())
 
+    ogroup.add_argument('-q', '--quiet', action='store_true',
+                        help='Suppress all output except warnings and errors')
+
+    ogroup.add_argument('--silent', action='store_true',
+                        help='Synonym for --quiet')
+
     return parser
 
 
@@ -194,4 +200,8 @@ def argparse() -> Namespace or None:
         parser.print_help(sys.stderr)
         return None
 
-    return parser.parse_args()
+    args = parser.parse_args()
+    if args.silent:
+        args.quiet = True
+
+    return args

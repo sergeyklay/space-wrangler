@@ -12,10 +12,13 @@ JSON files.
 """
 
 import json
+import logging
 import os
 
 from .common import get_all_pages_in_space, get_page_path
 from .template import html_template
+
+logger = logging.getLogger('confluence')
 
 
 def save_pages_to_files(pages, output_dir='./output'):
@@ -24,9 +27,8 @@ def save_pages_to_files(pages, output_dir='./output'):
     Args:
         pages (list): List of Confluence pages.
         output_dir (str): Directory to save the output files.
-
     """
-    print('Render pages:')
+    logger.info('Render pages...')
     for page in pages:
         html_path = get_page_path(os.path.join(output_dir, 'html'), page)
         json_path = get_page_path(os.path.join(output_dir, 'json'), page)
@@ -44,10 +46,6 @@ def save_pages_to_files(pages, output_dir='./output'):
         with open(f"{json_path}.json", 'w', encoding='utf-8') as file:
             json.dump(page, file, ensure_ascii=False, indent=4)
 
-        print('.', end='', flush=True)
-    print('')
-    print('')
-
 
 def export_space(space_key, output_dir):
     """Export all pages from a specified Confluence space.
@@ -55,11 +53,12 @@ def export_space(space_key, output_dir):
     Args:
         space_key (str): The key of the Confluence space to export.
         output_dir (str): Directory to save the output files.
-
     """
     output_dir = os.path.abspath(output_dir)
     os.makedirs(output_dir, exist_ok=True)
 
     result = get_all_pages_in_space(space_key)
     save_pages_to_files(result, output_dir)
-    print(f"Total {len(result)} pages downloaded.")
+    logger.info('Total {} pages downloaded.'.format(
+        len(result)
+    ))
