@@ -108,15 +108,15 @@ jobs:
       - name: Build package distribution (sdist and wheel)
         run: make build
 
-      - name: Testing package distribution and installation
-        run: make test-dist
-
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         if: matrix.python == '3.12'
         with:
           name: coverage
           path: ./coverage.xml
+
+      - name: Testing package distribution and installation
+        run: make test-dist
 
 
   analize-with-sonarqube:

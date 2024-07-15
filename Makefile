@@ -81,8 +81,8 @@ clean:
 	@echo $(CS)Remove build and tests artefacts and directories$(CE)
 	$(call rm-venv-link)
 	find ./ -name '__pycache__' -delete -o -name '*.pyc' -delete
-	$(RM) -r ./build ./dist ./*.egg-info
-	$(RM) -r ./.cache ./.pytest_cache
+	$(RM) -r ./build ./dist ./output ./*.egg-info
+	$(RM) -r ./.cache ./.pytest_cache ./.mutmut-cache
 	$(RM) -r ./htmlcov
 	$(RM) ./coverage.*
 	@echo
@@ -154,7 +154,7 @@ sdist:
 	@echo
 
 .PHONY: test-sdist
-test-sdist: $(VENV_PYTHON) sdist
+test-sdist: $(VENV_PYTHON) clean sdist
 	@echo $(CS)Testing source distribution and installation$(CE)
 	$(VENV_PIP) install --force-reinstall --upgrade dist/*.gz
 	@echo
@@ -168,7 +168,7 @@ wheel: $(VENV_PYTHON)
 	@echo
 
 .PHONY: test-wheel
-test-wheel: $(VENV_PYTHON) wheel
+test-wheel: $(VENV_PYTHON) clean wheel
 	@echo $(CS)Testing built distribution and installation$(CE)
 	$(VENV_PIP) install --force-reinstall --upgrade dist/*.whl
 	@echo
