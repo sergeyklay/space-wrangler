@@ -20,11 +20,12 @@ from datetime import datetime
 from .common import (
     check_unlicensed_or_deleted,
     format_date,
-    get_all_pages_in_space,
     people_url,
 )
+from .http_client import ConfluenceClient
 
 logger = logging.getLogger('confluence')
+client = ConfluenceClient()
 
 
 class OwnerMetadata:
@@ -147,8 +148,8 @@ def export_owners_metadata(space_key, output_dir):
     output_dir = os.path.abspath(output_dir)
     os.makedirs(output_dir, exist_ok=True)
 
-    current_pages = get_all_pages_in_space(space_key, 'current')
-    archived_pages = get_all_pages_in_space(space_key, 'archived')
+    current_pages = client.get_all_pages_in_space(space_key, 'current')
+    archived_pages = client.get_all_pages_in_space(space_key, 'archived')
 
     owner_data = defaultdict(lambda: {
         OwnerMetadata.CURRENT_PAGES_OWNED: 0,

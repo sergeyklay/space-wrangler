@@ -15,15 +15,15 @@ import csv
 import logging
 import os
 
-from .common import CONFLUENCE_BASE_URL
 from .common import (
     contains_cyrillic,
     format_date,
-    get_all_pages_in_space,
     get_structured_title,
 )
+from .http_client import CONFLUENCE_BASE_URL, ConfluenceClient
 
 logger = logging.getLogger('confluence')
+client = ConfluenceClient()
 
 
 def save_pages_to_csv(pages, output_dir):
@@ -86,7 +86,7 @@ def export_pages_metadata(space_key, output_dir):
     output_dir = os.path.abspath(output_dir)
     os.makedirs(output_dir, exist_ok=True)
 
-    result = get_all_pages_in_space(space_key)
+    result = client.get_all_pages_in_space(space_key)
     save_pages_to_csv(result, output_dir)
     logger.info(
         f'Metadata for {len(result)} pages downloaded and saved to CSV')

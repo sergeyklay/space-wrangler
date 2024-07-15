@@ -15,10 +15,12 @@ import json
 import logging
 import os
 
-from .common import get_all_pages_in_space, get_page_path
+from .common import get_page_path
+from .http_client import ConfluenceClient
 from .template import html_template
 
 logger = logging.getLogger('confluence')
+client = ConfluenceClient()
 
 
 def save_pages_to_files(pages, output_dir='./output'):
@@ -57,6 +59,6 @@ def export_space(space_key, output_dir):
     output_dir = os.path.abspath(output_dir)
     os.makedirs(output_dir, exist_ok=True)
 
-    result = get_all_pages_in_space(space_key)
+    result = client.get_all_pages_in_space(space_key)
     save_pages_to_files(result, output_dir)
     logger.info(f'Total {len(result)} pages downloaded.')

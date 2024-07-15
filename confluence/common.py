@@ -14,13 +14,6 @@ import logging
 import os
 import re
 from datetime import datetime
-from urllib.parse import parse_qs, urlparse
-
-import requests
-from requests.auth import HTTPBasicAuth
-
-CONFLUENCE_BASE_URL = 'https://pdffiller.atlassian.net/wiki'
-CONFLUENCE_BASE_API_URL = f"{CONFLUENCE_BASE_URL}/rest/api"
 
 logger = logging.getLogger('confluence')
 
@@ -34,63 +27,8 @@ def people_url(people_id):
     Returns:
         str: URL to the user's Confluence profile.
     """
+    from .http_client import CONFLUENCE_BASE_URL
     return f'{CONFLUENCE_BASE_URL}/people/{people_id}'
-
-
-def get_all_pages_in_space(space_key, status_filter=None):
-    """Retrieve all pages for a given space key from Confluence.
-
-    Args:
-        space_key (str): The key of the Confluence space.
-        status_filter (str, optional): Filter for the status of the pages.
-
-    Returns:
-        list: List of pages in the specified Confluence space.
-    """
-    url = f"{CONFLUENCE_BASE_API_URL}/content"
-
-    limit = 100
-    headers = {'Accept': 'application/json'}
-    status_filter = status_filter or 'current'
-    params = {
-        'spaceKey': space_key,
-        'expand': 'body.storage,ancestors,history.lastUpdated,version',
-        'limit': str(limit),
-        'status': status_filter,
-    }
-
-    auth = HTTPBasicAuth(
-        os.getenv('CONFLUENCE_API_USER'),
-        os.getenv('CONFLUENCE_API_TOKEN'),
-    )
-
-    all_pages = []
-    logger.info(
-        f'Fetch space {status_filter} pages ({limit} pages per request)...')
-    while True:
-        response = requests.get(
-            url,
-            params=params,
-            auth=auth,
-            headers=headers,
-            timeout=10,
-        )
-        response.raise_for_status()
-        data = response.json()
-
-        all_pages.extend(data['results'])
-
-        if 'next' in data['_links']:
-            next_url = data['_links']['next']
-            parsed_url = urlparse(next_url)
-            query_params = parse_qs(parsed_url.query)
-
-            for key, value in query_params.items():
-                params.update({key: value[0] if len(value) == 1 else value})
-        else:
-            break
-
-    return all_pages
 
 
 def check_unlicensed_or_deleted(owner_name):
