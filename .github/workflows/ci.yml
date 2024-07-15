@@ -98,6 +98,9 @@ jobs:
 
       - name: Run unit tests with coverage
         run: make test
+        env:
+          CONFLUENCE_API_TOKEN: fake-token
+          CONFLUENCE_API_USER: fake-user@site.com
 
       - name: Combine coverage reports
         run: make ccov
