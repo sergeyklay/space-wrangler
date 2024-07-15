@@ -241,7 +241,7 @@ $ CONFLUENCE_API_USER=your-confluence-email \
 Confluence Space Management Toolkit is released under the
 [MIT License](https://choosealicense.com/licenses/mit/), and its code lives at
 [GitHub](https://github.com/airslateinc/confluence-maintenance-tools). It’s
-rigorously tested on Python 3.10+.
+rigorously tested on Python 3.9+.
 
 If you'd like to contribute to Consumer API Example you're most welcome!
 
