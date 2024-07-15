@@ -146,7 +146,7 @@ INSTALL_REQUIRES = [
 # Project's URLs
 PROJECT_URLS = {
     'Bug Tracker': 'https://github.com/airslateinc/confluence-maintenance-tools/issues',  # noqa: E501
-    'Changelog': f"{find_meta('url')}/blob/main/CHANGELOG.md",
+    'Changelog': f"{find_meta('url')}/releases",
     'Documentation': f"{find_meta('url')}?tab=readme-ov-file",
     'Source Code': find_meta('url'),
 }
