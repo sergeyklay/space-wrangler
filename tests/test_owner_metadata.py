@@ -8,7 +8,7 @@
 from collections import defaultdict
 
 from confluence.common import people_url
-from confluence.http_client import ConfluenceClient
+from confluence.confluence import Confluence
 from confluence.owner_metadata import (
     export_owners_metadata,
     OwnerMetadata,
@@ -73,7 +73,7 @@ def test_save_owners_to_csv(tmpdir):
 
 def test_export_owners_metadata(mocker, tmpdir, mock_response_with_account_id):
     mock_get = mocker.patch.object(
-        ConfluenceClient,
+        Confluence,
         'get_all_pages_in_space',
         return_value=mock_response_with_account_id.json()['results']
     )

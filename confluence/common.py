@@ -28,7 +28,7 @@ def people_url(people_id: str) -> str:
     Returns:
         str: URL to the user's Confluence profile.
     """
-    from .http_client import CONFLUENCE_BASE_URL
+    from .confluence import CONFLUENCE_BASE_URL
     return f'{CONFLUENCE_BASE_URL}/people/{people_id}'
 
 

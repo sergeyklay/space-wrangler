@@ -10,7 +10,7 @@ from confluence.common import (
     get_page_path,
     people_url,
 )
-from confluence.http_client import CONFLUENCE_BASE_URL
+from confluence.confluence import CONFLUENCE_BASE_URL
 
 
 def test_people_url():

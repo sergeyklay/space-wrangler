@@ -16,18 +16,17 @@ import os
 from typing import Any, Dict, List
 from urllib.parse import parse_qs, urlparse
 
-from atlassian import Confluence
+from atlassian import Confluence as Client
 
 from .exceptions import ConfigurationError
 
 CONFLUENCE_DOMAIN = 'https://pdffiller.atlassian.net'
 CONFLUENCE_BASE_URL = f'{CONFLUENCE_DOMAIN}/wiki'
-CONFLUENCE_BASE_API_URL = f"{CONFLUENCE_BASE_URL}/rest/api"
 
 logger = logging.getLogger('confluence')
 
 
-class ConfluenceClient:
+class Confluence:
     """Client for interacting with Confluence API.
 
     This client handles authentication and provides methods to perform
@@ -35,7 +34,7 @@ class ConfluenceClient:
     """
 
     def __init__(self, timeout: int = 75) -> None:
-        """Initialize the ConfluenceClient with authentication and base URL.
+        """Initialize the Confluence with authentication and base URL.
 
         Args:
             timeout (int, optional): Timeout for HTTP requests in seconds
@@ -45,14 +44,13 @@ class ConfluenceClient:
             ValueError: If the Confluence API user or token is not set in
                 environment variables.
         """
-        self.base_url = CONFLUENCE_BASE_API_URL  # DO I need this?
         user = os.getenv('CONFLUENCE_API_USER')
         token = os.getenv('CONFLUENCE_API_TOKEN')
 
         if user is None or token is None:
             raise ConfigurationError(user, token)
 
-        self.confluence = Confluence(
+        self.client = Client(
             url=CONFLUENCE_DOMAIN,
             username=user,
             password=token,
@@ -108,7 +106,7 @@ class ConfluenceClient:
 
         params = self._initial_params(limit)
         while True:
-            data = self.confluence.get_space_content(space_key, **params)
+            data = self.client.get_space_content(space_key, **params)
             all_pages.extend(data['results'])
             if not self._has_next_page(data):
                 break

@@ -21,7 +21,7 @@ from .common import (
     format_date,
     get_structured_title,
 )
-from .http_client import CONFLUENCE_BASE_URL, ConfluenceClient
+from .confluence import Confluence, CONFLUENCE_BASE_URL
 
 logger = logging.getLogger('confluence')
 
@@ -83,7 +83,7 @@ def export_pages_metadata(space_key: str, output_dir: str) -> None:
         space_key (str): The key of the Confluence space.
         output_dir (str): Directory to save the output files.
     """
-    client = ConfluenceClient()
+    client = Confluence()
 
     output_dir = os.path.abspath(output_dir)
     os.makedirs(output_dir, exist_ok=True)

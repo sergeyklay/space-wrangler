@@ -17,7 +17,7 @@ import os
 from typing import Any, Dict, List
 
 from .common import get_page_path
-from .http_client import ConfluenceClient
+from .confluence import Confluence
 from .template import html_template
 
 logger = logging.getLogger('confluence')
@@ -59,7 +59,7 @@ def export_space(space_key: str, output_dir: str) -> None:
         space_key (str): The key of the Confluence space to export.
         output_dir (str): Directory to save the output files.
     """
-    client = ConfluenceClient()
+    client = Confluence()
 
     output_dir = os.path.abspath(output_dir)
     os.makedirs(output_dir, exist_ok=True)

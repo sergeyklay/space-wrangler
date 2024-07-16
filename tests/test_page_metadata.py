@@ -7,7 +7,7 @@
 # For the full copyright and license information, please view
 # the LICENSE file that was distributed with this source code.
 
-from confluence.http_client import ConfluenceClient
+from confluence.confluence import Confluence
 from confluence.page_metadata import export_pages_metadata, save_pages_to_csv
 
 
@@ -21,7 +21,7 @@ def test_save_pages_to_csv(tmpdir, mock_response):
 
 def test_export_pages_metadata(mocker, tmpdir, mock_response):
     mock_get_all_pages_in_space = mocker.patch.object(
-        ConfluenceClient,
+        Confluence,
         'get_all_pages_in_space',
         return_value=mock_response.json()['results']
     )

@@ -7,14 +7,14 @@
 
 import pytest
 
+from confluence.confluence import Confluence
 from confluence.exceptions import ConfigurationError
-from confluence.http_client import ConfluenceClient
 
 
 def test_get_all_pages_in_space(mock_response, mocker):
     mock_get = mocker.patch('atlassian.Confluence.get_space_content')
     mock_get.return_value = mock_response.json()
-    client = ConfluenceClient()
+    client = Confluence()
     pages = client.get_all_pages_in_space('TEST')
     assert len(pages) == 1
     assert pages[0]['title'] == 'Test Page'
@@ -28,7 +28,7 @@ def test_get_all_pages_in_space_with_next(mock_response_with_next, mocker):
             mock_response_with_next[1].json(),
         ]
     )
-    client = ConfluenceClient()
+    client = Confluence()
     pages = client.get_all_pages_in_space('TEST')
 
     assert mock_get.call_count == 2
@@ -45,7 +45,7 @@ def test_get_all_pages_in_space_with_next_2(mock_response_with_next_2, mocker):
             mock_response_with_next_2[1].json(),
         ]
     )
-    client = ConfluenceClient()
+    client = Confluence()
     pages = client.get_all_pages_in_space('TEST')
 
     assert mock_get.call_count == 2
@@ -61,5 +61,5 @@ def test_http_client_initialization_error(monkeypatch):
     monkeypatch.delenv('CONFLUENCE_API_TOKEN', raising=False)
 
     with pytest.raises(ConfigurationError) as excinfo:
-        ConfluenceClient()
+        Confluence()
     assert 'Confluence API user and token are not set' in str(excinfo.value)
