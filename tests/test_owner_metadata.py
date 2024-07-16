@@ -18,13 +18,12 @@ from confluence.owner_metadata import (
 
 
 def test_process_pages():
-    # Sample page data
-    current_pages = [
+    pages = [
         {
             'version': {
                 'by': {
                     'displayName': 'John Doe',
-                    'accountId': '5b8e8643632a6b2c8f80b883'
+                    'accountId': '12345678'
                 }
             },
             'history': {
@@ -35,65 +34,33 @@ def test_process_pages():
         }
     ]
 
-    archived_pages = [
-        {
-            'version': {
-                'by': {
-                    'displayName': 'Jane Doe (Unlicensed)',
-                    'accountId': '5b8e8643632a6b2c8f80b884'
-                }
-            },
-            'history': {
-                'lastUpdated': {
-                    'when': '2024-01-04T12:00:00.000Z'
-                }
-            }
-        }
-    ]
-
     owner_data = defaultdict(lambda: {
-        OwnerMetadata.CURRENT_PAGES_OWNED: 0,
-        OwnerMetadata.ARCHIVED_PAGES_OWNED: 0,
+        OwnerMetadata.PAGES_OWNED: 0,
         OwnerMetadata.LAST_CONTRIBUTION: '01/01/1970',
         OwnerMetadata.OWNER_URL: ''
     })
 
-    # Process current pages
-    process_pages(current_pages, owner_data, 'current')
+    # Process pages
+    process_pages(pages, owner_data)
 
     owner_result = owner_data['John Doe']
-    assert owner_result[OwnerMetadata.CURRENT_PAGES_OWNED] == 1
-    assert owner_result[OwnerMetadata.ARCHIVED_PAGES_OWNED] == 0
+    assert owner_result[OwnerMetadata.PAGES_OWNED] == 1
     assert owner_result[OwnerMetadata.UNLICENSED] == 'FALSE'
-    assert owner_result[OwnerMetadata.OWNER_URL] == \
-           people_url('5b8e8643632a6b2c8f80b883')
+    assert owner_result[OwnerMetadata.OWNER_URL] == people_url('12345678')
     assert owner_result[OwnerMetadata.LAST_CONTRIBUTION] == '01/02/2024'
-
-    # Process archived pages
-    process_pages(archived_pages, owner_data, 'archived')
-
-    owner_result = owner_data['Jane Doe (Unlicensed)']
-    assert owner_result[OwnerMetadata.CURRENT_PAGES_OWNED] == 0
-    assert owner_result[OwnerMetadata.ARCHIVED_PAGES_OWNED] == 1
-    assert owner_result[OwnerMetadata.UNLICENSED] == 'TRUE'
-    assert owner_result[OwnerMetadata.OWNER_URL] == \
-           people_url('5b8e8643632a6b2c8f80b884')
-    assert owner_result[OwnerMetadata.LAST_CONTRIBUTION] == '01/04/2024'
 
 
 def test_save_owners_to_csv(tmpdir):
     owner_data = {
         'John Doe': {
             OwnerMetadata.UNLICENSED: 'FALSE',
-            OwnerMetadata.CURRENT_PAGES_OWNED: 2,
-            OwnerMetadata.ARCHIVED_PAGES_OWNED: 1,
+            OwnerMetadata.PAGES_OWNED: 2,
             OwnerMetadata.LAST_CONTRIBUTION: '07/10/2024',
             OwnerMetadata.OWNER_URL: people_url('5b8e8643632a6b2c8f80b883'),
         },
         'Jane Doe (Unlicensed)': {
             OwnerMetadata.UNLICENSED: 'TRUE',
-            OwnerMetadata.CURRENT_PAGES_OWNED: 1,
-            OwnerMetadata.ARCHIVED_PAGES_OWNED: 0,
+            OwnerMetadata.PAGES_OWNED: 1,
             OwnerMetadata.LAST_CONTRIBUTION: '07/11/2024',
             OwnerMetadata.OWNER_URL: people_url('5b8e8643632a6b2c8f80b884'),
         }
@@ -115,4 +82,4 @@ def test_export_owners_metadata(mocker, tmpdir, mock_response_with_account_id):
     csv_file = output_dir.join('owners-metadata.csv')
 
     assert csv_file.exists()
-    assert mock_get.call_count == 2
+    assert mock_get.call_count == 1

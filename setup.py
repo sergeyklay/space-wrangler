@@ -140,9 +140,7 @@ CLASSIFIERS = [
 # Dependencies that are downloaded by pip on installation and why.
 INSTALL_REQUIRES = [
     'python-dotenv>=1.0.1',  # Get values from your .env file.
-    'requests>=2.32.0',  # Python HTTP for Humans.
-    'types-requests>=2.32.0',  # Type hints for requests.
-    'urllib3>=2.2.2',  # HTTP library with thread-safe connection pooling, file post, and more.  # noqa: E501
+    'atlassian-python-api>=3.41.0',  # Python wrapper for Atlassian REST APIs.
 ]
 
 # Project's URLs

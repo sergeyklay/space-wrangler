@@ -6,6 +6,4 @@
 # the LICENSE file that was distributed with this source code.
 
 python-dotenv
-requests
-types-requests
-urllib3
+atlassian-python-api

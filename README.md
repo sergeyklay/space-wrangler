@@ -51,9 +51,8 @@ owner, and more.
 
 The Owner Metadata Exporter script generates a CSV file with metadata about 
 the owners of pages in a specified Confluence space, including information 
-about whether the owner is unlicensed or deleted, the number of current and 
-archived pages they own, the last contribution date, and a link to their 
-profile.
+about whether the owner is unlicensed or deleted, the number of current pages
+they own, the last contribution date, and a link to their profile.
 
 **Output structure:**
 
@@ -218,8 +217,8 @@ $ echo "CONFLUENCE_API_USER=your-confluence-email" > .env
 $ echo "CONFLUENCE_API_TOKEN=your-confluence-api-token" >> .env
 ```
 
-You can create an API token in your Confluence account settings.
-For more information, see [API Tokens](https://id.atlassian.com/manage-profile/security/api-tokens).
+Obtain an API token from: https://id.atlassian.com/manage-profile/security/api-tokens
+You cannot log in with your regular password to Confluence.
 
 ### Quick Start
 

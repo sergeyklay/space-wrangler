@@ -33,13 +33,12 @@ class OwnerMetadata:
 
     OWNER: str = 'Owner'
     UNLICENSED: str = 'Unlicensed'
-    CURRENT_PAGES_OWNED: str = 'Current Pages Owned'
-    ARCHIVED_PAGES_OWNED: str = 'Archived Pages Owned'
+    PAGES_OWNED: str = 'Pages Owned'
     LAST_CONTRIBUTION: str = 'Last Contribution'
     OWNER_URL: str = 'Owner URL'
 
     @classmethod
-    def get_fieldnames(cls) -> Tuple[str, str, str, str, str, str]:
+    def get_fieldnames(cls) -> Tuple[str, str, str, str, str]:
         """Get the fieldnames for the CSV file.
 
         Returns:
@@ -48,8 +47,7 @@ class OwnerMetadata:
         return (
             cls.OWNER,
             cls.UNLICENSED,
-            cls.CURRENT_PAGES_OWNED,
-            cls.ARCHIVED_PAGES_OWNED,
+            cls.PAGES_OWNED,
             cls.LAST_CONTRIBUTION,
             cls.OWNER_URL
         )
@@ -68,8 +66,7 @@ class OwnerMetadata:
         return {
             cls.OWNER: owner,
             cls.UNLICENSED: data[cls.UNLICENSED],
-            cls.CURRENT_PAGES_OWNED: data[cls.CURRENT_PAGES_OWNED],
-            cls.ARCHIVED_PAGES_OWNED: data[cls.ARCHIVED_PAGES_OWNED],
+            cls.PAGES_OWNED: data[cls.PAGES_OWNED],
             cls.LAST_CONTRIBUTION: data[cls.LAST_CONTRIBUTION],
             cls.OWNER_URL: data[cls.OWNER_URL]
         }
@@ -87,7 +84,7 @@ def save_owners_to_csv(owner_data: Dict[str, Any], output_dir: str) -> None:
 
     sorted_data = sorted(
         owner_data.items(),
-        key=lambda x: x[1][OwnerMetadata.CURRENT_PAGES_OWNED],
+        key=lambda x: x[1][OwnerMetadata.PAGES_OWNED],
         reverse=True,
     )
 
@@ -105,14 +102,12 @@ def save_owners_to_csv(owner_data: Dict[str, Any], output_dir: str) -> None:
 def process_pages(
         pages: List[Dict[str, Any]],
         owner_data: Dict[str, Any],
-        status: str
 ) -> None:
     """Process a list of pages and update owner metadata.
 
     Args:
         pages (list): List of Confluence pages.
         owner_data (dict): Dictionary to store owner metadata.
-        status (str): Status of the pages ('current' or 'archived').
     """
     for page in pages:
         owner = page['version']['by']['displayName']
@@ -123,12 +118,7 @@ def process_pages(
         formatted_last_updated = format_date(last_updated)
 
         curr_owner = owner_data[owner]
-
-        if status == 'current':
-            curr_owner[OwnerMetadata.CURRENT_PAGES_OWNED] += 1
-        elif status == 'archived':
-            curr_owner[OwnerMetadata.ARCHIVED_PAGES_OWNED] += 1
-
+        curr_owner[OwnerMetadata.PAGES_OWNED] += 1
         curr_owner[OwnerMetadata.UNLICENSED] = unlicensed_or_deleted
         curr_owner[OwnerMetadata.OWNER_URL] = owner_url
 
@@ -153,18 +143,14 @@ def export_owners_metadata(space_key: str, output_dir: str) -> None:
     output_dir = os.path.abspath(output_dir)
     os.makedirs(output_dir, exist_ok=True)
 
-    current_pages = client.get_all_pages_in_space(space_key, 'current')
-    archived_pages = client.get_all_pages_in_space(space_key, 'archived')
-
+    pages = client.get_all_pages_in_space(space_key)
     owner_data: DefaultDict[str, Dict[str, Any]] = defaultdict(lambda: {
-        OwnerMetadata.CURRENT_PAGES_OWNED: 0,
-        OwnerMetadata.ARCHIVED_PAGES_OWNED: 0,
+        OwnerMetadata.PAGES_OWNED: 0,
         OwnerMetadata.LAST_CONTRIBUTION: '01/01/1970',
         OwnerMetadata.OWNER_URL: ''
     })
 
-    process_pages(current_pages, owner_data, 'current')
-    process_pages(archived_pages, owner_data, 'archived')
-
+    process_pages(pages, owner_data)
     save_owners_to_csv(owner_data, output_dir)
+
     logger.info('Metadata for page owners downloaded and saved to CSV.')

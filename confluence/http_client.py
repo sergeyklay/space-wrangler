@@ -13,15 +13,15 @@ handling authentication and HTTP requests.
 
 import logging
 import os
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List
 from urllib.parse import parse_qs, urlparse
 
-import requests
-from requests.auth import HTTPBasicAuth
+from atlassian import Confluence
 
 from .exceptions import ConfigurationError
 
-CONFLUENCE_BASE_URL = 'https://pdffiller.atlassian.net/wiki'
+CONFLUENCE_DOMAIN = 'https://pdffiller.atlassian.net'
+CONFLUENCE_BASE_URL = f'{CONFLUENCE_DOMAIN}/wiki'
 CONFLUENCE_BASE_API_URL = f"{CONFLUENCE_BASE_URL}/rest/api"
 
 logger = logging.getLogger('confluence')
@@ -34,7 +34,7 @@ class ConfluenceClient:
     various API requests to the Confluence server.
     """
 
-    def __init__(self, timeout: int = 10) -> None:
+    def __init__(self, timeout: int = 75) -> None:
         """Initialize the ConfluenceClient with authentication and base URL.
 
         Args:
@@ -45,90 +45,62 @@ class ConfluenceClient:
             ValueError: If the Confluence API user or token is not set in
                 environment variables.
         """
-        self.base_url = CONFLUENCE_BASE_API_URL
+        self.base_url = CONFLUENCE_BASE_API_URL  # DO I need this?
         user = os.getenv('CONFLUENCE_API_USER')
         token = os.getenv('CONFLUENCE_API_TOKEN')
 
         if user is None or token is None:
             raise ConfigurationError(user, token)
 
-        self.auth = HTTPBasicAuth(user, token)
-        self.headers = {'Accept': 'application/json'}
-        self.timeout = timeout
-
-    def get(
-            self,
-            endpoint: str,
-            params: Optional[Dict[str, Any]] = None
-    ) -> Dict[str, Any]:
-        """Perform a GET request to the Confluence API.
-
-        Args:
-            endpoint (str): The API endpoint to send the GET request to.
-            params (dict, optional): Optional query parameters to include in
-               the request.
-
-        Returns:
-            dict: The JSON response from the API.
-
-        Raises:
-            requests.exceptions.HTTPError: If the HTTP request returned an
-               unsuccessful status code.
-        """
-        url = f"{self.base_url}{endpoint}"
-        response = requests.get(
-            url,
-            params=params,
-            auth=self.auth,
-            headers=self.headers,
-            timeout=self.timeout,
+        self.confluence = Confluence(
+            url=CONFLUENCE_DOMAIN,
+            username=user,
+            password=token,
+            timeout=timeout,
+            cloud=True
         )
-        response.raise_for_status()
-        return response.json()
 
     def get_all_pages_in_space(
             self,
             space_key: str,
-            status_filter: str = 'current',
             limit: int = 100
     ) -> List[Dict[str, Any]]:
         """Retrieve all pages for a given space key from Confluence.
 
         Args:
             space_key (str): The key of the Confluence space.
-            status_filter (str, optional): Filter for the status of the pages
-               ('current' or 'archived').
             limit (int, optional): Number of pages to retrieve per request
                (default is 100).
 
         Returns:
             list: List of pages in the specified Confluence space.
         """
-        endpoint = '/content'
-        params: Dict[str, Union[str, int]] = {
-            'spaceKey': space_key,
-            'expand': 'body.storage,ancestors,history.lastUpdated,version',
+        all_pages = []
+        logger.info(f'Fetch space pages ({limit} pages per request)...')
+
+        params = {
+            'depth': 'all',
+            'start': '0',
             'limit': str(limit),
-            'status': status_filter,
+            'expand': 'body.storage,ancestors,history.lastUpdated,version',
+            'content_type': 'page',  # How about blogpost?
         }
 
-        all_pages = []
-        logger.info(
-            f'Fetch space {status_filter} pages '
-            f'({limit} pages per request)...'
-        )
         while True:
-            data = self.get(endpoint, params=params)
+            data = self.confluence.get_space_content(space_key, **params)
             all_pages.extend(data['results'])
             if 'next' in data['_links']:
                 next_url = data['_links']['next']
                 parsed_url = urlparse(next_url)
                 query_params = parse_qs(parsed_url.query)
                 for key, value in query_params.items():
+                    if key == 'next':
+                        continue
                     if len(value) == 1:
                         params[key] = value[0]
                     else:
                         params[key] = ','.join(value)
             else:
                 break
+
         return all_pages

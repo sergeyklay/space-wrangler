@@ -88,7 +88,7 @@ def export_pages_metadata(space_key: str, output_dir: str) -> None:
     output_dir = os.path.abspath(output_dir)
     os.makedirs(output_dir, exist_ok=True)
 
-    result = client.get_all_pages_in_space(space_key)
-    save_pages_to_csv(result, output_dir)
+    pages = client.get_all_pages_in_space(space_key)
+    save_pages_to_csv(pages, output_dir)
     logger.info(
-        f'Metadata for {len(result)} pages downloaded and saved to CSV')
+        f'Metadata for {len(pages)} pages downloaded and saved to CSV')

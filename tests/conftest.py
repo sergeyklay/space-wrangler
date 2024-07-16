@@ -8,7 +8,6 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
-import requests
 
 
 @pytest.fixture(autouse=True)
@@ -22,7 +21,7 @@ def set_env_vars():
 
 @pytest.fixture
 def mock_response_with_account_id():
-    mock_resp = MagicMock(spec=requests.Response)
+    mock_resp = MagicMock()
     mock_resp.json.return_value = {
         'results': [
             {
@@ -78,7 +77,7 @@ def mock_response_with_account_id():
 
 @pytest.fixture
 def mock_response():
-    mock_resp = MagicMock(spec=requests.Response)
+    mock_resp = MagicMock()
     mock_resp.json.return_value = {
         'results': [
             {
@@ -105,7 +104,7 @@ def mock_response():
 
 @pytest.fixture
 def mock_response_with_next():
-    mock_resp1 = MagicMock(spec=requests.Response)
+    mock_resp1 = MagicMock()
     mock_resp1.json.return_value = {
         'results': [
             {
@@ -129,7 +128,7 @@ def mock_response_with_next():
     }
     mock_resp1.status_code = 200
 
-    mock_resp2 = MagicMock(spec=requests.Response)
+    mock_resp2 = MagicMock()
     mock_resp2.json.return_value = {
         'results': [
             {
@@ -157,7 +156,7 @@ def mock_response_with_next():
 
 @pytest.fixture
 def mock_response_with_next_2():
-    mock_resp1 = MagicMock(spec=requests.Response)
+    mock_resp1 = MagicMock()
     mock_resp1.json.return_value = {
         'results': [
             {
@@ -181,7 +180,7 @@ def mock_response_with_next_2():
     }
     mock_resp1.status_code = 200
 
-    mock_resp2 = MagicMock(spec=requests.Response)
+    mock_resp2 = MagicMock()
     mock_resp2.json.return_value = {
         'results': [
             {

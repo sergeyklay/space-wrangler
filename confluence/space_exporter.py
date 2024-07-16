@@ -64,6 +64,6 @@ def export_space(space_key: str, output_dir: str) -> None:
     output_dir = os.path.abspath(output_dir)
     os.makedirs(output_dir, exist_ok=True)
 
-    result = client.get_all_pages_in_space(space_key)
-    save_pages_to_files(result, output_dir)
-    logger.info(f'Total {len(result)} pages downloaded.')
+    pages = client.get_all_pages_in_space(space_key)
+    save_pages_to_files(pages, output_dir)
+    logger.info(f'Total {len(pages)} pages downloaded.')
