@@ -87,6 +87,75 @@ What kind of things you need to install on your workstation to start:
 
 ### Installing
 
+#### Recommended Installation Method
+
+To use the Confluence Space Management Toolkit without modifying or exploring
+its code, follow the steps below. This method is suitable for those who might be
+new to Python and are unfamiliar with virtual environments.
+
+##### Installation Using `pip`
+
+The Confluence Space Management Toolkit is a Python package, and the recommended
+installation method is using `pip`. This ensures that all dependencies are managed
+correctly and the toolkit is isolated from other Python projects on your system.
+
+###### Step-by-Step Guide
+
+1. Ensure you have Python installed on your system (`python3 --version`).
+2. Open a Terminal/Command Prompt
+3. Run the following command to install the toolkit directly from GitHub.
+   This will install the latest version of the toolkit.
+   ```shell
+    $ pip3 install --user --upgrade git+https://github.com/airslateinc/confluence-maintenance-tools.git#egg=confluence
+   ```
+4. After installation, you can verify that the toolkit is installed correctly
+   by checking its version.
+   ```shell
+    $ confluence --version
+   ```
+
+###### Using Virtual Environment (Optional but Recommended)
+
+Using a virtual environment is a good practice in Python as it creates an
+isolated environment for your projects, avoiding conflicts with other Python
+projects.
+
+1. Run the following commands to create and activate a virtual environment.
+   ```shell
+    $ python3 -m venv .venv
+    $ source .venv/bin/activate  # On Windows use `venv\Scripts\activate`
+   ```
+2. Once the virtual environment is activated, install the toolkit using pip.
+   ```shell
+    $ pip install --upgrade git+https://github.com/airslateinc/confluence-maintenance-tools.git#egg=confluence
+    ```
+3. Similar to the previous step, verify the installation.
+   ```shell
+    $ confluence --version
+   ```
+
+###### Installing Tagged Release
+
+If you prefer to install a specific, stable version of the toolkit, you can use
+a tagged release. Replace `v1.2.0` in the example below with the desired version:
+
+```shell
+# Without virtualenv
+pip install --user --upgrade git+https://github.com/airslateinc/confluence-maintenance-tools.git@v1.2.0#egg=confluence
+
+# Or, with virtualenv
+pip install --upgrade git+https://github.com/airslateinc/confluence-maintenance-tools.git@v1.2.0#egg=confluence
+````
+
+###### Additional Resources
+
+For more information on `pip` and Python packaging, visit the following links:
+
+* [Install pip](https://pip.pypa.io/en/latest/installation/)
+* [Python Packaging User Guide](https://packaging.python.org/)
+
+#### Git way installation method (for developers)
+
 To install Confluence Space Management Toolkits, follow these steps:
 
 1. Clone the repository
@@ -95,7 +164,7 @@ To install Confluence Space Management Toolkits, follow these steps:
 4. Install project and all its dependencies
 5. Create a `.env` file with your Confluence API credentials
 
-#### Installation Steps
+###### Installation Steps
 
 ```shell
 # Clone the repository
@@ -111,25 +180,36 @@ $ source .venv/bin/activate  # On Windows use `venv\Scripts\activate`
 # Install project and all its dependencies
 $ make install
 
-# Create a .env file in the root directory and add the following variables:
-$ echo "CONFLUENCE_API_USER=your-confluence-email" > .env
-$ echo "CONFLUENCE_API_TOKEN=your-confluence-api-token" >> .env
+# Verify the installation
+$ confluence --version
 ```
 
 > [!IMPORTANT]
 > The command `source .venv/bin/activate` activates the virtual
 > environment. This step is not only part of the installation process but also
-> mandatory for running the project. Remember to activate the virtual
-> environment once per terminal session.
-
-
-You can create an API token in your Confluence account settings. For more
-information, see [API Tokens](https://id.atlassian.com/manage-profile/security/api-tokens).
+> mandatory for running the project when using the Git way installation method.
+> Remember to activate the virtual environment once per terminal session.
 
 More information about Python virtualenv can be found here:
 [Python Virtualenv](https://docs.python.org/3/library/venv.html).
 
 ## Usage
+
+### Creating the `.env` file
+
+Before running the toolkit, you need to create a `.env` file in the root directory
+with your Confluence API credentials. This file will store your API user and token
+securely. Run the following commands to create the `.env` file and add your
+Confluence API credentials:
+
+```shell
+# Create a .env file in the root directory and add the following variables:
+$ echo "CONFLUENCE_API_USER=your-confluence-email" > .env
+$ echo "CONFLUENCE_API_TOKEN=your-confluence-api-token" >> .env
+```
+
+You can create an API token in your Confluence account settings.
+For more information, see [API Tokens](https://id.atlassian.com/manage-profile/security/api-tokens).
 
 ### Quick Start
 
