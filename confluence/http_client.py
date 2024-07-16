@@ -19,6 +19,8 @@ from urllib.parse import parse_qs, urlparse
 import requests
 from requests.auth import HTTPBasicAuth
 
+from .exceptions import ConfigurationError
+
 CONFLUENCE_BASE_URL = 'https://pdffiller.atlassian.net/wiki'
 CONFLUENCE_BASE_API_URL = f"{CONFLUENCE_BASE_URL}/rest/api"
 
@@ -48,8 +50,7 @@ class ConfluenceClient:
         token = os.getenv('CONFLUENCE_API_TOKEN')
 
         if user is None or token is None:
-            raise ValueError('Confluence API user or token not '
-                             'set in environment variables.')
+            raise ConfigurationError(user, token)
 
         self.auth = HTTPBasicAuth(user, token)
         self.headers = {'Accept': 'application/json'}

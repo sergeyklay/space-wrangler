@@ -134,6 +134,16 @@ projects.
     $ confluence --version
    ```
 
+> [!IMPORTANT]
+> The command `source .venv/bin/activate` activates the virtual
+> environment. This step is not only part of the installation process but also
+> mandatory for running the project when using the Virtual Environment way
+> installation method. Remember to activate the virtual environment once per
+> terminal session.
+
+More information about Python virtualenv can be found here:
+[Python Virtualenv](https://docs.python.org/3/library/venv.html).
+
 ###### Installing Tagged Release
 
 If you prefer to install a specific, stable version of the toolkit, you can use

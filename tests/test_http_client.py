@@ -7,6 +7,7 @@
 
 import pytest
 
+from confluence.exceptions import ConfigurationError
 from confluence.http_client import ConfluenceClient
 
 
@@ -53,6 +54,6 @@ def test_http_client_initialization_error(monkeypatch):
     monkeypatch.delenv('CONFLUENCE_API_USER', raising=False)
     monkeypatch.delenv('CONFLUENCE_API_TOKEN', raising=False)
 
-    message = 'Confluence API user or token not set in environment variables'
-    with pytest.raises(ValueError, match=message):
+    with pytest.raises(ConfigurationError) as excinfo:
         ConfluenceClient()
+    assert 'Confluence API user and token are not set' in str(excinfo.value)
