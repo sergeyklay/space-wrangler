@@ -60,6 +60,34 @@ class ConfluenceClient:
             cloud=True
         )
 
+    def _initial_params(self, limit: int) -> Dict[str, str]:
+        """Initialize the query parameters."""
+        return {
+            'depth': 'all',
+            'start': '0',
+            'limit': str(limit),
+            'expand': 'body.storage,ancestors,history.lastUpdated,version',
+            'content_type': 'page',   # How about blogpost?
+        }
+
+    def _update_params_with_next(
+            self,
+            next_url: str,
+            params: Dict[str, str]
+    ) -> Dict[str, str]:
+        """Update query parameters with the next page's parameters."""
+        parsed_url = urlparse(next_url)
+        query_params = parse_qs(parsed_url.query)
+        for key, value in query_params.items():
+            if key == 'next':
+                continue
+            params[key] = value[0] if len(value) == 1 else ','.join(value)
+        return params
+
+    def _has_next_page(self, data: Dict[str, Any]) -> bool:
+        """Check if there is a next page."""
+        return 'next' in data['_links']
+
     def get_all_pages_in_space(
             self,
             space_key: str,
@@ -78,29 +106,15 @@ class ConfluenceClient:
         all_pages = []
         logger.info(f'Fetch space pages ({limit} pages per request)...')
 
-        params = {
-            'depth': 'all',
-            'start': '0',
-            'limit': str(limit),
-            'expand': 'body.storage,ancestors,history.lastUpdated,version',
-            'content_type': 'page',  # How about blogpost?
-        }
-
+        params = self._initial_params(limit)
         while True:
             data = self.confluence.get_space_content(space_key, **params)
             all_pages.extend(data['results'])
-            if 'next' in data['_links']:
-                next_url = data['_links']['next']
-                parsed_url = urlparse(next_url)
-                query_params = parse_qs(parsed_url.query)
-                for key, value in query_params.items():
-                    if key == 'next':
-                        continue
-                    if len(value) == 1:
-                        params[key] = value[0]
-                    else:
-                        params[key] = ','.join(value)
-            else:
+            if not self._has_next_page(data):
                 break
+            params = self._update_params_with_next(
+                data['_links']['next'],
+                params
+            )
 
         return all_pages
