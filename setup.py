@@ -139,6 +139,7 @@ CLASSIFIERS = [
 
 # Dependencies that are downloaded by pip on installation and why.
 INSTALL_REQUIRES = [
+    'click>=8.1.0',  # Composable command line interface toolkit.
     'python-dotenv>=1.0.1',  # Get values from your .env file.
     'atlassian-python-api>=3.41.0',  # Python wrapper for Atlassian REST APIs.
 ]
