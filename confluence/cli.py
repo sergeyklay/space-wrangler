@@ -11,30 +11,9 @@ import logging
 import signal
 
 import click
-from dotenv import find_dotenv, load_dotenv
 
+from confluence.env_loader import EnvLoader
 from .exceptions import Error
-
-
-def load_env_variables() -> None:
-    """Load environment variables from .env file if it exists.
-
-    This function uses `find_dotenv` to locate the .env file. If the .env file
-    is found, it loads the environment variables from this file into the
-    environment. If the .env file is not found, it will load any existing
-    environment variables. Using `usecwd=True` ensures that the search for
-    the .env file starts from the current working directory.
-    """
-    # Use find_dotenv to locate the .env file, ensuring it is found
-    # in the current working directory.
-    dotenv_path = find_dotenv(usecwd=True)
-    if dotenv_path:
-        # Load environment variables from the found .env file.
-        load_dotenv(dotenv_path)
-    else:
-        # Fallback: load environment variables from
-        # the default .env file location.
-        load_dotenv()
 
 
 def main() -> int:
@@ -45,7 +24,7 @@ def main() -> int:
     """
     # Load environment variables early in the main function to ensure all
     # subsequent imports and operations have access to these variables.
-    load_env_variables()
+    EnvLoader.load_env_variables()
 
     try:
         from .commands import app

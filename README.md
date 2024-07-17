@@ -171,7 +171,7 @@ To install Confluence Space Management Toolkits, follow these steps:
 2. Set up the project
 3. Activate the virtual environment
 4. Install project and all its dependencies
-5. Create a `.env` file with your Confluence API credentials
+5. Verify the installation
 
 ###### Installation Steps
 
@@ -204,21 +204,9 @@ More information about Python virtualenv can be found here:
 
 ## Usage
 
-### Creating the `.env` file
-
-Before running the toolkit, you need to create a `.env` file in the root directory
-with your Confluence API credentials. This file will store your API user and token
-securely. Run the following commands to create the `.env` file and add your
-Confluence API credentials:
-
-```shell
-# Create a .env file in the root directory and add the following variables:
-$ echo "CONFLUENCE_API_USER=your-confluence-email" > .env
-$ echo "CONFLUENCE_API_TOKEN=your-confluence-api-token" >> .env
-```
-
-Obtain an API token from: https://id.atlassian.com/manage-profile/security/api-tokens
-You cannot log in with your regular password to Confluence.
+Before running the toolkit, you need to provide your Confluence API credentials.
+For detailed instructions on how to create and store your credentials, see the
+[Environment Variables](#environment-variables) section.
 
 ### Quick Start
 
@@ -274,9 +262,56 @@ $ confluence -q <command> --space-key YOUR_SPACE_KEY
 
 ## Environment Variables
 
-Our toolkit can obtain the necessary API credentials from the current
-environment variables without reading from a `.env` file. This can be useful
-for avoiding the storage of secrets in the project directory.
+Currently, the Confluence Space Management Toolkit needs the following
+environment variables to work:
+
+- `CONFLUENCE_API_USER`: Your Confluence email address.
+- `CONFLUENCE_API_TOKEN`: Your Confluence API token.
+
+You can obtain an API token from
+[Confluence API Tokens section](https://id.atlassian.com/manage-profile/security/api-tokens).
+You cannot log in with your regular password to Confluence.
+
+The toolkit loads environment variables in the following order:
+
+1. Variables from the current console session.
+2. Variables from the `.confluence` file in the current working directory.
+3. Variables from the `.env` file in the current working directory as a fallback.
+4. Variables from the `.confluence` file in the user's home directory.
+
+### Creating the `.confluence` file
+
+One way to provide the necessary environment variables is to create a `.confluence`
+file with your Confluence API credentials. This file can be placed in various
+locations depending on your setup and needs:
+
+1. **Current Working Directory**: If you are running the toolkit from a specific
+  directory, you can place the `.confluence` file in that directory. This allows
+  the toolkit to find the credentials relative to where you are executing the
+  commands.
+2. **Home Directory**: Alternatively, you can place the `.confluence` file in
+  your home directory. This is useful if you want to use the same credentials
+  across multiple projects or executions.
+
+Run the following commands to create the `.confluence` file and add your
+Confluence API credentials:
+
+```shell
+# Create a .confluence file and add the following variables:
+$ echo CONFLUENCE_API_USER="your-confluence-email" > .confluence
+$ echo CONFLUENCE_API_TOKEN="your-confluence-api-token" >> .confluence
+```
+
+> [!WARNING]
+> The `.confluence` file (or its equivalent `.env`) is a plain text file and is
+> not protected against simple reading. Wherever this file is located, it is
+> the user's responsibility to protect it from unauthorized access.
+ 
+### Using Environment Variables Directly
+
+The toolkit can also obtain the necessary API credentials from the current
+environment variables without reading from a `.confluence` file. This can be
+useful for avoiding the storage of secrets in the project directory.
 
 To run the scripts with environment variables directly, use the following
 commands:
