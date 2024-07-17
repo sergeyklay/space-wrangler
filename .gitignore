@@ -32,4 +32,4 @@ coverage.*
 .mutmut-cache
 
 # Application configuration.
-.env
+.confluence

@@ -19,6 +19,9 @@
 *.md            linguist-documentation -linguist-detectable
 LICENSE         linguist-documentation -linguist-detectable
 
+# Environment files
+.confluence.example linguist-language=Shell
+
 #
 # Exclude files from exporting
 # (used by the "download ZIP archive" option, for example).

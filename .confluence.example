@@ -1,0 +1,10 @@
+# This file is part of the Confluence Space Management Toolkit.
+# Use this file to define your environment variables for the Confluence API.
+# For more information regarding the Environment Variables, please visit:
+# https://github.com/airslateinc/confluence-maintenance-tools?tab=readme-ov-file#environment-variables
+
+# Confluence API Token
+CONFLUENCE_API_TOKEN="secret token"
+
+# Confluence API User (usually your email)
+CONFLUENCE_API_USER="your email"
