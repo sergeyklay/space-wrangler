@@ -38,7 +38,7 @@ class OwnerMetadata:
     OWNER_URL: str = 'Owner URL'
 
     @classmethod
-    def get_fieldnames(cls) -> Tuple[str, str, str, str, str]:
+    def get_fieldnames(cls) -> Tuple[str, ...]:
         """Get the fieldnames for the CSV file.
 
         Returns:
@@ -58,7 +58,7 @@ class OwnerMetadata:
 
         Args:
             owner (str): Owner name.
-            data (dict): Owner metadata.
+            data (dict): Owner data.
 
         Returns:
             dict: Dictionary representation of the owner metadata.
@@ -93,8 +93,7 @@ def save_owners_to_csv(owner_data: Dict[str, Any], output_dir: str) -> None:
         writer.writeheader()
 
         for owner, data in sorted_data:
-            if data[fieldnames[2]] > 0 or data[fieldnames[3]] > 0:
-                writer.writerow(OwnerMetadata.to_dict(owner, data))
+            writer.writerow(OwnerMetadata.to_dict(owner, data))
 
     logger.info(f'CSV file saved to {csv_path}')
 
@@ -110,8 +109,8 @@ def process_pages(
         owner_data (dict): Dictionary to store owner metadata.
     """
     for page in pages:
-        owner = page['version']['by']['displayName']
-        owner_id = page['version']['by']['accountId']
+        owner = page['history']['ownedBy']['displayName']
+        owner_id = page['history']['ownedBy']['accountId']
         owner_url = people_url(owner_id)
         unlicensed_or_deleted = check_unlicensed_or_deleted(owner)
         last_updated = page['history']['lastUpdated']['when']

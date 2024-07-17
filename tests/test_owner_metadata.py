@@ -29,7 +29,11 @@ def test_process_pages():
             'history': {
                 'lastUpdated': {
                     'when': '2024-01-02T12:00:00.000Z'
-                }
+                },
+                'ownedBy': {
+                    'accountId': '5b8e8643632a6b2c8f80b883',
+                    'displayName': 'John Doe',
+                },
             }
         }
     ]
@@ -46,7 +50,8 @@ def test_process_pages():
     owner_result = owner_data['John Doe']
     assert owner_result[OwnerMetadata.PAGES_OWNED] == 1
     assert owner_result[OwnerMetadata.UNLICENSED] == 'FALSE'
-    assert owner_result[OwnerMetadata.OWNER_URL] == people_url('12345678')
+    assert owner_result[OwnerMetadata.OWNER_URL] == people_url(
+        '5b8e8643632a6b2c8f80b883')
     assert owner_result[OwnerMetadata.LAST_CONTRIBUTION] == '01/02/2024'
 
 

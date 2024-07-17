@@ -37,7 +37,11 @@ def mock_response_with_account_id():
                             'displayName': 'John Doe',
                             'accountId': '5b8e8643632a6b2c8f80b883',
                         }
-                    }
+                    },
+                    'ownedBy': {
+                        'accountId': '5b8e8643632a6b2c8f80b883',
+                        'displayName': 'John Doe',
+                    },
                 },
                 'version': {'by': {
                     'displayName': 'John Doe',
@@ -58,8 +62,12 @@ def mock_response_with_account_id():
                         'by': {
                             'displayName': 'Jane Doe (Unlicensed)',
                             'accountId': '5b8e8643632a6b2c8f80b884',
-                        }
-                    }
+                        },
+                    },
+                    'ownedBy': {
+                        'accountId': '5b8e8643632a6b2c8f80b884',
+                        'displayName': 'Jane Doe (Unlicensed)',
+                    },
                 },
                 'version': {'by': {
                     'displayName': 'Jane Doe (Unlicensed)',
@@ -90,7 +98,11 @@ def mock_response():
                     'lastUpdated': {
                         'when': '2024-01-02T12:00:00.000Z',
                         'by': {'displayName': 'Test User'}
-                    }
+                    },
+                    'ownedBy': {
+                        'accountId': '123',
+                        'displayName': 'Test User',
+                    },
                 },
                 'version': {'by': {'displayName': 'Test User'}},
                 '_links': {'webui': '/wiki/pages/viewpage.action?pageId=123'}
@@ -117,7 +129,11 @@ def mock_response_with_next():
                     'lastUpdated': {
                         'when': '2024-01-02T12:00:00.000Z',
                         'by': {'displayName': 'Test User 1'}
-                    }
+                    },
+                    'ownedBy': {
+                        'accountId': '123',
+                        'displayName': 'Test User 1',
+                    },
                 },
                 'version': {'by': {'displayName': 'Test User 1'}},
                 '_links': {'webui': '/wiki/pages/viewpage.action?pageId=123'}
@@ -141,7 +157,11 @@ def mock_response_with_next():
                     'lastUpdated': {
                         'when': '2024-01-02T12:00:00.000Z',
                         'by': {'displayName': 'Test User 2'}
-                    }
+                    },
+                    'ownedBy': {
+                        'accountId': '123',
+                        'displayName': 'Test User 2',
+                    },
                 },
                 'version': {'by': {'displayName': 'Test User 2'}},
                 '_links': {'webui': '/wiki/pages/viewpage.action?pageId=124'}
@@ -169,7 +189,11 @@ def mock_response_with_next_2():
                     'lastUpdated': {
                         'when': '2024-01-02T12:00:00.000Z',
                         'by': {'displayName': 'Test User 1'}
-                    }
+                    },
+                    'ownedBy': {
+                        'accountId': '123',
+                        'displayName': 'Test User 1',
+                    },
                 },
                 'version': {'by': {'displayName': 'Test User 1'}},
                 '_links': {'webui': '/wiki/pages/viewpage.action?pageId=123'}
@@ -193,7 +217,11 @@ def mock_response_with_next_2():
                     'lastUpdated': {
                         'when': '2024-01-02T12:00:00.000Z',
                         'by': {'displayName': 'Test User 2'}
-                    }
+                    },
+                    'ownedBy': {
+                        'accountId': '123',
+                        'displayName': 'Test User 2',
+                    },
                 },
                 'version': {'by': {'displayName': 'Test User 2'}},
                 '_links': {'webui': '/wiki/pages/viewpage.action?pageId=124'}

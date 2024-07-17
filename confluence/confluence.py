@@ -60,11 +60,18 @@ class Confluence:
 
     def _initial_params(self, limit: int) -> Dict[str, str]:
         """Initialize the query parameters."""
+        expand = (
+            'body.storage,'
+            'ancestors,'
+            'history.ownedBy,'
+            'history.lastUpdated,'
+            'version'
+        )
         return {
             'depth': 'all',
             'start': '0',
             'limit': str(limit),
-            'expand': 'body.storage,ancestors,history.lastUpdated,version',
+            'expand': expand,
             'content_type': 'page',   # How about blogpost?
         }
 
