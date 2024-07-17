@@ -15,7 +15,7 @@ import os
 import re
 import textwrap
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from bs4 import BeautifulSoup
 
@@ -138,7 +138,7 @@ def format_text(html_content: str) -> str:
 
     text = soup.get_text().replace('\xa0', ' ')
     lines = text.splitlines()
-    new_lines = []
+    new_lines: List[str] = []
     empty_line = False
 
     for line in lines:
