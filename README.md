@@ -335,6 +335,47 @@ $ CONFLUENCE_API_USER=your-confluence-email \
 > your API credentials in the command history. Ensure to clear or manage your
 > command history appropriately to avoid exposing sensitive information.
 
+### Persistent Environment Variables
+
+The ability to configure the toolkit using environment variables directly
+means you can set these variables in your shell's configuration files such as
+`.bashrc`, `.profile`, `.zshrc`, or their equivalents. This allows the variables
+to be set automatically in every new terminal session.
+
+Add the following lines to your respective shell configuration file:
+
+```shell
+export CONFLUENCE_API_USER="your-confluence-email"
+export CONFLUENCE_API_TOKEN="your-confluence-api-token"
+```
+
+Then apply the changes by sourcing the file:
+
+```shell
+source ~/.bashrc
+# or
+source ~/.profile
+# or
+source ~/.zshrc
+```
+
+> [!WARNING]  
+> While setting environment variables in your shell configuration files is
+> convenient, it also poses a security risk. These files are usually stored in
+> your home directory and might be accessible to other users on your system
+> if proper permissions are not set.
+>
+> If another user gains access to your home directory, they could read your
+> configuration files and steal your Confluence API credentials.
+> 
+> If you back up your home directory without encryption, your credentials might
+> be exposed in the backup files.
+> 
+> Ensure that your configuration files are only readable and writable by you or
+> store sensitive information in encrypted storage services such as AWS Secrets
+> Manager, Azure Key Vault, or HashiCorp Vault. These services provide secure
+> access to credentials and can be integrated with your environment.
+
 ## Project Information
 
 Confluence Space Management Toolkit is released under the
