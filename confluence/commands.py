@@ -11,7 +11,7 @@ from typing import Any
 
 import click
 
-from . import __copyright__, __version__
+from . import __copyright__, __description__, __version__
 from .logger import setup_logger
 
 CONTEXT_SETTINGS = {
@@ -66,7 +66,8 @@ def get_version_str() -> str:
 
 @click.group(
     context_settings=CONTEXT_SETTINGS,
-    invoke_without_command=True
+    invoke_without_command=True,
+    help=__description__,
 )
 @click.version_option(
     __version__,
@@ -84,19 +85,23 @@ def get_version_str() -> str:
     is_flag=True,
 )
 @click.pass_context
-def app(ctx: click.core.Context, quiet: bool, silent: bool) -> None:
+def app(ctx: click.core.Context, quiet: bool, silent: bool) -> int:
     """The main CLI application entry point.
 
     Args:
         ctx (click.core.Context): The Click context object.
         quiet (bool): Flag to suppress all output except warnings and errors.
         silent (bool): Synonym for `quiet`.
+
+    Returns:
+        int: An exit code
     """
     # Setup logger based on the quiet argument
     setup_logger(quiet or silent)
     if ctx.invoked_subcommand is None:
         click.echo(ctx.get_help())
-        ctx.exit(1)
+        return 1
+    return 0
 
 
 @app.command(

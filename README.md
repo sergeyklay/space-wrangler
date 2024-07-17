@@ -231,7 +231,7 @@ $ confluence --help
 To export all pages from a specified Confluence space:
 
 ```shell
-$ confluence export --space-key YOUR_SPACE_KEY
+$ confluence export-space --space-key YOUR_SPACE_KEY
 ```
 
 ### Exporting Page Metadata
@@ -284,7 +284,7 @@ commands:
 ```shell
 $ CONFLUENCE_API_USER=your-confluence-email \
 > CONFLUENCE_API_TOKEN="your-confluence-api-token" \
-> confluence export --space-key YOUR_SPACE_KEY
+> confluence export-space --space-key YOUR_SPACE_KEY
 
 $ CONFLUENCE_API_USER=your-confluence-email \
 > CONFLUENCE_API_TOKEN="your-confluence-api-token" \
