@@ -24,39 +24,42 @@ useful features in the future.
 
 ### Space Exporter
 
-The Space Exporter script downloads all pages from a specified Confluence 
-space and saves them locally in both HTML and JSON formats.
+The Space Exporter command downloads all pages from a specified Confluence 
+space and saves them locally in HTML, JSON, and plain text formats.
 
 **Output structure:**
 
-* The script saves HTML and JSON versions of each page in the `output/html` 
-  and `output/json` directories, respectively.
+* The command saves HTML, JSON, and text versions of each page in the
+  `output/html` `output/json`, and `output/txt` directories, respectively.
 * The directory structure mirrors the hierarchy of pages in Confluence.
 * The `output` directory can be customized using the `--output-dir` option.
 
+The text files are formatted to ensure that there are no extra empty lines and
+that each line does not exceed 80 characters.
+
 ### Pages Metadata Exporter
 
-The Pages Metadata Exporter script generates a CSV file with metadata about 
+The Pages Metadata Exporter command generates a CSV file with metadata about 
 each page in a specified Confluence space, including whether the content is in 
 English or contains Cyrillic characters, creation and last modification dates, 
 owner, and more.
 
 **Output structure:**
 
-* The script saves `pages-metadata.csv` CSV file with metadata about each page 
+* The command saves `pages-metadata.csv` CSV file with metadata about each page 
   in the `output` directory.
 * The `output` directory can be customized using the `--output-dir` option.
 
 ### Owner Metadata Exporter
 
-The Owner Metadata Exporter script generates a CSV file with metadata about 
+The Owner Metadata Exporter command generates a CSV file with metadata about 
 the owners of pages in a specified Confluence space, including information 
 about whether the owner is unlicensed or deleted, the number of current pages
 they own, the last contribution date, and a link to their profile.
 
 **Output structure:**
 
-* The script saves `owners-metadata.csv` CSV file with metadata about each 
+* The command saves `owners-metadata.csv` CSV file with metadata about each 
   owner in the `output` directory.
 * The `output` directory can be customized using the `--output-dir` option.
 
@@ -70,7 +73,7 @@ What kind of things you need to install on your workstation to start:
 * [Git](https://git-scm.com/) >= 1.7.0
 
 > [!NOTE]
-> While this project might hypothetically work with Python 3.8 or earlier
+> While this toolkit might hypothetically work with Python 3.8 or earlier
 > versions, I have not tested it on those versions. As such, I cannot guarantee
 > its functionality on these older versions of Python. Given the age of these
 > versions, if issues arise, I do not plan to address them.
@@ -136,7 +139,7 @@ projects.
 > [!IMPORTANT]
 > The command `source .venv/bin/activate` activates the virtual
 > environment. This step is not only part of the installation process but also
-> mandatory for running the project when using the Virtual Environment way
+> mandatory for running the toolkit when using the Virtual Environment way
 > installation method. Remember to activate the virtual environment once per
 > terminal session.
 
@@ -170,7 +173,7 @@ To install Confluence Space Management Toolkits, follow these steps:
 1. Clone the repository
 2. Set up the project
 3. Activate the virtual environment
-4. Install project and all its dependencies
+4. Install toolkit and all its dependencies
 5. Verify the installation
 
 ###### Installation Steps
@@ -186,7 +189,7 @@ $ make init
 # Activate the virtual environment
 $ source .venv/bin/activate  # On Windows use `venv\Scripts\activate`
 
-# Install project and all its dependencies
+# Install toolkit and all its dependencies
 $ make install
 
 # Verify the installation
@@ -196,7 +199,7 @@ $ confluence --version
 > [!IMPORTANT]
 > The command `source .venv/bin/activate` activates the virtual
 > environment. This step is not only part of the installation process but also
-> mandatory for running the project when using the Git way installation method.
+> mandatory for running the toolkit when using the Git way installation method.
 > Remember to activate the virtual environment once per terminal session.
 
 More information about Python virtualenv can be found here:
@@ -291,7 +294,7 @@ locations depending on your setup and needs:
   commands.
 2. **Home Directory**: Alternatively, you can place the `.confluence` file in
   your home directory. This is useful if you want to use the same credentials
-  across multiple projects or executions.
+  across multiple executions from different directories.
 
 Run the following commands to create the `.confluence` file and add your
 Confluence API credentials:
@@ -311,10 +314,10 @@ $ echo CONFLUENCE_API_TOKEN="your-confluence-api-token" >> .confluence
 
 The toolkit can also obtain the necessary API credentials from the current
 environment variables without reading from a `.confluence` file. This can be
-useful for avoiding the storage of secrets in the project directory.
+useful for avoiding the storage of secrets in a directory.
 
-To run the scripts with environment variables directly, use the following
-commands:
+To run the commands with environment variables directly, use the following
+approach:
 
 ```shell
 $ CONFLUENCE_API_USER=your-confluence-email \

@@ -13,8 +13,11 @@ This module provides shared functions and constants used by other modules.
 import logging
 import os
 import re
+import textwrap
 from datetime import datetime
 from typing import Any, Dict
+
+from bs4 import BeautifulSoup
 
 logger = logging.getLogger('confluence')
 
@@ -107,3 +110,46 @@ def get_structured_title(page: Dict[str, Any]) -> str:
     path_parts.append('/' + page['title'].replace('/', '-'))
 
     return ''.join(path_parts)
+
+
+def format_text(html_content: str) -> str:
+    """Extract and format text from HTML content.
+
+    Args:
+        html_content (str): Input HTML content.
+
+    Returns:
+        str: Formatted plain text.
+    """
+    soup = BeautifulSoup(html_content, 'html.parser')
+
+    # Remove all <ac:parameter> tags
+    for param in soup.find_all('ac:parameter'):
+        param.decompose()
+
+    # Find all code blocks and add double newlines before and after them
+    for code_block in soup.find_all(
+            'ac:structured-macro',
+            {'ac:name': 'code'}
+    ):
+        code_text = code_block.get_text()
+        formatted_code_text = f'\n\n{code_text}\n\n'
+        code_block.replace_with(formatted_code_text)
+
+    text = soup.get_text().replace('\xa0', ' ')
+    lines = text.splitlines()
+    new_lines = []
+    empty_line = False
+
+    for line in lines:
+        if line.strip() == '':
+            if not empty_line and new_lines:
+                new_lines.append('')
+            empty_line = True
+        else:
+            wrapped_lines = textwrap.wrap(line, width=80)
+            new_lines.extend(wrapped_lines)
+            empty_line = False
+
+    formatted_text = '\n'.join(new_lines).strip()
+    return formatted_text

@@ -17,8 +17,11 @@ def test_save_pages_to_files(tmpdir, mock_response):
     save_pages_to_files(pages, output_dir=str(output_dir))
     html_file = output_dir.join('html/Parent Page/Test Page.html')
     json_file = output_dir.join('json/Parent Page/Test Page.json')
+    text_file = output_dir.join('txt/Parent Page/Test Page.txt')
+
     assert html_file.exists()
     assert json_file.exists()
+    assert text_file.exists()
 
 
 def test_export_space(mocker, tmpdir, mock_response):
@@ -31,7 +34,9 @@ def test_export_space(mocker, tmpdir, mock_response):
     export_space('TEST', output_dir=str(output_dir))
     html_file = output_dir.join('html/Parent Page/Test Page.html')
     json_file = output_dir.join('json/Parent Page/Test Page.json')
+    text_file = output_dir.join('txt/Parent Page/Test Page.txt')
 
     assert html_file.exists()
     assert json_file.exists()
+    assert text_file.exists()
     assert mock_get_all_pages_in_space.call_count == 1

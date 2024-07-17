@@ -16,7 +16,7 @@ import logging
 import os
 from typing import Any, Dict, List
 
-from .common import get_page_path
+from .common import format_text, get_page_path
 from .confluence import Confluence
 from .template import html_template
 
@@ -27,7 +27,7 @@ def save_pages_to_files(
         pages: List[Dict[str, Any]],
         output_dir: str = './output'
 ) -> None:
-    """Save Confluence pages to HTML and JSON files.
+    """Save Confluence pages to HTML, JSON and text files.
 
     Args:
         pages (list): List of Confluence pages.
@@ -37,9 +37,11 @@ def save_pages_to_files(
     for page in pages:
         html_path = get_page_path(os.path.join(output_dir, 'html'), page)
         json_path = get_page_path(os.path.join(output_dir, 'json'), page)
+        text_path = get_page_path(os.path.join(output_dir, 'txt'), page)
 
         os.makedirs(os.path.dirname(html_path), exist_ok=True)
         os.makedirs(os.path.dirname(json_path), exist_ok=True)
+        os.makedirs(os.path.dirname(text_path), exist_ok=True)
 
         content = html_template(
             title=page['title'],
@@ -50,6 +52,10 @@ def save_pages_to_files(
 
         with open(f"{json_path}.json", 'w', encoding='utf-8') as file:
             json.dump(page, file, ensure_ascii=False, indent=4)
+
+        plain_text = format_text(page['body']['storage']['value'])
+        with open(f"{text_path}.txt", 'w', encoding='utf-8') as file:
+            file.write(plain_text)
 
 
 def export_space(space_key: str, output_dir: str) -> None:

@@ -7,10 +7,99 @@
 
 from confluence.common import (
     check_unlicensed_or_deleted,
+    format_text,
     get_page_path,
     people_url,
 )
 from confluence.confluence import CONFLUENCE_BASE_URL
+
+
+def test_format_text():
+    html_content = """\n\n\n
+    <p>Test with&nbsp;non-breaking&nbsp;spaces.</p>
+    <p>Second paragraph.</p>\n\n\n\n
+    """
+    expected_output = "Test with non-breaking spaces.\nSecond paragraph."
+    assert format_text(html_content) == expected_output
+
+
+def test_format_text_line_length():
+    html_content = "<p>" + "a" * 100 + "</p>"
+    output = format_text(html_content)
+    lines = output.split('\n')
+    assert all(len(line) <= 80 for line in lines)
+
+
+def test_format_text_with_empty_lines():
+    html_content = """
+    <p>First paragraph.</p>
+    <p></p>
+    <p>Second paragraph.</p>
+    <p></p>
+    <p></p>
+    <p>Third paragraph.</p>
+    """
+    expected_output = (
+        "First paragraph.\n\nSecond paragraph.\n\nThird paragraph."
+    )
+    assert format_text(html_content) == expected_output
+
+
+def test_format_text_preserves_single_empty_line():
+    html_content = """
+    <p>First paragraph.</p>
+    <p></p>
+    <p>Second paragraph.</p>
+    """
+    expected_output = "First paragraph.\n\nSecond paragraph."
+    assert format_text(html_content) == expected_output
+
+
+def test_format_text_wrap_long_lines():
+    html_content = (
+        "<p>This is a very long line that should be wrapped into multiple "
+        "lines because it exceeds eighty characters in length.</p>"
+    )
+    expected_output = (
+        "This is a very long line that should be wrapped into multiple "
+        "lines because it\nexceeds eighty characters in length."
+    )
+    assert format_text(html_content) == expected_output
+
+
+def test_format_text_with_empty_content():
+    html_content = "<p></p><p></p>"
+    expected_output = ""
+    assert format_text(html_content) == expected_output
+
+
+def test_format_text_with_code_block():
+    html_content = """
+    <p>Lorem ipsum dolor sit amet,</p>
+    <p>consectetur adipiscing elit:</p>
+    <ac:structured-macro ac:name="code" ac:macro-id="...">
+        <ac:parameter ac:name="language">json</ac:parameter>
+        <p>{
+        "document":{
+            "doc_gen_fields":[],
+            "doc_gen_content":[],
+            "content":{}
+        }</p>
+    </ac:structured-macro>
+    <p>Sed eu iaculis nisi.</p>
+    """
+    expected_output = """Lorem ipsum dolor sit amet,
+consectetur adipiscing elit:
+
+{
+        "document":{
+            "doc_gen_fields":[],
+            "doc_gen_content":[],
+            "content":{}
+        }
+
+Sed eu iaculis nisi."""
+    assert format_text(html_content) == expected_output
 
 
 def test_people_url():
