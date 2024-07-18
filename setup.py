@@ -139,10 +139,12 @@ CLASSIFIERS = [
 
 # Dependencies that are downloaded by pip on installation and why.
 INSTALL_REQUIRES = [
+    'atlassian-python-api>=3.41.0',  # Python wrapper for Atlassian REST APIs.
     'beautifulsoup4>=4.12.0',  # HTML and XML parser.
     'click>=8.1.0',  # Composable command line interface toolkit.
     'python-dotenv>=1.0.1',  # Get values from your .env file.
-    'atlassian-python-api>=3.41.0',  # Python wrapper for Atlassian REST APIs.
+    'requests>=2.32.0',  # Python HTTP for Humans.
+    'types-requests>=2.32.0',  # Type hints for requests.
 ]
 
 # Project's URLs
