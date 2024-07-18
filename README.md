@@ -279,8 +279,7 @@ The toolkit loads environment variables in the following order:
 
 1. Variables from the current console session.
 2. Variables from the `.confluence` file in the current working directory.
-3. Variables from the `.env` file in the current working directory as a fallback.
-4. Variables from the `.confluence` file in the user's home directory.
+3. Variables from the `.confluence` file in the user's home directory.
 
 ### Creating the `.confluence` file
 
@@ -306,9 +305,9 @@ echo CONFLUENCE_API_TOKEN="your-confluence-api-token" >> .confluence
 ```
 
 > [!WARNING]
-> The `.confluence` file (or its equivalent `.env`) is a plain text file and is
-> not protected against simple reading. Wherever this file is located, it is
-> the user's responsibility to protect it from unauthorized access.
+> The `.confluence` file is a plain text file and is  not protected against
+> simple reading. Wherever this file is located, it is  the user's responsibility
+> to protect it from unauthorized access.
  
 ### Using Environment Variables Directly
 

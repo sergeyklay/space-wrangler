@@ -37,25 +37,6 @@ def test_load_from_cwd_confluence(tmpdir, monkeypatch):
         assert os.getenv("CONFLUENCE_API_TOKEN") == "cwd_confluence_token"
 
 
-def test_load_from_cwd_env_as_fallback(tmpdir, monkeypatch):
-    """Test loading variables from .env in current working directory."""
-
-    cwd_env = tmpdir.join(".env")
-    credentials = (
-        "CONFLUENCE_API_USER=cwd_env_user\n"
-        "CONFLUENCE_API_TOKEN=cwd_env_token\n"
-    )
-    cwd_env.write(credentials)
-
-    monkeypatch.setattr(Path, "cwd", lambda: Path(tmpdir))
-
-    with mock.patch.dict(os.environ, {}, clear=True):
-        EnvLoader.load_env_variables()
-
-        assert os.getenv("CONFLUENCE_API_USER") == "cwd_env_user"
-        assert os.getenv("CONFLUENCE_API_TOKEN") == "cwd_env_token"
-
-
 def test_load_from_home_confluence_as_last_resort(tmpdir, monkeypatch):
     """Test loading variables from .confluence in home directory."""
 
@@ -87,12 +68,6 @@ def test_priority_of_env_loading(tmpdir, monkeypatch):
         "CONFLUENCE_API_TOKEN=cwd_confluence_token"
     )
 
-    cwd_env = tmpdir.join(".env")
-    cwd_env.write(
-        "CONFLUENCE_API_USER=cwd_env_user\n"
-        "CONFLUENCE_API_TOKEN=cwd_env_token"
-    )
-
     home_confluence = tmpdir.mkdir("home").join(".confluence")
     home_confluence.write(
         "CONFLUENCE_API_USER=home_confluence_user\n"
@@ -122,17 +97,8 @@ def test_priority_of_env_loading(tmpdir, monkeypatch):
         assert os.getenv("CONFLUENCE_API_USER") == "cwd_confluence_user"
         assert os.getenv("CONFLUENCE_API_TOKEN") == "cwd_confluence_token"
 
-        # Remove cwd .confluence to test fallback to .env
+        # Remove cwd .confluence to test home .confluence
         cwd_confluence.remove()
-        os.environ.clear()
-        EnvLoader.load_env_variables()
-
-        # Verify that cwd .env variables are loaded as fallback
-        assert os.getenv("CONFLUENCE_API_USER") == "cwd_env_user"
-        assert os.getenv("CONFLUENCE_API_TOKEN") == "cwd_env_token"
-
-        # Remove cwd .env to test home .confluence
-        cwd_env.remove()
         os.environ.clear()
         EnvLoader.load_env_variables()
 

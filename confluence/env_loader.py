@@ -21,9 +21,7 @@ class EnvLoader:
 
         1. Variables from the current console session
         2. Variables from .confluence file in the current working directory
-        3. Variables from .env file in the current working directory
-           as fallback
-        4. Variables from .confluence file in the user's home directory
+        3. Variables from .confluence file in the user's home directory
         """
         # 1. Load environment variables from the current console session
         # (already loaded by default)
@@ -34,13 +32,7 @@ class EnvLoader:
             load_dotenv(dotenv_path=cwd_confluence, override=False)
             return  # Stop loading from other sources
 
-        # 3. Load from .env in current working directory as fallback
-        cwd_env = Path.cwd() / '.env'
-        if cwd_env.exists():
-            load_dotenv(dotenv_path=cwd_env, override=False)
-            return  # Stop loading from other sources
-
-        # 4. Load from .confluence in the user's home directory
+        # 3. Load from .confluence in the user's home directory
         home_confluence = Path.home() / '.confluence'
         if home_confluence.exists():
             load_dotenv(dotenv_path=home_confluence, override=False)
