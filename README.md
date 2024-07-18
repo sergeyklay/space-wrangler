@@ -42,7 +42,7 @@ that each line does not exceed 80 characters.
 The Pages Metadata Exporter command generates a CSV file with metadata about 
 each page in a specified Confluence space, including whether the content is in 
 English or contains Cyrillic characters, creation and last modification dates, 
-owner, and more.
+owner, total and unique number of views, and more.
 
 **Output structure:**
 
