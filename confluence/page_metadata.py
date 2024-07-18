@@ -14,7 +14,7 @@ file.
 import csv
 import logging
 import os
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from .common import (
     contains_cyrillic,
@@ -103,12 +103,17 @@ def save_pages_to_csv(pages: List[Dict[str, Any]], output_dir: str) -> None:
     logger.info(f'CSV file saved to {csv_path}')
 
 
-def export_pages_metadata(space_key: str, output_dir: str) -> None:
+def export_pages_metadata(
+        space_key: str,
+        output_dir: str,
+        analytics: Optional[bool] = False
+) -> None:
     """Export metadata of pages from a specified Confluence space.
 
     Args:
         space_key (str): The key of the Confluence space.
         output_dir (str): Directory to save the output files.
+        analytics (bool): Fetch analytics data for each page (default is False).
     """
     client = Confluence()
 
@@ -117,15 +122,14 @@ def export_pages_metadata(space_key: str, output_dir: str) -> None:
 
     pages = client.get_all_pages_in_space(space_key)
 
-    content_ids = [page['id'] for page in pages]
-    print('Total IDs:', len(content_ids))
+    if analytics:
+        content_ids = [page['id'] for page in pages]
+        viewers_counts = client.get_page_analytics(content_ids)
+        print(viewers_counts.items())
 
-    viewers_counts = client.fetch_viewers(content_ids)
-    print(viewers_counts.items())
-
-    for page in pages:
-        page_id = page['id']
-        page['viewers'] = viewers_counts.get(page_id, 0)
+        for page in pages:
+            page_id = page['id']
+            page['viewers'] = viewers_counts.get(page_id, 0)
 
     save_pages_to_csv(pages, output_dir)
     logger.info(
