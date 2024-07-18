@@ -16,7 +16,8 @@ import multiprocessing
 import os
 import random
 import time
-from typing import Any, Dict, Generator, List, Optional, Tuple, Union
+from dataclasses import dataclass
+from typing import Any, Dict, Generator, List, Optional, Tuple
 from urllib.parse import parse_qs, urlparse
 
 import requests
@@ -28,11 +29,53 @@ from .exceptions import ConfigurationError
 CONFLUENCE_DOMAIN = 'https://pdffiller.atlassian.net'
 CONFLUENCE_BASE_URL = f'{CONFLUENCE_DOMAIN}/wiki'
 
-# Default values for jitter multiplier range.
-# Used for exponential backoff with jitter.
-DEFAULT_JITTER = (0.7, 1.3)
-
 logger = logging.getLogger('confluence')
+
+
+@dataclass(frozen=True)
+class DefaultRetryOptions:
+    """Default configuration options for retry logic in API requests.
+
+    Attributes:
+        max_retries (int): The maximum number of retry attempts. Default is 4.
+        last_retry_delay (int): The delay before the last retry attempt, in
+            milliseconds. Default is 5000 ms.
+        max_retry_delay (int): The maximum delay between retry attempts, in
+            milliseconds. Default is 30000 ms.
+        jitter_multiplier_range (Tuple[float, float]): A tuple specifying the
+            range for jitter multiplier. The first element is the minimum
+            multiplier, and the second element is the maximum multiplier.
+            Default is (0.7, 1.3).
+    """
+
+    max_retries: int = 4
+    last_retry_delay: int = 5000
+    max_retry_delay: int = 30000
+    jitter_multiplier_range: Tuple[float, float] = (0.7, 1.3)
+
+
+@dataclass
+class ProcessContext:
+    """Context for multiprocessing pool initialization.
+
+    Holds configuration and authentication parameters for initializing
+    process-specific context.
+
+    Attributes:
+        base_url (str): The base URL for the API requests.
+        headers (Dict[str, str]): The HTTP headers to include in requests.
+        auth (HTTPBasicAuth): The authentication object containing user
+            credentials.
+        timeout (int): The timeout for HTTP requests in seconds.
+        retry_options (DefaultRetryOptions): Configuration options for
+            retry logic.
+    """
+
+    base_url: str
+    headers: Dict[str, str]
+    auth: HTTPBasicAuth
+    timeout: int
+    retry_options: DefaultRetryOptions
 
 
 class Confluence:
@@ -45,15 +88,15 @@ class Confluence:
     def __init__(
             self,
             timeout: int = 75,
-            jitter: Optional[Tuple[float, float]] = DEFAULT_JITTER
+            retry_options: Optional[DefaultRetryOptions] = None
     ) -> None:
         """Initialize the Confluence with authentication and base URL.
 
         Args:
             timeout (int, optional): Timeout for HTTP requests in seconds
                (default is 10).
-            jitter (tuple, optional): Jitter multiplier range for exponential
-                backoff (default is DEFAULT_JITTER).
+            retry_options (DefaultRetryOptions, optional): Retry options for
+                handling rate limits and server errors (default is None).
 
         Raises:
             ValueError: If the Confluence API user or token is not set in
@@ -78,9 +121,24 @@ class Confluence:
         # our own requests.
         self.auth = HTTPBasicAuth(user, token)
         self.headers = {'Accept': 'application/json'}
-        self.jitter = jitter
         self.timeout = timeout
         self.base_url = CONFLUENCE_BASE_URL
+        self.retry_options = retry_options or DefaultRetryOptions()
+
+    def _sanitise_retry_options(
+            self,
+            retry_options: DefaultRetryOptions
+    ) -> DefaultRetryOptions:
+        min_jitter, max_jitter = retry_options.jitter_multiplier_range
+        if max_jitter <= min_jitter:
+            raise ValueError('jitter_multiplier_range must be (min, max).')
+        return retry_options
+
+    def _delay(self, millis: int) -> None:
+        time.sleep(millis / 1000)
+
+    def _random_in_range(self, min_val: float, max_val: float) -> float:
+        return random.uniform(min_val, max_val)
 
     def _initial_params(self, limit: int) -> Dict[str, str]:
         """Initialize the query parameters."""
@@ -151,29 +209,29 @@ class Confluence:
     def exponential_backoff(
             self,
             retry_count: int,
-            base_delay: Union[int, float],
+            base_delay: int,
             max_retry_delay: int,
-    ) -> float:
+    ) -> int:
         """Calculate the backoff delay with jitter."""
         delay = min((2 ** retry_count) * base_delay, max_retry_delay)
-        jitter = delay * random.uniform(*self.jitter)  # type: ignore[misc]
-        return delay + jitter
+        jitter = delay * random.uniform(
+            *self.retry_options.jitter_multiplier_range
+        )
+        return int(delay + jitter)
 
-    # pylint: disable=too-many-arguments,inconsistent-return-statements
-    def fetch_page_views(  # type: ignore[return]
+    def fetch_page_views(
             self,
             content_id: str,
             views_type: str,
-            retry_count: int = 0,
-            last_retry_delay: Union[int, float] = 1,
-            max_retry_delay: int = 30,
-            max_retries: int = 4
+            retry_count: int = 0
     ) -> Tuple[str, Optional[int]]:
         """Fetch the number of views for the specified page."""
         url = (
             f'{self.base_url}'
             f'/rest/api/analytics/content/{content_id}/{views_type}'
         )
+        retry_options = self._sanitise_retry_options(self.retry_options)
+        result = (content_id, None)
 
         try:
             response = requests.get(
@@ -184,29 +242,26 @@ class Confluence:
             )
             if response.status_code == 200:
                 data = response.json()
-                return content_id, data['count']
-
-            if response.status_code == 429:
+                result = (content_id, data['count'])
+            elif response.status_code == 429:
                 retry_after = response.headers.get(
                     'Retry-After',
-                    last_retry_delay
+                    retry_options.last_retry_delay / 1000
                 )
 
                 # Rate limited. Retry after the specified delay.
-                if retry_count < max_retries:
+                if retry_count < retry_options.max_retries:
                     time.sleep(int(retry_after))
                     delay = self.exponential_backoff(
                         retry_count,
-                        last_retry_delay,
-                        max_retry_delay
+                        int(retry_after),
+                        retry_options.max_retry_delay
                     )
-                    time.sleep(delay)
-
+                    self._delay(delay)
                     return self.fetch_page_views(
                         content_id,
                         views_type,
                         retry_count + 1,
-                        delay,
                     )
 
                 # Exceeded max retries.
@@ -215,23 +270,19 @@ class Confluence:
                     'after being rate limited.'
                 )
                 logger.error(message)
-                return content_id, None
-
-            if response.status_code == 500:
+            elif response.status_code == 500:
                 # Internal Server Error. Retry after backoff.
-                if retry_count < max_retries:
+                if retry_count < retry_options.max_retries:
                     delay = self.exponential_backoff(
                         retry_count,
-                        last_retry_delay,
-                        max_retry_delay
+                        retry_options.last_retry_delay,
+                        retry_options.max_retry_delay
                     )
-                    time.sleep(delay)
-
+                    self._delay(delay)
                     return self.fetch_page_views(
                         content_id,
                         views_type,
                         retry_count + 1,
-                        delay,
                     )
 
                 # Exceeded max retries.
@@ -240,28 +291,23 @@ class Confluence:
                     'after server error.'
                 )
                 logger.error(message)
-                return content_id, None
-
-            # Other errors.
-            response.raise_for_status()
+            else:
+                # Other errors.
+                response.raise_for_status()
         except requests.RequestException as e:
             message = f'Failed to fetch data for content ID {content_id}: {e}'
             logger.error(message)
-            return content_id, None
 
-    def _init_process_context(
-            self,
-            base_url: str,
-            headers: Dict[str, str],
-            auth: HTTPBasicAuth,
-            timeout: int
-    ) -> None:
+        return result
+
+    def _init_process_context(self, context: ProcessContext) -> None:
         """Initialize process-specific context."""
         logger.info('Initializing process...')
-        self.base_url = base_url
-        self.headers = headers
-        self.auth = auth
-        self.timeout = timeout
+        self.base_url = context.base_url
+        self.headers = context.headers
+        self.auth = context.auth
+        self.timeout = context.timeout
+        self.retry_options = context.retry_options
 
     def _fetch_page_views_chunk(
             self,
@@ -301,17 +347,19 @@ class Confluence:
                 yield lst[i:i + n]
 
         content_id_chunks = chunks(content_ids, len(content_ids) // jobs)
-        initargs = (
-            CONFLUENCE_BASE_URL,
-            self.headers,
-            self.auth,
-            self.timeout
+
+        context = ProcessContext(
+            base_url=CONFLUENCE_BASE_URL,
+            headers=self.headers,
+            auth=self.auth,
+            timeout=self.timeout,
+            retry_options=self.retry_options
         )
 
         with multiprocessing.Pool(
                 processes=jobs,
                 initializer=self._init_process_context,
-                initargs=initargs) as pool:
+                initargs=(context,)) as pool:
             results = pool.starmap(
                 self._fetch_page_views_chunk,
                 [(chunk, views_type) for chunk in content_id_chunks],

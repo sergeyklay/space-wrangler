@@ -273,13 +273,15 @@ environment variables to work:
 
 You can obtain an API token from
 [Confluence API Tokens section](https://id.atlassian.com/manage-profile/security/api-tokens).
-You cannot log in with your regular password to Confluence.
+You cannot use your regular password for the API token.
 
-The toolkit loads environment variables in the following order:
+The toolkit searches for environment variables in the following order:
 
 1. Variables from the current console session.
 2. Variables from the `.confluence` file in the current working directory.
 3. Variables from the `.confluence` file in the user's home directory.
+
+The first found set of variables is used to authenticate with the Confluence API.
 
 ### Creating the `.confluence` file
 
@@ -319,7 +321,7 @@ To run the commands with environment variables directly, use the following
 approach:
 
 ```shell
-CONFLUENCE_API_USER=email CONFLUENCE_API_TOKEN="token" confluence COMMAND -s YOUR_SPACE_KEY
+CONFLUENCE_API_USER=email CONFLUENCE_API_TOKEN="token" confluence COMMAND OPTIONS
 ```
 
 > [!WARNING]  
