@@ -117,7 +117,7 @@ def export_pages_metadata(space_key: str, output_dir: str) -> None:
 
     pages = client.get_all_pages_in_space(space_key)
 
-    #  Fetch analytics data for each page
+    logger.info('Fetch analytics data for each page...')
     content_ids = [page['id'] for page in pages]
     viewers_counts = client.get_page_analytics(content_ids)
     print(viewers_counts.items())
