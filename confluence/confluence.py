@@ -278,7 +278,7 @@ class Confluence:
     def get_page_analytics(
             self,
             content_ids: List[str],
-            views_type
+            views_type: str
     ) -> Dict[str, Optional[int]]:
         """Get analytics for the specified Confluence pages.
 
