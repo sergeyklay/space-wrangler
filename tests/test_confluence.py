@@ -7,20 +7,22 @@
 
 import pytest
 
-from confluence.confluence import Confluence
 from confluence.exceptions import ConfigurationError
 
 
-def test_get_all_pages_in_space(mock_response, mocker):
+def test_get_all_pages_in_space(mock_response, mocker, confluence):
     mock_get = mocker.patch('atlassian.Confluence.get_space_content')
     mock_get.return_value = mock_response.json()
-    client = Confluence()
-    pages = client.get_all_pages_in_space('TEST')
+    pages = confluence.get_all_pages_in_space('TEST')
     assert len(pages) == 1
     assert pages[0]['title'] == 'Test Page'
 
 
-def test_get_all_pages_in_space_with_next(mock_response_with_next, mocker):
+def test_get_all_pages_in_space_with_next(
+        mock_response_with_next,
+        mocker,
+        confluence,
+):
     mock_get = mocker.patch(
         'atlassian.Confluence.get_space_content',
         side_effect=[
@@ -28,8 +30,7 @@ def test_get_all_pages_in_space_with_next(mock_response_with_next, mocker):
             mock_response_with_next[1].json(),
         ]
     )
-    client = Confluence()
-    pages = client.get_all_pages_in_space('TEST')
+    pages = confluence.get_all_pages_in_space('TEST')
 
     assert mock_get.call_count == 2
     assert len(pages) == 2
@@ -37,7 +38,11 @@ def test_get_all_pages_in_space_with_next(mock_response_with_next, mocker):
     assert pages[1]['title'] == 'Test Page 2'
 
 
-def test_get_all_pages_in_space_with_next_2(mock_response_with_next_2, mocker):
+def test_get_all_pages_in_space_with_next_2(
+        mock_response_with_next_2,
+        mocker,
+        confluence
+):
     mock_get = mocker.patch(
         'atlassian.Confluence.get_space_content',
         side_effect=[
@@ -45,8 +50,7 @@ def test_get_all_pages_in_space_with_next_2(mock_response_with_next_2, mocker):
             mock_response_with_next_2[1].json(),
         ]
     )
-    client = Confluence()
-    pages = client.get_all_pages_in_space('TEST')
+    pages = confluence.get_all_pages_in_space('TEST')
 
     assert mock_get.call_count == 2
     assert len(pages) == 2
@@ -61,5 +65,6 @@ def test_http_client_initialization_error(monkeypatch):
     monkeypatch.delenv('CONFLUENCE_API_TOKEN', raising=False)
 
     with pytest.raises(ConfigurationError) as excinfo:
+        from confluence.confluence import Confluence
         Confluence()
     assert 'Confluence API user and token are not set' in str(excinfo.value)

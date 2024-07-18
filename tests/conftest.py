@@ -9,6 +9,14 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from confluence.confluence import Confluence
+
+
+@pytest.fixture
+def confluence():
+    """Fixture to create a Confluence instance."""
+    return Confluence()
+
 
 @pytest.fixture(autouse=True)
 def set_env_vars():
