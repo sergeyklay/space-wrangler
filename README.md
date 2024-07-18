@@ -108,12 +108,12 @@ correctly and the toolkit is isolated from other Python projects on your system.
 3. Run the following command to install the toolkit directly from GitHub.
    This will install the latest version of the toolkit.
    ```shell
-    $ pip3 install --user --upgrade git+https://github.com/airslateinc/confluence-maintenance-tools.git#egg=confluence
+    pip3 install --user --upgrade git+https://github.com/airslateinc/confluence-maintenance-tools.git#egg=confluence
    ```
 4. After installation, you can verify that the toolkit is installed correctly
    by checking its version.
    ```shell
-    $ confluence --version
+    confluence --version
    ```
 
 ###### Using Virtual Environment (Optional but Recommended)
@@ -124,16 +124,16 @@ projects.
 
 1. Run the following commands to create and activate a virtual environment.
    ```shell
-    $ python3 -m venv .venv
-    $ source .venv/bin/activate  # On Windows use `venv\Scripts\activate`
+    python3 -m venv .venv
+    source .venv/bin/activate  # On Windows use `venv\Scripts\activate`
    ```
 2. Once the virtual environment is activated, install the toolkit using pip.
    ```shell
-    $ pip install --upgrade git+https://github.com/airslateinc/confluence-maintenance-tools.git#egg=confluence
+    pip install --upgrade git+https://github.com/airslateinc/confluence-maintenance-tools.git#egg=confluence
     ```
 3. Similar to the previous step, verify the installation.
    ```shell
-    $ confluence --version
+    confluence --version
    ```
 
 > [!IMPORTANT]
@@ -180,20 +180,20 @@ To install Confluence Space Management Toolkits, follow these steps:
 
 ```shell
 # Clone the repository
-$ git clone git@github.com:airslateinc/confluence-maintenance-tools.git
-$ cd confluence-maintenance-tools
+git clone git@github.com:airslateinc/confluence-maintenance-tools.git
+cd confluence-maintenance-tools
 
 # Set project up
-$ make init
+make init
 
 # Activate the virtual environment
-$ source .venv/bin/activate  # On Windows use `venv\Scripts\activate`
+source .venv/bin/activate  # On Windows use `venv\Scripts\activate`
 
 # Install toolkit and all its dependencies
-$ make install
+make install
 
 # Verify the installation
-$ confluence --version
+confluence --version
 ```
 
 > [!IMPORTANT]
@@ -214,7 +214,7 @@ For detailed instructions on how to create and store your credentials, see the
 ### Quick Start
 
 ```shell
-$ confluence --help
+confluence --help
 ```
 
 ### Exporting Confluence Space
@@ -222,7 +222,7 @@ $ confluence --help
 To export all pages from a specified Confluence space:
 
 ```shell
-$ confluence export-space --space-key YOUR_SPACE_KEY
+confluence export-space --space-key YOUR_SPACE_KEY
 ```
 
 ### Exporting Page Metadata
@@ -231,7 +231,7 @@ To generate a CSV file with metadata about each page in a specified Confluence
 space:
 
 ```shell
-$ confluence pages-metadata --space-key YOUR_SPACE_KEY
+confluence pages-metadata --space-key YOUR_SPACE_KEY
 ```
 
 ### Exporting Owner Metadata
@@ -240,7 +240,7 @@ To generate a CSV file with metadata about the owners of pages in a specified
 Confluence space:
 
 ```shell
-$ confluence owners-metadata --space-key YOUR_SPACE_KEY
+confluence owners-metadata --space-key YOUR_SPACE_KEY
 ```
 
 ## Common Options
@@ -250,7 +250,7 @@ There are common options that can be used with all commands.
 To specify the output directory:
 
 ```shell
-$ confluence COMMAND --space-key YOUR_SPACE_KEY --output-dir YOUR_OUTPUT_DIR
+confluence COMMAND --space-key YOUR_SPACE_KEY --output-dir YOUR_OUTPUT_DIR
 ```
 
 If the `--output-dir` option is not specified, the `output` directory in the
@@ -260,7 +260,7 @@ To suppress informational messages, use the `-q`, `--quiet` or `--silent`
 option:
 
 ```shell
-$ confluence -q <command> --space-key YOUR_SPACE_KEY
+confluence -q <command> --space-key YOUR_SPACE_KEY
 ```
 
 ## Environment Variables
@@ -301,8 +301,8 @@ Confluence API credentials:
 
 ```shell
 # Create a .confluence file and add the following variables:
-$ echo CONFLUENCE_API_USER="your-confluence-email" > .confluence
-$ echo CONFLUENCE_API_TOKEN="your-confluence-api-token" >> .confluence
+echo CONFLUENCE_API_USER="your-confluence-email" > .confluence
+echo CONFLUENCE_API_TOKEN="your-confluence-api-token" >> .confluence
 ```
 
 > [!WARNING]
@@ -320,17 +320,7 @@ To run the commands with environment variables directly, use the following
 approach:
 
 ```shell
-$ CONFLUENCE_API_USER=your-confluence-email \
-> CONFLUENCE_API_TOKEN="your-confluence-api-token" \
-> confluence export-space --space-key YOUR_SPACE_KEY
-
-$ CONFLUENCE_API_USER=your-confluence-email \
-> CONFLUENCE_API_TOKEN="your-confluence-api-token" \
-> confluence pages-metadata --space-key YOUR_SPACE_KEY
-
-$ CONFLUENCE_API_USER=your-confluence-email \
-> CONFLUENCE_API_TOKEN="your-confluence-api-token" \
-> confluence owners-metadata --space-key YOUR_SPACE_KEY
+CONFLUENCE_API_USER=email CONFLUENCE_API_TOKEN="token" confluence COMMAND -s YOUR_SPACE_KEY
 ```
 
 > [!WARNING]  
