@@ -163,15 +163,16 @@ class Confluence:
     def fetch_page_views(  # type: ignore[return]
             self,
             content_id: str,
+            views_type: str,
             retry_count: int = 0,
             last_retry_delay: Union[int, float] = 1,
             max_retry_delay: int = 30,
             max_retries: int = 4
     ) -> Tuple[str, Optional[int]]:
-        """Fetch the number of page views for the specified page."""
+        """Fetch the number of views for the specified page."""
         url = (
             f'{self.base_url}'
-            f'/rest/api/analytics/content/{content_id}/viewers'
+            f'/rest/api/analytics/content/{content_id}/{views_type}'
         )
 
         try:
@@ -203,6 +204,7 @@ class Confluence:
 
                     return self.fetch_page_views(
                         content_id,
+                        views_type,
                         retry_count + 1,
                         delay,
                     )
@@ -227,6 +229,7 @@ class Confluence:
 
                     return self.fetch_page_views(
                         content_id,
+                        views_type,
                         retry_count + 1,
                         delay,
                     )
@@ -262,29 +265,32 @@ class Confluence:
 
     def _fetch_page_views_chunk(
             self,
-            content_ids: List[str]
+            content_ids: List[str],
+            views_type: str
     ) -> Dict[str, Optional[int]]:
         """Fetch page views for a chunk of content IDs."""
         chunk_results = {}
         for content_id in content_ids:
-            content_id, views = self.fetch_page_views(content_id)
+            content_id, views = self.fetch_page_views(content_id, views_type)
             chunk_results[content_id] = views
         return chunk_results
 
     def get_page_analytics(
             self,
-            content_ids: List[str]
+            content_ids: List[str],
+            views_type
     ) -> Dict[str, Optional[int]]:
         """Get analytics for the specified Confluence pages.
 
         Args:
             content_ids (list): List of Confluence page IDs.
+            views_type (str): The type of analytics (viewers or views).
 
         Returns:
             dict: Dictionary with page IDs as keys and list of viewers as
                values.
         """
-        logger.info('Fetch viewers for the specified pages...')
+        logger.info(f'Fetch {views_type} for the specified pages...')
 
         jobs = multiprocessing.cpu_count() or 1
         logger.info(f'Select the number of jobs: {jobs}')
@@ -306,9 +312,9 @@ class Confluence:
                 processes=jobs,
                 initializer=self._init_process_context,
                 initargs=initargs) as pool:
-            results = pool.map(
+            results = pool.starmap(
                 self._fetch_page_views_chunk,
-                list(content_id_chunks),
+                [(chunk, views_type) for chunk in content_id_chunks],
             )
 
         page_views = {}
