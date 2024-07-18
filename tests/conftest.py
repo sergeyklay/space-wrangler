@@ -5,7 +5,7 @@
 # For the full copyright and license information, please view
 # the LICENSE file that был distributed with this source code.
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -16,15 +16,6 @@ from confluence.confluence import Confluence
 def confluence():
     """Fixture to create a Confluence instance."""
     return Confluence()
-
-
-@pytest.fixture(autouse=True)
-def set_env_vars():
-    with patch.dict('os.environ', {
-        'CONFLUENCE_API_USER': 'test_user',
-        'CONFLUENCE_API_TOKEN': 'test_token'
-    }):
-        yield
 
 
 @pytest.fixture
@@ -55,8 +46,7 @@ def mock_response_with_account_id():
                     'displayName': 'John Doe',
                     'accountId': '5b8e8643632a6b2c8f80b883',
                 }},
-                '_links': {'webui': '/wiki/pages/viewpage.action?pageId=123'},
-                'status': 'current'
+                '_links': {'webui': '/wiki/pages/viewpage.action?pageId=123'}
             },
             {
                 'id': '124',
@@ -81,8 +71,7 @@ def mock_response_with_account_id():
                     'displayName': 'Jane Doe (Unlicensed)',
                     'accountId': '5b8e8643632a6b2c8f80b884',
                 }},
-                '_links': {'webui': '/wiki/pages/viewpage.action?pageId=124'},
-                'status': 'archived'
+                '_links': {'webui': '/wiki/pages/viewpage.action?pageId=124'}
             }
         ],
         '_links': {}
