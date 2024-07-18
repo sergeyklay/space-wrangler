@@ -16,7 +16,7 @@ import multiprocessing
 import os
 import random
 import time
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, Generator, List, Optional, Tuple, Union
 from urllib.parse import parse_qs, urlparse
 
 import requests
@@ -73,12 +73,14 @@ class Confluence:
             cloud=True
         )
 
-        # We use auth, headers and jitter for requests that are not covered by
+        # We use the following for requests that are not covered by
         # the atlassian library. These variables are used exclusively for
         # our own requests.
         self.auth = HTTPBasicAuth(user, token)
         self.headers = {'Accept': 'application/json'}
         self.jitter = jitter
+        self.timeout = timeout
+        self.base_url = CONFLUENCE_BASE_URL
 
     def _initial_params(self, limit: int) -> Dict[str, str]:
         """Initialize the query parameters."""
@@ -149,43 +151,49 @@ class Confluence:
     def exponential_backoff(
             self,
             retry_count: int,
-            base_delay: int,
+            base_delay: Union[int, float],
             max_retry_delay: int,
     ) -> float:
         """Calculate the backoff delay with jitter."""
         delay = min((2 ** retry_count) * base_delay, max_retry_delay)
-        jitter = delay * random.uniform(*self.jitter)
+        jitter = delay * random.uniform(*self.jitter)  # type: ignore[misc]
         return delay + jitter
 
-    def fetch_page_views(
+    # pylint: disable=too-many-arguments,inconsistent-return-statements
+    def fetch_page_views(  # type: ignore[return]
             self,
-            content_id: Union[str, int],
+            content_id: str,
             retry_count: int = 0,
             last_retry_delay: Union[int, float] = 1,
             max_retry_delay: int = 30,
             max_retries: int = 4
-    ):
+    ) -> Tuple[str, Optional[int]]:
         """Fetch the number of page views for the specified page."""
         url = (
-            f'{CONFLUENCE_BASE_URL}'
+            f'{self.base_url}'
             f'/rest/api/analytics/content/{content_id}/viewers'
         )
 
         try:
-            response = requests.get(url, headers=self.headers, auth=self.auth)
+            response = requests.get(
+                url,
+                headers=self.headers,
+                auth=self.auth,
+                timeout=self.timeout,
+            )
             if response.status_code == 200:
                 data = response.json()
                 return content_id, data['count']
-            elif response.status_code == 429:
+
+            if response.status_code == 429:
                 retry_after = response.headers.get(
                     'Retry-After',
                     last_retry_delay
                 )
-                retry_after = int(retry_after)
 
                 # Rate limited. Retry after the specified delay.
                 if retry_count < max_retries:
-                    time.sleep(retry_after)
+                    time.sleep(int(retry_after))
                     delay = self.exponential_backoff(
                         retry_count,
                         last_retry_delay,
@@ -196,9 +204,18 @@ class Confluence:
                     return self.fetch_page_views(
                         content_id,
                         retry_count + 1,
-                        delay
+                        delay,
                     )
-            elif response.status_code == 500:
+
+                # Exceeded max retries.
+                message = (
+                    f'Exceeded max retries for content ID {content_id} '
+                    'after being rate limited.'
+                )
+                logger.error(message)
+                return content_id, None
+
+            if response.status_code == 500:
                 # Internal Server Error. Retry after backoff.
                 if retry_count < max_retries:
                     delay = self.exponential_backoff(
@@ -211,58 +228,87 @@ class Confluence:
                     return self.fetch_page_views(
                         content_id,
                         retry_count + 1,
-                        delay
+                        delay,
                     )
-            else:
-                response.raise_for_status()
+
+                # Exceeded max retries.
+                message = (
+                    f'Exceeded max retries for content ID {content_id} '
+                    'after server error.'
+                )
+                logger.error(message)
+                return content_id, None
+
+            # Other errors.
+            response.raise_for_status()
         except requests.RequestException as e:
             message = f'Failed to fetch data for content ID {content_id}: {e}'
             logger.error(message)
             return content_id, None
 
-    def _init_process_context(self, base_url, headers, auth):
+    def _init_process_context(
+            self,
+            base_url: str,
+            headers: Dict[str, str],
+            auth: HTTPBasicAuth,
+            timeout: int
+    ) -> None:
         """Initialize process-specific context."""
         logger.info('Initializing process...')
         self.base_url = base_url
         self.headers = headers
         self.auth = auth
+        self.timeout = timeout
 
-    def _fetch_page_views_chunk(self, content_ids_chunk):
+    def _fetch_page_views_chunk(
+            self,
+            content_ids: List[str]
+    ) -> Dict[str, Optional[int]]:
         """Fetch page views for a chunk of content IDs."""
         chunk_results = {}
-        for content_id in content_ids_chunk:
+        for content_id in content_ids:
             content_id, views = self.fetch_page_views(content_id)
             chunk_results[content_id] = views
         return chunk_results
 
-    def get_page_analytics(self, content_ids: List[str]):
+    def get_page_analytics(
+            self,
+            content_ids: List[str]
+    ) -> Dict[str, Optional[int]]:
         """Get analytics for the specified Confluence pages.
 
         Args:
             content_ids (list): List of Confluence page IDs.
 
         Returns:
-            dict: Dictionary with page IDs as keys and list of viewers as values.
+            dict: Dictionary with page IDs as keys and list of viewers as
+               values.
         """
         logger.info('Fetch viewers for the specified pages...')
 
-        jobs = multiprocessing.cpu_count()
+        jobs = multiprocessing.cpu_count() or 1
         logger.info(f'Select the number of jobs: {jobs}')
 
-        def chunks(lst, n):
+        def chunks(lst: List, n: int) -> Generator:
             """Yield successive n-sized chunks from lst."""
-            for i in range(0, len(lst), n):
+            for i in range(0, len(lst), n or 1):  # 1 for tests
                 yield lst[i:i + n]
 
         content_id_chunks = chunks(content_ids, len(content_ids) // jobs)
+        initargs = (
+            CONFLUENCE_BASE_URL,
+            self.headers,
+            self.auth,
+            self.timeout
+        )
 
         with multiprocessing.Pool(
                 processes=jobs,
                 initializer=self._init_process_context,
-                initargs=(CONFLUENCE_DOMAIN, self.headers, self.auth)) as pool:
+                initargs=initargs) as pool:
             results = pool.map(
                 self._fetch_page_views_chunk,
-                content_id_chunks,
+                list(content_id_chunks),
             )
 
         page_views = {}

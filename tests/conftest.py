@@ -105,6 +105,8 @@ def mock_response():
                     },
                 },
                 'version': {'by': {'displayName': 'Test User'}},
+                'viewers': 1,
+                'views': 1,
                 '_links': {'webui': '/wiki/pages/viewpage.action?pageId=123'}
             }
         ],
