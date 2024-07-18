@@ -103,7 +103,6 @@ Sed eu iaculis nisi."""
 
 
 def test_people_url():
-    """Test the people_url function."""
     people_id = '5b8e8643632a6b2c8f80b883'
     expected_url = f'{CONFLUENCE_BASE_URL}/people/{people_id}'
     assert people_url(people_id) == expected_url
