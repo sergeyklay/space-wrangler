@@ -31,6 +31,7 @@ class PageMetadata:
 
     PAGE_ID: str = 'Page ID'
     PAGE_TITLE: str = 'Page Title'
+    UNIQUE_VIEWERS: str = 'Unique Viewers'
     TITLE_IN_ENGLISH: str = 'Title in English'
     CONTENT_IN_ENGLISH: str = 'Content in English'
     CREATED_DATE: str = 'Created Date'
@@ -49,6 +50,7 @@ class PageMetadata:
         return (
             cls.PAGE_ID,
             cls.PAGE_TITLE,
+            cls.UNIQUE_VIEWERS,
             cls.TITLE_IN_ENGLISH,
             cls.CONTENT_IN_ENGLISH,
             cls.CREATED_DATE,
@@ -80,6 +82,7 @@ def save_pages_to_csv(pages: List[Dict[str, Any]], output_dir: str) -> None:
         rows.append({
             PageMetadata.PAGE_ID: page['id'],
             PageMetadata.PAGE_TITLE: get_structured_title(page),
+            PageMetadata.UNIQUE_VIEWERS: page['viewers'],
             PageMetadata.TITLE_IN_ENGLISH: title_is_english,
             PageMetadata.CONTENT_IN_ENGLISH: content_is_english,
             PageMetadata.CREATED_DATE: format_date(created_date),
@@ -113,6 +116,17 @@ def export_pages_metadata(space_key: str, output_dir: str) -> None:
     os.makedirs(output_dir, exist_ok=True)
 
     pages = client.get_all_pages_in_space(space_key)
+
+    content_ids = [page['id'] for page in pages]
+    print('Total IDs:', len(content_ids))
+
+    viewers_counts = client.fetch_viewers(content_ids)
+    print(viewers_counts.items())
+
+    for page in pages:
+        page_id = page['id']
+        page['viewers'] = viewers_counts.get(page_id, 0)
+
     save_pages_to_csv(pages, output_dir)
     logger.info(
         f'Metadata for {len(pages)} pages downloaded and saved to CSV')

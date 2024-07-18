@@ -12,11 +12,17 @@ handling authentication and HTTP requests.
 """
 
 import logging
+import multiprocessing
 import os
+import random
+import time
+from dataclasses import dataclass
 from typing import Any, Dict, List
 from urllib.parse import parse_qs, urlparse
 
+import requests
 from atlassian import Confluence as Client
+from requests.auth import HTTPBasicAuth
 
 from .exceptions import ConfigurationError
 
@@ -24,6 +30,17 @@ CONFLUENCE_DOMAIN = 'https://pdffiller.atlassian.net'
 CONFLUENCE_BASE_URL = f'{CONFLUENCE_DOMAIN}/wiki'
 
 logger = logging.getLogger('confluence')
+
+@dataclass
+class _Context:
+    """Class for passing a context to parallel processes."""
+    base_url: str = ''
+    headers: dict = None
+    auth: HTTPBasicAuth = None
+    logger: logging.Logger = None
+
+
+_ctx = _Context(logger=logging.getLogger('confluence'))
 
 
 class Confluence:
@@ -123,3 +140,79 @@ class Confluence:
             )
 
         return all_pages
+
+    def exponential_backoff(self, retry_count, last_retry_delay, max_retry_delay, jitter_multiplier_range):
+        """Calculate the backoff delay with jitter."""
+        delay = min(2 * last_retry_delay, max_retry_delay)
+        jitter = delay * random.uniform(*jitter_multiplier_range)
+        return delay + jitter
+
+    def get_page_viewers_with_backoff(self, content_id, retry_count=0, last_retry_delay=1, max_retry_delay=30, max_retries=4):
+        """Fetch the number of viewers for a given page ID with exponential backoff."""
+        url = f"{_ctx.base_url}/wiki/rest/api/analytics/content/{content_id}/viewers"
+        try:
+            response = requests.get(url, headers=_ctx.headers, auth=_ctx.auth)
+            if response.status_code == 200:
+                data = response.json()
+                _ctx.logger.info(f"Page {content_id} has {data['count']} viewers.")
+                return content_id, data['count']
+            elif response.status_code == 429:
+                retry_after = int(response.headers.get('Retry-After', last_retry_delay))
+                _ctx.logger.warning(f"Rate limited on {content_id}. Retrying after {retry_after} seconds...")
+                if retry_count < max_retries:
+                    delay = self.exponential_backoff(retry_count, last_retry_delay, max_retry_delay, (0.7, 1.3))
+                    time.sleep(delay)
+                    return self.get_page_viewers_with_backoff(content_id, retry_count + 1, delay)
+            elif response.status_code == 500:
+                _ctx.logger.warning(f"Internal Server Error for page {content_id}. Retrying after backoff...")
+                if retry_count < max_retries:
+                    delay = self.exponential_backoff(retry_count, last_retry_delay, max_retry_delay, (0.7, 1.3))
+                    time.sleep(delay)
+                    return self.get_page_viewers_with_backoff(content_id, retry_count + 1, delay)
+            else:
+                response.raise_for_status()
+        except requests.RequestException as e:
+            _ctx.logger.error(f'Failed to fetch data for content ID {content_id}: {e}')
+            return content_id, None
+
+    def _init_process(self, base_url, headers, auth):
+        """Initialize process-specific context."""
+        _ctx.base_url = base_url
+        _ctx.headers = headers
+        _ctx.auth = auth
+        _ctx.logger = logging.getLogger(__name__)
+        _ctx.logger.info('Initializing process')
+
+    def fetch_viewers(self, content_ids: List[str]):
+        """Fetch viewers for the specified Confluence pages.
+
+        Args:
+            content_ids (list): List of Confluence page IDs.
+
+        Returns:
+            dict: Dictionary with page IDs as keys and list of viewers as values.
+        """
+        logger.info('Fetch viewers for the specified pages...')
+
+        jobs = multiprocessing.cpu_count()
+        logger.info(f'Select the number of jobs: {jobs}')
+
+        def chunks(lst, n):
+            """Yield successive n-sized chunks from lst."""
+            for i in range(0, len(lst), n):
+                yield lst[i:i + n]
+
+        base_url = CONFLUENCE_DOMAIN
+        headers = {'Accept': 'application/json'}
+        auth = HTTPBasicAuth(
+            os.getenv('CONFLUENCE_API_USER'),
+            os.getenv('CONFLUENCE_API_TOKEN')
+        )
+
+        with multiprocessing.Pool(
+                processes=jobs,
+                initializer=self._init_process,
+                initargs=(base_url, headers, auth)) as pool:
+            results = pool.map(self.get_page_viewers_with_backoff, content_ids)
+
+        return dict(results)
