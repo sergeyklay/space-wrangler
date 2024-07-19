@@ -14,54 +14,41 @@
     </a>
 </p>
 
-Welcome to the Confluence Space Management Toolkit! This repository is 
-designed to help you manage and maintain your Confluence spaces more 
-efficiently. Currently, we have tools for exporting Confluence spaces, 
-exporting page metadata, and exporting owner metadata, and we plan to add more 
-useful features in the future.
+Welcome to the Confluence Space Management Toolkit! This toolkit is designed to
+help you efficiently manage and maintain your Confluence spaces. Currently, it
+includes tools for exporting spaces and metadata, with more features planned.
 
 ## Tools
 
 ### Space Exporter
 
-The Space Exporter command downloads all pages from a specified Confluence 
-space and saves them locally in HTML, JSON, and plain text formats.
+Export all pages from a specified Confluence space in HTML, JSON, and plain text
+formats.
 
 **Output structure:**
 
-* The command saves HTML, JSON, and text versions of each page in the
-  `output/html` `output/json`, and `output/txt` directories, respectively.
-* The directory structure mirrors the hierarchy of pages in Confluence.
-* The `output` directory can be customized using the `--output-dir` option.
-
-The text files are formatted to ensure that there are no extra empty lines and
-that each line does not exceed 80 characters.
+* Saves files in `output/html` `output/json`, and `output/txt` directories.
+* Directory structure mirrors the hierarchy of Confluence pages.
+* Customize the output directory with the `--output-dir` option.
 
 ### Pages Metadata Exporter
 
-The Pages Metadata Exporter command generates a CSV file with metadata about 
-each page in a specified Confluence space, including whether the content is in 
-English or contains Cyrillic characters, creation and last modification dates, 
-owner, total and unique number of views, and more.
+Generate a CSV file with metadata about each page in a specified Confluence space.
 
 **Output structure:**
 
-* The command saves `pages-metadata.csv` CSV file with metadata about each page 
-  in the `output` directory.
-* The `output` directory can be customized using the `--output-dir` option.
+* CSV file `pages-metadata.csv` saved in the `output` directory.
+* Customize the `output` directory with the `--output-dir` option.
 
 ### Owner Metadata Exporter
 
-The Owner Metadata Exporter command generates a CSV file with metadata about 
-the owners of pages in a specified Confluence space, including information 
-about whether the owner is unlicensed or deleted, the number of current pages
-they own, the last contribution date, and a link to their profile.
+Generate a CSV file with metadata about the owners of pages in a specified
+Confluence space.
 
 **Output structure:**
 
-* The command saves `owners-metadata.csv` CSV file with metadata about each 
-  owner in the `output` directory.
-* The `output` directory can be customized using the `--output-dir` option.
+* CSV file `owners-metadata.csv` saved in the `output` directory.
+* Customize the output directory with the `--output-dir` option.
 
 ## Getting Started
 
@@ -89,85 +76,6 @@ What kind of things you need to install on your workstation to start:
 
 ### Installing
 
-#### Recommended Installation Method
-
-To use the Confluence Space Management Toolkit without modifying or exploring
-its code, follow the steps below. This method is suitable for those who might be
-new to Python and are unfamiliar with virtual environments.
-
-##### Installation Using `pip`
-
-The Confluence Space Management Toolkit is a Python package, and the recommended
-installation method is using `pip`. This ensures that all dependencies are managed
-correctly and the toolkit is isolated from other Python projects on your system.
-
-###### Step-by-Step Guide
-
-1. Ensure you have Python installed on your system (`python3 --version`).
-2. Open a Terminal/Command Prompt
-3. Run the following command to install the toolkit directly from GitHub.
-   This will install the latest version of the toolkit.
-   ```shell
-    pip3 install --user --upgrade git+https://github.com/airslateinc/confluence-maintenance-tools.git#egg=confluence
-   ```
-4. After installation, you can verify that the toolkit is installed correctly
-   by checking its version.
-   ```shell
-    confluence --version
-   ```
-
-###### Using Virtual Environment (Optional but Recommended)
-
-Using a virtual environment is a good practice in Python as it creates an
-isolated environment for your projects, avoiding conflicts with other Python
-projects.
-
-1. Run the following commands to create and activate a virtual environment.
-   ```shell
-    python3 -m venv .venv
-    source .venv/bin/activate  # On Windows use `venv\Scripts\activate`
-   ```
-2. Once the virtual environment is activated, install the toolkit using pip.
-   ```shell
-    pip install --upgrade git+https://github.com/airslateinc/confluence-maintenance-tools.git#egg=confluence
-    ```
-3. Similar to the previous step, verify the installation.
-   ```shell
-    confluence --version
-   ```
-
-> [!IMPORTANT]
-> The command `source .venv/bin/activate` activates the virtual
-> environment. This step is not only part of the installation process but also
-> mandatory for running the toolkit when using the Virtual Environment way
-> installation method. Remember to activate the virtual environment once per
-> terminal session.
-
-More information about Python virtualenv can be found here:
-[Python Virtualenv](https://docs.python.org/3/library/venv.html).
-
-###### Installing Tagged Release
-
-If you prefer to install a specific, stable version of the toolkit, you can use
-a tagged release. Replace `v1.2.0` in the example below with the desired version:
-
-```shell
-# Without virtualenv
-pip install --user --upgrade git+https://github.com/airslateinc/confluence-maintenance-tools.git@v1.2.0#egg=confluence
-
-# Or, with virtualenv
-pip install --upgrade git+https://github.com/airslateinc/confluence-maintenance-tools.git@v1.2.0#egg=confluence
-````
-
-###### Additional Resources
-
-For more information on `pip` and Python packaging, visit the following links:
-
-* [Install pip](https://pip.pypa.io/en/latest/installation/)
-* [Python Packaging User Guide](https://packaging.python.org/)
-
-#### Git way installation method (for developers)
-
 To install Confluence Space Management Toolkits, follow these steps:
 
 1. Clone the repository
@@ -176,25 +84,29 @@ To install Confluence Space Management Toolkits, follow these steps:
 4. Install toolkit and all its dependencies
 5. Verify the installation
 
-###### Installation Steps
+#### Installation Steps
 
-```shell
-# Clone the repository
-git clone git@github.com:airslateinc/confluence-maintenance-tools.git
-cd confluence-maintenance-tools
-
-# Set project up
-make init
-
-# Activate the virtual environment
-source .venv/bin/activate  # On Windows use `venv\Scripts\activate`
-
-# Install toolkit and all its dependencies
-make install
-
-# Verify the installation
-confluence --version
-```
+1. Clone the repository:
+   ```shell
+   git clone git@github.com:airslateinc/confluence-maintenance-tools.git
+   cd confluence-maintenance-tools
+   ```
+2. Set up the project:
+   ```shell
+   make init
+   ```
+3. Activate the virtual environment:
+   ```shell
+   source .venv/bin/activate  # On Windows use `venv\Scripts\activate`
+   ```
+4. Install the toolkit and dependencies:
+   ```shell
+   make install
+   ```
+5. Verify the installation:
+   ```shell
+   confluence --version
+   ```   
 
 > [!IMPORTANT]
 > The command `source .venv/bin/activate` activates the virtual
@@ -207,9 +119,28 @@ More information about Python virtualenv can be found here:
 
 ## Usage
 
-Before running the toolkit, you need to provide your Confluence API credentials.
-For detailed instructions on how to create and store your credentials, see the
-[Environment Variables](#environment-variables) section.
+Before using the toolkit, provide your Confluence API credentials.
+
+### Environment Variables
+
+Set the following environment variables:
+
+- `CONFLUENCE_API_USER`: Your Confluence email address.
+- `CONFLUENCE_API_TOKEN`: Your Confluence API token.
+
+You can obtain an API token from
+[Confluence API Tokens section](https://id.atlassian.com/manage-profile/security/api-tokens).
+You cannot use your regular password for the API token.
+
+### Creating the `.confluence` File
+
+Create a `.confluenc`e file with your credentials in the current working
+directory or home directory:
+
+```shell
+echo CONFLUENCE_API_USER="your-confluence-email" > .confluence
+echo CONFLUENCE_API_TOKEN="your-confluence-api-token" >> .confluence
+```
 
 ### Quick Start
 
@@ -263,123 +194,6 @@ option:
 confluence -q <command> --space-key YOUR_SPACE_KEY
 ```
 
-## Environment Variables
-
-Currently, the Confluence Space Management Toolkit needs the following
-environment variables to work:
-
-- `CONFLUENCE_API_USER`: Your Confluence email address.
-- `CONFLUENCE_API_TOKEN`: Your Confluence API token.
-
-You can obtain an API token from
-[Confluence API Tokens section](https://id.atlassian.com/manage-profile/security/api-tokens).
-You cannot use your regular password for the API token.
-
-The toolkit searches for environment variables in the following order:
-
-1. Variables from the current console session.
-2. Variables from the `.confluence` file in the current working directory.
-3. Variables from the `.confluence` file in the user's home directory.
-
-The first found set of variables is used to authenticate with the Confluence API.
-
-### Creating the `.confluence` file
-
-One way to provide the necessary environment variables is to create a `.confluence`
-file with your Confluence API credentials. This file can be placed in various
-locations depending on your setup and needs:
-
-1. **Current Working Directory**: If you are running the toolkit from a specific
-  directory, you can place the `.confluence` file in that directory. This allows
-  the toolkit to find the credentials relative to where you are executing the
-  commands.
-2. **Home Directory**: Alternatively, you can place the `.confluence` file in
-  your home directory. This is useful if you want to use the same credentials
-  across multiple executions from different directories.
-
-Run the following commands to create the `.confluence` file and add your
-Confluence API credentials:
-
-```shell
-# Create a .confluence file and add the following variables:
-echo CONFLUENCE_API_USER="your-confluence-email" > .confluence
-echo CONFLUENCE_API_TOKEN="your-confluence-api-token" >> .confluence
-```
-
-> [!WARNING]
-> The `.confluence` file is a plain text file and is  not protected against
-> simple reading. Wherever this file is located, it is  the user's responsibility
-> to protect it from unauthorized access.
- 
-### Using Environment Variables Directly
-
-The toolkit can also obtain the necessary API credentials from the current
-environment variables without reading from a `.confluence` file. This can be
-useful for avoiding the storage of secrets in a directory.
-
-To run the commands with environment variables directly, use the following
-approach:
-
-```shell
-CONFLUENCE_API_USER=email CONFLUENCE_API_TOKEN="token" confluence COMMAND OPTIONS
-```
-
-> [!WARNING]  
-> Using environment variables directly in commands might expose
-> your API credentials in the command history. Ensure to clear or manage your
-> command history appropriately to avoid exposing sensitive information.
-
-### Persistent Environment Variables
-
-The ability to configure the toolkit using environment variables directly
-means you can set these variables in your shell's configuration files such as
-`.bashrc`, `.profile`, `.zshrc`, or their equivalents. This allows the variables
-to be set automatically in every new terminal session.
-
-Add the following lines to your respective shell configuration file:
-
-```shell
-export CONFLUENCE_API_USER="your-confluence-email"
-export CONFLUENCE_API_TOKEN="your-confluence-api-token"
-```
-
-Then apply the changes by sourcing the file:
-
-```shell
-source ~/.bashrc
-# or
-source ~/.profile
-# or
-source ~/.zshrc
-```
-
-> [!WARNING]  
-> While setting environment variables in your shell configuration files is
-> convenient, it also poses a security risk. These files are usually stored in
-> your home directory and might be accessible to other users on your system
-> if proper permissions are not set.
->
-> If another user gains access to your home directory, they could read your
-> configuration files and steal your Confluence API credentials.
-> 
-> If you back up your home directory without encryption, your credentials might
-> be exposed in the backup files.
-> 
-> Ensure that your configuration files are only readable and writable by you or
-> store sensitive information in encrypted storage services such as AWS Secrets
-> Manager, Azure Key Vault, or HashiCorp Vault. These services provide secure
-> access to credentials and can be integrated with your environment.
-
-## Project Information
-
-Confluence Space Management Toolkit is released under the
-[MIT License](https://choosealicense.com/licenses/mit/), and its code lives at
-[GitHub](https://github.com/airslateinc/confluence-maintenance-tools). It’s
-rigorously tested on Python 3.9+.
-
-If you'd like to contribute to Confluence Space Management Toolkit you're most
-welcome!
-
 ## Support
 
 Should you have any question, any remark, or if you find a bug, or if there is
@@ -389,7 +203,5 @@ something you can't do with the Confluence Space Management Toolkit, please
 ## Credits
 
 Confluence Space Management Toolkit is written and maintained by
-[Serghei Iakovlev](https://github.com/sergeyklay/).
-
-A full list of contributors can be found in
+[Serghei Iakovlev](https://github.com/sergeyklay/). Contributors are listed on
 [GitHub's overview](https://github.com/airslateinc/confluence-maintenance-tools/graphs/contributors).
