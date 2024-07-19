@@ -12,9 +12,9 @@ package info used by various functions within confluence.
 """
 
 __copyright__ = 'Copyright (C) 2024 airSlate, Inc.'
-__version__ = '1.4.0'
+__version__ = '1.5.0'
 __license__ = 'MIT'
 __author__ = 'Serghei Iakovlev'
-__author_email__ = 'serghei@airslate,com'
+__author_email__ = 'serghei@airslate.com'
 __url__ = 'https://github.com/airslateinc/confluence-maintenance-tools'
 __description__ = 'Confluence Space Management Toolkit.'
