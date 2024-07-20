@@ -5,6 +5,12 @@
 # For the full copyright and license information, please view
 # the LICENSE file that был distributed with this source code.
 
+"""Tools for exporting metadata of Confluence spaces.
+
+This module provides functions to save metadata of Confluence spaces to a CSV
+file.
+"""
+
 import csv
 import logging
 import os
