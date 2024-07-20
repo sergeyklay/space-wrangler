@@ -105,6 +105,23 @@ def app(ctx: click.core.Context, quiet: bool, silent: bool) -> int:
 
 
 @app.command(
+    'spaces-metadata',
+    short_help='Export metadata of all spaces.',
+    help='Export metadata of all Confluence spaces.',
+)
+@click.option(
+    '-o', '--output-dir',
+    help='Directory to save the data.',
+    type=click.Path(),
+    default='output',
+)
+def spaces_metadata(**kwargs: str) -> None:
+    """Export metadata of all spaces."""
+    from .space_metadata import export_spaces_metadata
+    export_spaces_metadata(kwargs['output_dir'])
+
+
+@app.command(
     'export-space',
     short_help='Export all pages from the specified space.',
     help='Export all pages from the specified Confluence space.',

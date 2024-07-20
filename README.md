@@ -16,7 +16,7 @@
 
 Welcome to the Confluence Space Management Toolkit! This toolkit is designed to
 help you efficiently manage and maintain your Confluence spaces. Currently, it
-includes tools for exporting spaces and metadata, with more features planned.
+includes tools for exporting spaces its metadata, with more features planned.
 
 ## Tools
 
@@ -31,6 +31,15 @@ formats.
   and `output/<SPACE-KEY>/txt` directories.
 * Directory structure mirrors the hierarchy of Confluence pages.
 * Customize the output directory with the `--output-dir` option.
+
+### Space Metadata Exporter
+
+Generate a CSV file with metadata about each global space in your Confluence.
+
+**Output structure:**
+
+* CSV file `all-spaces.csv` saved in the `output/` directory.
+* Customize the `output` directory with the `--output-dir` option.
 
 ### Pages Metadata Exporter
 
@@ -155,6 +164,14 @@ To export all pages from a specified Confluence space:
 
 ```shell
 confluence export-space --space-key YOUR_SPACE_KEY
+```
+
+### Exporting Spaces Metadata
+
+To generate a CSV file with metadata about all Confluence spaces:
+
+```shell
+confluence spaces-metadata
 ```
 
 ### Exporting Page Metadata
