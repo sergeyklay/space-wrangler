@@ -13,10 +13,9 @@ JSON files.
 
 import json
 import logging
-import os
 from typing import Any, Dict, List
 
-from .common import format_text, get_page_path
+from .common import format_text, mk_path
 from .confluence import Confluence
 from .template import html_template
 
@@ -25,23 +24,21 @@ logger = logging.getLogger('confluence')
 
 def save_pages_to_files(
         pages: List[Dict[str, Any]],
-        output_dir: str = './output'
+        space_key: str,
+        output_dir: str
 ) -> None:
     """Save Confluence pages to HTML, JSON and text files.
 
     Args:
         pages (list): List of Confluence pages.
+        space_key (str): The key of the Confluence space.
         output_dir (str): Directory to save the output files.
     """
     logger.info('Render pages...')
     for page in pages:
-        html_path = get_page_path(os.path.join(output_dir, 'html'), page)
-        json_path = get_page_path(os.path.join(output_dir, 'json'), page)
-        text_path = get_page_path(os.path.join(output_dir, 'txt'), page)
-
-        os.makedirs(os.path.dirname(html_path), exist_ok=True)
-        os.makedirs(os.path.dirname(json_path), exist_ok=True)
-        os.makedirs(os.path.dirname(text_path), exist_ok=True)
+        html_path = mk_path('html', space_key, output_dir, page)
+        json_path = mk_path('json', space_key, output_dir, page)
+        text_path = mk_path('txt', space_key, output_dir, page)
 
         content = html_template(
             title=page['title'],
@@ -67,9 +64,6 @@ def export_space(space_key: str, output_dir: str) -> None:
     """
     client = Confluence()
 
-    output_dir = os.path.abspath(output_dir)
-    os.makedirs(output_dir, exist_ok=True)
-
     pages = client.get_all_pages_in_space(space_key)
-    save_pages_to_files(pages, output_dir)
+    save_pages_to_files(pages, space_key, output_dir)
     logger.info(f'Total {len(pages)} pages downloaded.')

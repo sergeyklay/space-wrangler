@@ -71,8 +71,8 @@ def test_save_owners_to_csv(tmpdir):
         }
     }
     output_dir = tmpdir.mkdir('output')
-    save_owners_to_csv(owner_data, output_dir=str(output_dir))
-    csv_file = output_dir.join('owners-metadata.csv')
+    save_owners_to_csv(owner_data, 'AIR', str(output_dir))
+    csv_file = output_dir.join('AIR/csv/owners-metadata.csv')
     assert csv_file.exists()
 
 
@@ -82,9 +82,10 @@ def test_export_owners_metadata(mocker, tmpdir, mock_response_with_account_id):
         'get_all_pages_in_space',
         return_value=mock_response_with_account_id.json()['results']
     )
+
     output_dir = tmpdir.mkdir('output')
-    export_owners_metadata('TEST', output_dir=str(output_dir))
-    csv_file = output_dir.join('owners-metadata.csv')
+    export_owners_metadata('AIR', str(output_dir))
+    csv_file = output_dir.join('AIR/csv/owners-metadata.csv')
 
     assert csv_file.exists()
     assert mock_get.call_count == 1

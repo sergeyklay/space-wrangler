@@ -13,19 +13,19 @@ from confluence.page_metadata import export_pages_metadata, save_pages_to_csv
 def test_save_pages_to_csv(tmpdir, mock_response):
     pages = mock_response.json()['results']
     output_dir = tmpdir.mkdir('output')
-    save_pages_to_csv(pages, output_dir=str(output_dir))
-    csv_file = output_dir.join('pages-metadata.csv')
+    save_pages_to_csv(pages, 'AIR', str(output_dir))
+    csv_file = output_dir.join('AIR/csv/pages-metadata.csv')
     assert csv_file.exists()
 
 
 def test_export_pages_metadata(mocker, tmpdir, mock_response):
     mock_object = 'confluence.confluence.Confluence.get_all_pages_in_space'
-    mock_get = mocker.patch(mock_object)
-    mock_get.return_value = mock_response.json()['results']
+    mock_get_all_pages_in_space = mocker.patch(mock_object)
+    mock_get_all_pages_in_space.return_value = mock_response.json()['results']
 
     output_dir = tmpdir.mkdir('output')
-    export_pages_metadata('TEST', output_dir=str(output_dir))
-    csv_file = output_dir.join('pages-metadata.csv')
+    export_pages_metadata('AIR', str(output_dir))
+    csv_file = output_dir.join('AIR/csv/pages-metadata.csv')
 
     assert csv_file.exists()
-    assert mock_get.call_count == 1
+    assert mock_get_all_pages_in_space.call_count == 1

@@ -20,6 +20,7 @@ from .common import (
     contains_cyrillic,
     format_date,
     get_structured_title,
+    mk_path
 )
 from .confluence import Confluence, CONFLUENCE_BASE_URL
 
@@ -63,14 +64,20 @@ class PageMetadata:
         )
 
 
-def save_pages_to_csv(pages: List[Dict[str, Any]], output_dir: str) -> None:
+def save_pages_to_csv(
+        pages: List[Dict[str, Any]],
+        space_key: str,
+        output_dir: str
+) -> None:
     """Save metadata of Confluence pages to a CSV file.
 
     Args:
         pages (list): List of Confluence pages.
+        space_key (str): The key of the Confluence space.
         output_dir (str): Directory to save the CSV file.
     """
-    csv_path = os.path.join(output_dir, 'pages-metadata.csv')
+    csv_path = mk_path('csv', space_key, output_dir)
+    csv_path = os.path.join(csv_path, 'pages-metadata.csv')
 
     rows = []
     for page in pages:
@@ -115,12 +122,9 @@ def export_pages_metadata(space_key: str, output_dir: str) -> None:
     """
     client = Confluence()
 
-    output_dir = os.path.abspath(output_dir)
-    os.makedirs(output_dir, exist_ok=True)
-
     pages = client.get_all_pages_in_space(space_key)
-
     logger.info('Fetch analytics data for specified pages...')
+
     content_ids = [page['id'] for page in pages]
 
     viewers_counts = client.get_page_analytics(
@@ -138,6 +142,6 @@ def export_pages_metadata(space_key: str, output_dir: str) -> None:
         page['viewers'] = viewers_counts.get(page_id, 0)
         page['views'] = views_counts.get(page_id, 0)
 
-    save_pages_to_csv(pages, output_dir)
+    save_pages_to_csv(pages, space_key, output_dir)
     logger.info(
         f'Metadata for {len(pages)} pages downloaded and saved to CSV')

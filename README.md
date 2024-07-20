@@ -27,7 +27,8 @@ formats.
 
 **Output structure:**
 
-* Saves files in `output/html` `output/json`, and `output/txt` directories.
+* Saves files in `output/<SPACE-KEY>/html` `output/<SPACE-KEY>/json`,
+  and `output/<SPACE-KEY>/txt` directories.
 * Directory structure mirrors the hierarchy of Confluence pages.
 * Customize the output directory with the `--output-dir` option.
 
@@ -37,7 +38,7 @@ Generate a CSV file with metadata about each page in a specified Confluence spac
 
 **Output structure:**
 
-* CSV file `pages-metadata.csv` saved in the `output` directory.
+* CSV file `pages-metadata.csv` saved in the `output/<SPACE-KEY>/csv` directory.
 * Customize the `output` directory with the `--output-dir` option.
 
 ### Owner Metadata Exporter
@@ -47,7 +48,7 @@ Confluence space.
 
 **Output structure:**
 
-* CSV file `owners-metadata.csv` saved in the `output` directory.
+* CSV file `owners-metadata.csv` saved in the `output/<SPACE-KEY>/csv` directory.
 * Customize the output directory with the `--output-dir` option.
 
 ## Getting Started

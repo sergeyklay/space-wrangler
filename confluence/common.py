@@ -15,7 +15,7 @@ import os
 import re
 import textwrap
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from bs4 import BeautifulSoup
 
@@ -64,6 +64,37 @@ def get_page_path(base_dir: str, page: Dict[str, Any]) -> str:
     path_parts.append(page['title'].replace('/', '-'))
 
     full_path = os.path.join(base_dir, *path_parts)
+    return full_path
+
+
+def mk_path(
+        parent_dir: str,
+        space_key: str,
+        output_dir: str,
+        page: Optional[Dict[str, Any]] = None
+) -> str:
+    """Create and return the full directory path.
+
+    Constructs the directory path based on the given parameters, including the
+    Confluence space key, output directory, and optional page data, creates the
+    directories if they do not exist, and returns the full path.
+
+    Args:
+        parent_dir (str): Parent directory name.
+        space_key (str): Key of the Confluence space.
+        output_dir (str): Base output directory.
+        page (Optional[Dict[str, Any]]): Optional Confluence page data.
+
+    Returns:
+        str: The full path to the directory.
+    """
+    base_path = os.path.join(output_dir, space_key, parent_dir)
+    if page:
+        full_path = get_page_path(str(base_path), page)
+    else:
+        full_path = base_path
+
+    os.makedirs(full_path, exist_ok=True)
     return full_path
 
 

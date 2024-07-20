@@ -21,6 +21,7 @@ from typing import Any, DefaultDict, Dict, List, Tuple
 from .common import (
     check_unlicensed_or_deleted,
     format_date,
+    mk_path,
     people_url,
 )
 from .confluence import Confluence
@@ -72,14 +73,21 @@ class OwnerMetadata:
         }
 
 
-def save_owners_to_csv(owner_data: Dict[str, Any], output_dir: str) -> None:
+def save_owners_to_csv(
+        owner_data: Dict[str, Any],
+        space_key: str,
+        output_dir: str,
+) -> None:
     """Save metadata of Confluence page owners to a CSV file.
 
     Args:
         owner_data (dict): Dictionary containing owner metadata.
+        space_key (str): The key of the Confluence space.
         output_dir (str): Directory to save the CSV file.
     """
-    csv_path = os.path.join(output_dir, 'owners-metadata.csv')
+    csv_path = mk_path('csv', space_key, output_dir)
+    csv_path = os.path.join(csv_path, 'owners-metadata.csv')
+
     fieldnames = OwnerMetadata.get_fieldnames()
 
     sorted_data = sorted(
@@ -139,8 +147,6 @@ def export_owners_metadata(space_key: str, output_dir: str) -> None:
         output_dir (str): Directory to save the output files.
     """
     client = Confluence()
-    output_dir = os.path.abspath(output_dir)
-    os.makedirs(output_dir, exist_ok=True)
 
     pages = client.get_all_pages_in_space(space_key)
     owner_data: DefaultDict[str, Dict[str, Any]] = defaultdict(lambda: {
@@ -150,6 +156,6 @@ def export_owners_metadata(space_key: str, output_dir: str) -> None:
     })
 
     process_pages(pages, owner_data)
-    save_owners_to_csv(owner_data, output_dir)
+    save_owners_to_csv(owner_data, space_key, output_dir)
 
     logger.info('Metadata for page owners downloaded and saved to CSV.')
