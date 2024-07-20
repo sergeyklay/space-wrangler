@@ -114,6 +114,52 @@ def mock_response():
 
 
 @pytest.fixture
+def spaces_response_with_next():
+    mock_resp = MagicMock()
+    mock_resp.json.return_value = {
+            'results': [
+                {
+                    'key': 'TEST',
+                    'name': 'Test Space',
+                    'type': 'global',
+                    'history': {
+                        'createdBy': {
+                            'displayName': 'Test User'
+                        },
+                        'createdDate': '2024-01-01T12:00:00.000Z'
+                    },
+                    '_links': {
+                        'webui': '/spaces/TEST'
+                    }
+                },
+                {
+                    'key': 'ds',
+                    'name': 'Demonstration Space',
+                    'type': 'global',
+                    'history': {
+                        'createdDate': '2015-10-20T15:05:06.966Z'
+                    },
+                    '_links': {
+                        'webui': '/spaces/ds'
+                    }
+                }
+            ],
+            'start': 0,
+            'limit': 100,
+            'size': 100,
+            '_links': {
+                'base': 'https://pdffiller.atlassian.net/wiki',
+                'context': '/wiki',
+                'next': ('/rest/api/space'
+                         '?next=true&expand=history&limit=100'
+                         '&start=100&type=global'),
+            },
+        }
+    mock_resp.status_code = 200
+    return mock_resp
+
+
+@pytest.fixture
 def mock_response_with_next():
     mock_resp1 = MagicMock()
     mock_resp1.json.return_value = {

@@ -17,12 +17,14 @@ import os
 from typing import Any, Dict, List, Tuple
 
 from .common import (
+    CONFLUENCE_BASE_URL,
     contains_cyrillic,
     format_date,
     get_structured_title,
-    mk_path
+    mk_path,
+    path,
 )
-from .confluence import Confluence, CONFLUENCE_BASE_URL
+from .confluence import Confluence
 
 logger = logging.getLogger('confluence')
 
@@ -81,12 +83,12 @@ def save_pages_to_csv(
 
     rows = []
     for page in pages:
-        content = page['body']['storage']['value']
+        content = path(page, 'body.storage.value')
         content_is_english = not contains_cyrillic(content)
         title_is_english = not contains_cyrillic(page['title'])
-        last_updated = page['history']['lastUpdated']
-        created_date = page['history']['createdDate']
-        owner_name = page['history']['ownedBy']['displayName']
+        last_updated = path(page, 'history.lastUpdated')
+        created_date = path(page, 'history.createdDate')
+        owner_name = path(page, 'history.ownedBy.displayName')
 
         rows.append({
             PageMetadata.PAGE_ID: page['id'],
@@ -97,10 +99,10 @@ def save_pages_to_csv(
             PageMetadata.CONTENT_IN_ENGLISH: content_is_english,
             PageMetadata.CREATED_DATE: format_date(created_date),
             PageMetadata.LAST_UPDATED_DATE: format_date(last_updated['when']),
-            PageMetadata.LAST_EDITOR: last_updated['by']['displayName'],
+            PageMetadata.LAST_EDITOR: path(last_updated, 'by.displayName'),
             PageMetadata.CURRENT_OWNER: owner_name,
             PageMetadata.PAGE_URL:
-                CONFLUENCE_BASE_URL + page['_links']['webui'],
+                CONFLUENCE_BASE_URL + path(page, '_links.webui'),
         })
 
     rows.sort(key=lambda x: x[PageMetadata.PAGE_TITLE])

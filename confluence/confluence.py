@@ -17,17 +17,15 @@ import os
 import random
 import time
 from dataclasses import dataclass
-from typing import Any, Dict, Generator, List, Optional, Tuple
+from typing import Any, Dict, Generator, List, Optional, Tuple, Union
 from urllib.parse import parse_qs, urlparse
 
 import requests
 from atlassian import Confluence as Client
 from requests.auth import HTTPBasicAuth
 
+from .common import CONFLUENCE_BASE_URL, CONFLUENCE_DOMAIN, path
 from .exceptions import ConfigurationError
-
-CONFLUENCE_DOMAIN = 'https://pdffiller.atlassian.net'
-CONFLUENCE_BASE_URL = f'{CONFLUENCE_DOMAIN}/wiki'
 
 logger = logging.getLogger('confluence')
 
@@ -140,7 +138,7 @@ class Confluence:
     def _random_in_range(self, min_val: float, max_val: float) -> float:
         return random.uniform(min_val, max_val)
 
-    def _initial_params(self, limit: int) -> Dict[str, str]:
+    def _initial_params(self, limit: int) -> Dict[str, Union[str, int]]:
         """Initialize the query parameters."""
         expand = (
             'body.storage,'
@@ -151,8 +149,8 @@ class Confluence:
         )
         return {
             'depth': 'all',
-            'start': '0',
-            'limit': str(limit),
+            'start': 0,
+            'limit': limit,
             'expand': expand,
             'content_type': 'page',   # How about blogpost?
         }
@@ -160,13 +158,15 @@ class Confluence:
     def _update_params_with_next(
             self,
             next_url: str,
-            params: Dict[str, str]
-    ) -> Dict[str, str]:
+            params: Dict[str, Any],
+            ignore: Optional[List] = None
+    ) -> Dict[str, Any]:
         """Update query parameters with the next page's parameters."""
+        ignore = ignore or []
         parsed_url = urlparse(next_url)
         query_params = parse_qs(parsed_url.query)
         for key, value in query_params.items():
-            if key == 'next':
+            if key in ignore:
                 continue
             params[key] = value[0] if len(value) == 1 else ','.join(value)
         return params
@@ -200,11 +200,41 @@ class Confluence:
             if not self._has_next_page(data):
                 break
             params = self._update_params_with_next(
-                data['_links']['next'],
-                params
+                path(data, '_links.next'),
+                params,
+                ['next']
             )
 
         return all_pages
+
+    def get_all_spaces(self, limit: int = 100) -> List[Dict[str, Any]]:
+        """Retrieve all spaces from Confluence.
+
+        Returns:
+            list: List of spaces in Confluence.
+        """
+        all_spaces = []
+        logger.info(f'Fetch spaces ({limit} pages per request)...')
+
+        params = {
+            'start': 0,
+            'limit': limit,
+            'space_status': 'current',
+            'expand': 'history',
+        }
+
+        while True:
+            data = self.client.get_all_spaces(**params)
+            all_spaces.extend(data['results'])
+            if not self._has_next_page(data):
+                break
+            params = self._update_params_with_next(
+                path(data, '_links.next'),
+                params,
+                ['next', 'type', 'status']
+            )
+
+        return all_spaces
 
     def exponential_backoff(
             self,

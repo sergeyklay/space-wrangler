@@ -15,11 +15,15 @@ import os
 import re
 import textwrap
 from datetime import datetime
+from functools import reduce
 from typing import Any, Dict, List, Optional
 
 from bs4 import BeautifulSoup
 
 logger = logging.getLogger('confluence')
+
+CONFLUENCE_DOMAIN = 'https://pdffiller.atlassian.net'
+CONFLUENCE_BASE_URL = f'{CONFLUENCE_DOMAIN}/wiki'
 
 
 def people_url(people_id: str) -> str:
@@ -31,7 +35,6 @@ def people_url(people_id: str) -> str:
     Returns:
         str: URL to the user's Confluence profile.
     """
-    from .confluence import CONFLUENCE_BASE_URL
     return f'{CONFLUENCE_BASE_URL}/people/{people_id}'
 
 
@@ -184,3 +187,27 @@ def format_text(html_content: str) -> str:
 
     formatted_text = '\n'.join(new_lines).strip()
     return formatted_text
+
+
+def path(data: dict, item: str, default: Any = None) -> Any:
+    """Steps through an item chain to get the ultimate value.
+
+    If ultimate value or path to value does not exist, does not raise
+    an exception and instead returns default.
+
+    Args:
+        data (dict): Dictionary to search through.
+        item (str): Path to the value.
+        default (Any, optional): Default value to return if path
+            does not exist.
+    """
+    def getitem(obj: Any, name: str) -> Any:
+        if obj is None:
+            return default
+
+        try:
+            return obj[name]
+        except (KeyError, TypeError):
+            return default
+
+    return reduce(getitem, item.split('.'), data)

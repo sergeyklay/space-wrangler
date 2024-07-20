@@ -15,7 +15,7 @@ import json
 import logging
 from typing import Any, Dict, List
 
-from .common import format_text, mk_path
+from .common import format_text, mk_path, path
 from .confluence import Confluence
 from .template import html_template
 
@@ -40,9 +40,8 @@ def save_pages_to_files(
         json_path = mk_path('json', space_key, output_dir, page)
         text_path = mk_path('txt', space_key, output_dir, page)
 
-        content = html_template(
-            title=page['title'],
-            content=page['body']['storage']['value'])
+        body_value = path(page, 'body.storage.value')
+        content = html_template(title=page['title'], content=body_value)
 
         with open(f"{html_path}.html", 'w', encoding='utf-8') as file:
             file.write(content)
@@ -50,7 +49,7 @@ def save_pages_to_files(
         with open(f"{json_path}.json", 'w', encoding='utf-8') as file:
             json.dump(page, file, ensure_ascii=False, indent=4)
 
-        plain_text = format_text(page['body']['storage']['value'])
+        plain_text = format_text(body_value)
         with open(f"{text_path}.txt", 'w', encoding='utf-8') as file:
             file.write(plain_text)
 

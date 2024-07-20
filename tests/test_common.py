@@ -5,13 +5,16 @@
 # For the full copyright and license information, please view
 # the LICENSE file that was distributed with this source code.
 
+import pytest
+
 from confluence.common import (
     check_unlicensed_or_deleted,
+    CONFLUENCE_BASE_URL,
     format_text,
     get_page_path,
+    path,
     people_url,
 )
-from confluence.confluence import CONFLUENCE_BASE_URL
 
 
 def test_format_text():
@@ -121,3 +124,24 @@ def test_check_unlicensed_or_deleted():
     assert check_unlicensed_or_deleted('John Doe (Unlicensed)') == 'TRUE'
     assert check_unlicensed_or_deleted('Jane Doe (Deleted)') == 'TRUE'
     assert check_unlicensed_or_deleted('John Doe') == 'FALSE'
+
+
+@pytest.mark.parametrize(
+    'search,expected',
+    [
+        ('a', {'b': {'c': {'d': 42}}}),
+        ('a.b', {'c': {'d': 42}}),
+        ('a.b.c', {'d': 42}),
+        ('a.b.c.d', 42),
+        ('a.z.c.d', None),
+        ('a.b.c.z', None),
+        ('z.y.z', None),
+        ('42', None),
+    ])
+def test_path(search, expected):
+    my_dict = {'a': {'b': {'c': {'d': 42}}}}
+
+    if expected is None:
+        assert path(my_dict, search) is expected
+    else:
+        assert path(my_dict, search) == expected

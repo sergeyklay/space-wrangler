@@ -22,6 +22,7 @@ from .common import (
     check_unlicensed_or_deleted,
     format_date,
     mk_path,
+    path,
     people_url,
 )
 from .confluence import Confluence
@@ -117,11 +118,11 @@ def process_pages(
         owner_data (dict): Dictionary to store owner metadata.
     """
     for page in pages:
-        owner = page['history']['ownedBy']['displayName']
-        owner_id = page['history']['ownedBy']['accountId']
+        owner = path(page, 'history.ownedBy.displayName')
+        owner_id = path(page, 'history.ownedBy.accountId')
         owner_url = people_url(owner_id)
         unlicensed_or_deleted = check_unlicensed_or_deleted(owner)
-        last_updated = page['history']['lastUpdated']['when']
+        last_updated = path(page, 'history.lastUpdated.when')
         formatted_last_updated = format_date(last_updated)
 
         curr_owner = owner_data[owner]

@@ -47,23 +47,24 @@ class ConfigurationError(Error):
             str: The error message indicating what is missing and how to fix
                 the configuration.
         """
-        if self.user is None and self.token is None:
-            return (
-                'Confluence API user and token are not set in environment '
-                'variables. Please set both CONFLUENCE_API_USER and '
-                'CONFLUENCE_API_TOKEN.'
-            )
+        def is_set(value: Optional[str]) -> bool:
+            """Check if the value is set and not empty."""
+            return value is not None and len(str(value)) > 0
 
-        if self.user is None:
+        if not is_set(self.user) and is_set(self.token):
             return (
                 'Confluence API user is not set in environment variables. '
                 'Please set CONFLUENCE_API_USER.'
             )
 
-        if self.token is None:
+        if not is_set(self.token) and is_set(self.user):
             return (
                 'Confluence API token is not set in environment variables. '
                 'Please set CONFLUENCE_API_TOKEN.'
             )
 
-        return 'Configuration error.'
+        return (
+            'Confluence API user and token are not set in environment '
+            'variables. Please set both CONFLUENCE_API_USER and '
+            'CONFLUENCE_API_TOKEN.'
+        )

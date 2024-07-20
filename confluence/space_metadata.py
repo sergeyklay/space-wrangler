@@ -16,8 +16,9 @@ import logging
 import os
 from typing import Tuple
 
-from .common import format_date
-from .confluence import Confluence, CONFLUENCE_BASE_URL
+from .common import CONFLUENCE_BASE_URL, format_date, path
+from .confluence import Confluence
+
 
 logger = logging.getLogger('confluence')
 
@@ -57,14 +58,8 @@ def export_spaces_metadata(output_dir: str) -> None:
     """
     client = Confluence()
 
-    # Get all global spaces with their history
-    spaces_data = client.client.get_all_spaces(
-        space_type='global',
-        space_status='current',
-        expand='history',
-    )
+    spaces = client.get_all_spaces()
 
-    # Prepare CSV file path
     csv_path = os.path.join(output_dir, 'all-spaces.csv')
     os.makedirs(output_dir, exist_ok=True)
 
@@ -73,14 +68,16 @@ def export_spaces_metadata(output_dir: str) -> None:
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()
 
-        for space in spaces_data['results']:
-            # Demonstration Space has no createdBy field
-            if 'createdBy' in space['history']:
-                created_by = space['history']['createdBy']['displayName']
-            else:
-                created_by = 'Confluence'
-            created_date = format_date(space['history']['createdDate'])
-            space_url = CONFLUENCE_BASE_URL + space['_links']['webui']
+        for space in spaces:
+            # 'Demonstration Space' has no 'createdBy' field
+            created_by = path(
+                space,
+                'history.createdBy.displayName',
+                'Confluence'
+            )
+
+            created_date = format_date(path(space, 'history.createdDate'))
+            space_url = CONFLUENCE_BASE_URL + path(space, '_links.webui')
 
             writer.writerow({
                 SpaceMetadata.SPACE_KEY: space['key'],
