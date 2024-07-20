@@ -214,7 +214,7 @@ class Confluence:
             list: List of spaces in Confluence.
         """
         all_spaces = []
-        logger.info(f'Fetch spaces ({limit} pages per request)...')
+        logger.info(f'Fetch spaces ({limit} spaces per request)...')
 
         params = {
             'start': 0,
