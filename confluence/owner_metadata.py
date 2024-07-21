@@ -159,4 +159,7 @@ def export_owners_metadata(space_key: str, output_dir: str) -> None:
     process_pages(pages, owner_data)
     save_owners_to_csv(owner_data, space_key, output_dir)
 
-    logger.info('Metadata for page owners downloaded and saved to CSV.')
+    logger.info(
+        (f'Metadata for {len(owner_data)} page owners '
+         'downloaded and saved to CSV.\n')
+    )

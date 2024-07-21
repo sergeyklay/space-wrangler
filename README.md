@@ -34,7 +34,7 @@ formats.
 
 ### Space Metadata Exporter
 
-Generate a CSV file with metadata about each global space in your Confluence.
+Generate a CSV file with metadata about each space in your Confluence.
 
 **Output structure:**
 
@@ -43,7 +43,7 @@ Generate a CSV file with metadata about each global space in your Confluence.
 
 ### Pages Metadata Exporter
 
-Generate a CSV file with metadata about each page in a specified Confluence space.
+Generate a CSV file with metadata about each page in specified Confluence spaces.
 
 **Output structure:**
 
@@ -52,8 +52,8 @@ Generate a CSV file with metadata about each page in a specified Confluence spac
 
 ### Owner Metadata Exporter
 
-Generate a CSV file with metadata about the owners of pages in a specified
-Confluence space.
+Generate a CSV file with metadata about the owners of pages in specified
+Confluence spaces.
 
 **Output structure:**
 
@@ -79,10 +79,6 @@ What kind of things you need to install on your workstation to start:
 > the default version on macOS. However, I do not recommend relying on continued
 > support for Python 3.9. It is advisable to install a more recent version of
 > Python, which is a straightforward process on both Linux and macOS.
->
-> As for Windows users, with all the various issues and hacks they usually deal
-> with, it’s safe to assume they already have the latest version of Python and
-> likely work within WSL or maintain a native POSIX terminal environment.
 
 ### Installing
 
@@ -160,10 +156,10 @@ confluence --help
 
 ### Exporting Confluence Space
 
-To export all pages from a specified Confluence space:
+To export all pages from specified Confluence spaces:
 
 ```shell
-confluence export-space --space-key YOUR_SPACE_KEY
+confluence export-space --space-key SPACE_KEY1,SPACE_KEY2
 ```
 
 ### Exporting Spaces Metadata
@@ -176,20 +172,20 @@ confluence spaces-metadata
 
 ### Exporting Page Metadata
 
-To generate a CSV file with metadata about each page in a specified Confluence
-space:
+To generate a CSV file with metadata about each page in specified Confluence
+spaces:
 
 ```shell
-confluence pages-metadata --space-key YOUR_SPACE_KEY
+confluence pages-metadata --space-key SPACE_KEY1,SPACE_KEY2
 ```
 
 ### Exporting Owner Metadata
 
-To generate a CSV file with metadata about the owners of pages in a specified
-Confluence space:
+To generate a CSV file with metadata about the owners of pages in specified
+Confluence spaces:
 
 ```shell
-confluence owners-metadata --space-key YOUR_SPACE_KEY
+confluence owners-metadata --space-key SPACE_KEY1,SPACE_KEY2
 ```
 
 ## Common Options
@@ -199,7 +195,7 @@ There are common options that can be used with all commands.
 To specify the output directory:
 
 ```shell
-confluence COMMAND --space-key YOUR_SPACE_KEY --output-dir YOUR_OUTPUT_DIR
+confluence COMMAND --space-key SPACE_KEY --output-dir OUTPUT_DIR
 ```
 
 If the `--output-dir` option is not specified, the `output` directory in the
@@ -209,7 +205,7 @@ To suppress informational messages, use the `-q`, `--quiet` or `--silent`
 option:
 
 ```shell
-confluence -q <command> --space-key YOUR_SPACE_KEY
+confluence -q <command> --space-key SPACE_KEY
 ```
 
 ## Support

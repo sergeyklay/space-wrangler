@@ -146,4 +146,5 @@ def export_pages_metadata(space_key: str, output_dir: str) -> None:
 
     save_pages_to_csv(pages, space_key, output_dir)
     logger.info(
-        f'Metadata for {len(pages)} pages downloaded and saved to CSV')
+        f'Metadata for {len(pages)} pages downloaded and saved to CSV\n'
+    )

@@ -7,7 +7,7 @@
 
 """CLI commands for the Confluence application."""
 
-from typing import Any
+from typing import Any, Optional
 
 import click
 
@@ -18,6 +18,40 @@ CONTEXT_SETTINGS = {
     'show_default': True,
     'help_option_names': ['-h', '--help'],
 }
+
+
+class CommaSeparatedList(click.ParamType):
+    """A custom Click parameter type for comma-separated lists."""
+
+    name = 'list'
+
+    def convert(
+            self,
+            value: Any,
+            param: Optional[click.core.Parameter],
+            ctx: Optional[click.core.Context]
+    ) -> Any:
+        """Convert the value to the correct type.
+
+        Args:
+            value: The value to convert.
+            param (Optional[click.core.Parameter]): The parameter that is using
+                this type to convert its value. May be ``None``.
+            ctx (Optional[click.core.Context]): The current context that
+                arrived at this value. May be ``None``.
+        """
+        if isinstance(value, list):
+            return value
+
+        if value is None or str(value).strip() == '':
+            raise click.BadParameter(
+                message="Option '--space-key' requires an argument.",
+                ctx=ctx,
+                param=param,
+                param_hint='--space-key',
+            )
+
+        return value.split(',')
 
 
 class ExportCommand(click.core.Command):
@@ -44,8 +78,10 @@ class ExportCommand(click.core.Command):
             0,
             click.core.Option(
                 ('-s', '--space-key',),
-                help='Confluence space key to work with.',
+                help=('Confluence space key(s) to work with. '
+                      'Separate multiple keys with commas.'),
                 required=True,
+                type=CommaSeparatedList(),
             )
         )
 
@@ -130,7 +166,8 @@ def spaces_metadata(**kwargs: str) -> None:
 def export_space_command(**kwargs: str) -> None:
     """Export all pages from the specified space."""
     from .space_exporter import export_space
-    export_space(kwargs['space_key'], kwargs['output_dir'])
+    for space_key in kwargs['space_key']:
+        export_space(space_key, kwargs['output_dir'])
 
 
 @app.command(
@@ -142,7 +179,8 @@ def export_space_command(**kwargs: str) -> None:
 def pages_metadata(**kwargs: str) -> None:
     """Export metadata of pages from the specified space."""
     from .page_metadata import export_pages_metadata
-    export_pages_metadata(kwargs['space_key'], kwargs['output_dir'])
+    for space_key in kwargs['space_key']:
+        export_pages_metadata(space_key, kwargs['output_dir'])
 
 
 @app.command(
@@ -154,4 +192,5 @@ def pages_metadata(**kwargs: str) -> None:
 def owners_metadata(**kwargs: str) -> None:
     """Export metadata of owners from the specified space."""
     from .owner_metadata import export_owners_metadata
-    export_owners_metadata(kwargs['space_key'], kwargs['output_dir'])
+    for space_key in kwargs['space_key']:
+        export_owners_metadata(space_key, kwargs['output_dir'])

@@ -22,10 +22,11 @@ from urllib.parse import parse_qs, urlparse
 
 import requests
 from atlassian import Confluence as Client
+from atlassian.errors import ApiError
 from requests.auth import HTTPBasicAuth
 
 from .common import CONFLUENCE_BASE_URL, CONFLUENCE_DOMAIN, path
-from .exceptions import ConfigurationError
+from .exceptions import ConfigurationError, Error
 
 logger = logging.getLogger('confluence')
 
@@ -168,7 +169,9 @@ class Confluence:
             list: List of pages in the specified Confluence space.
         """
         all_pages = []
-        logger.info(f'Fetch space pages ({limit} pages per request)...')
+        logger.info(
+            f'Fetch {space_key} space pages ({limit} pages per request)...'
+        )
 
         expand = (
             'body.storage,'
@@ -186,7 +189,13 @@ class Confluence:
         }
 
         while True:
-            data = self.client.get_space_content(space_key, **params)
+            try:
+                data = self.client.get_space_content(space_key, **params)
+            except ApiError as exc:
+                raise Error(
+                    f'Failed to fetch pages for {space_key}: {exc}'
+                ) from exc
+
             all_pages.extend(data['results'])
             if not self._has_next_page(data):
                 break

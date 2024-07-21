@@ -65,4 +65,4 @@ def export_space(space_key: str, output_dir: str) -> None:
 
     pages = client.get_all_pages_in_space(space_key)
     save_pages_to_files(pages, space_key, output_dir)
-    logger.info(f'Total {len(pages)} pages downloaded.')
+    logger.info(f'Total {len(pages)} pages downloaded.\n')
