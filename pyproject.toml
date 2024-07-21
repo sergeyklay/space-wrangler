@@ -1,0 +1,203 @@
+[build-system]
+requires = [
+    "setuptools >= 61.0",
+    "wheel",
+    "build>=1.2.0",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "confluence"
+dynamic = ["version"]
+authors = [{name = "Serghei Iakovlev", email = "serghei@airslate.com"}]
+maintainers = [{name = "Serghei Iakovlev", email = "serghei@airslate.com"}]
+license = {text = "MIT License"}
+description = "Confluence Space Management Toolkit."
+readme = "README.md"
+keywords = ["confluence", "cli", "atlassian", "maintenance", "documentation-management"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "Intended Audience :: Information Technology",
+    "Natural Language :: English",
+    "License :: OSI Approved :: MIT",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Software Development",
+    "Topic :: Terminals",
+    "Topic :: Text Processing",
+    "Topic :: Utilities",
+]
+requires-python = ">=3.9, <4"
+# It is not considered best practice to use install_requires to pin dependencies
+# to specific versions. For more se:
+# https://packaging.python.org/en/latest/discussions/install-requires-vs-requirements/#install-requires
+dependencies = [
+    "pip",
+    "atlassian-python-api",
+    "beautifulsoup4",
+    "click",
+    "python-dotenv",
+    "requests",
+    "types-requests",
+]
+
+[project.optional-dependencies]
+testing = [
+    "Flake8-pyproject",
+    "check-manifest",
+    "coverage[toml]",
+    "flake8",
+    "flake8-blind-except",
+    "flake8-import-order",
+    "mypy",
+    "pylint",
+    "pytest",
+    "pytest-mock",
+]
+
+[project.urls]
+Homepage = "https://github.com/airslateinc/confluence-maintenance-tools"
+Documentation = "https://github.com/airslateinc/confluence-maintenance-tools?tab=readme-ov-file"
+Repository = "https://github.com/airslateinc/confluence-maintenance-tools"
+Issues = "https://github.com/airslateinc/confluence-maintenance-tools/issues"
+Changelog = "https://github.com/airslateinc/confluence-maintenance-tools/releases"
+
+[project.scripts]
+confluence = "confluence.cli:main"
+
+[tool.setuptools]
+platforms = ["any"]
+
+[tool.setuptools.packages.find]
+exclude = ["tests", "tests*"]
+
+[tool.pytest.ini_options]
+addopts = "--verbose --durations=25 --color=no"
+
+[tool.pylint.main]
+# Use multiple processes to speed up Pylint. Specifying 0 will auto-detect the
+# number of processors available to use.
+jobs = "0"
+
+[tool.pylint.logging]
+# The type of string formatting that logging methods do.
+# 'old' means using % formatting, 'new' is for '{}' formatting.
+logging-format-style = "new"
+
+[tool.pylint.messages_control]
+# Disable the message, report, category or checker with the given id(s).
+disable = [
+    "import-outside-toplevel",
+    "logging-fstring-interpolation",
+    "too-few-public-methods",
+]
+
+[tool.pylint.variables]
+# List of qualified module names which can have objects that can redefine
+# builtins.
+redefining-builtins-modules = "requests.exceptions"
+
+[tool.flake8]
+# Set the maximum allowed length for a line of code
+max-line-length = 79
+
+# Set the maximum allowed cyclomatic complexity for a function or method
+max-complexity = 10
+
+# When set to True, this option instructs Flake8 to display a summary of
+# warnings and errors grouped by type at the end of its output.
+statistics = true
+
+# When set to True, this option causes Flake8 to display the offending line
+# of code for each warning or error, providing better context for understanding
+# and fixing the issues.
+show-source = true
+
+# List of files and directories to exclude from linting
+exclude = [
+    ".eggs",
+    ".git",
+    ".pytest_cache",
+    ".venv",
+    "__pycache__",
+    "build",
+    "dist"
+]
+
+# List of modules to be considered as local
+application-import-names = [
+    "confluence",
+    "tests"
+]
+
+# Set the import order style to follow Smarkets' style
+import-order-style = "smarkets"
+
+[tool.coverage.report]
+# Set the number of decimal places in coverage percentage
+precision = 2
+
+# Show lines that were not executed
+show_missing = true
+
+[tool.coverage.html]
+# Directory for the HTML format report
+directory = "htmlcov"
+
+[tool.coverage.xml]
+# Filename for the XML format report
+output = "coverage.xml"
+
+[tool.coverage.run]
+# Enable branch coverage (default: False)
+branch = true
+
+# Run tests in parallel (useful when using CI/CD)
+parallel = true
+
+# Filename for storing coverage data
+data_file = "coverage.db"
+
+# Omit specified files or directories from the report
+omit = [
+    "*/.venv/*",
+    "*/__pycache__/*",
+    "*/site-packages/*",
+    "*/tests/*",
+]
+
+[tool.mypy]
+# The version of Python to use for type checking.
+python_version = "3.9"
+
+# Disallow function calls without type annotations.
+disallow_untyped_calls = true
+
+# Disallow defining functions without type annotations.
+disallow_untyped_defs = true
+
+# Disallow functions with incomplete type annotations.
+disallow_incomplete_defs = true
+
+# Check the bodies of untyped functions.
+check_untyped_defs = true
+
+# Ignore missing type hints for imported modules.
+ignore_missing_imports = true
+
+# Show error messages in a human-readable format
+pretty = true
+
+# Show the context of errors in the output
+show_error_context = true

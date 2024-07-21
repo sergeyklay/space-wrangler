@@ -98,8 +98,8 @@ maintainer-clean: clean
 .PHONY: lint
 lint: $(VENV_PYTHON)
 	@echo $(CS)Running linters$(CE)
-	-$(VENV_BIN)/flake8 $(FLAKE8_FLAGS) ./
-	$(VENV_BIN)/pylint $(PYLINT_FLAGS) ./$(PKG_NAME)
+	-$(VENV_BIN)/flake8 --toml-config ./pyproject.toml $(FLAKE8_FLAGS) ./
+	$(VENV_BIN)/pylint --rcfile ./pyproject.toml $(PYLINT_FLAGS) ./$(PKG_NAME)
 	@echo
 
 .PHONY: typecheck

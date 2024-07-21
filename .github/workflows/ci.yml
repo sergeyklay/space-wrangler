@@ -71,14 +71,6 @@ jobs:
           python -m pip list
         shell: bash
 
-      - name: Setuptools self-test
-        run: |
-          source .venv/bin/activate
-
-          python setup.py --fullname
-          python setup.py --long-description
-          python setup.py --classifiers
-
       - name: Setup pylint cache
         uses: actions/cache@v4
         with:

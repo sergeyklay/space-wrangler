@@ -11,6 +11,7 @@ coverage[toml]
 flake8
 flake8-blind-except
 flake8-import-order
+Flake8-pyproject
 mypy
 pylint
 pytest
