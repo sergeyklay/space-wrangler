@@ -19,10 +19,3 @@ updates:
       interval: daily
     assignees:
       - sergeyklay
-
-registries:
-  github:
-    type: git
-    url: https://github.com
-    username: x-access-token
-    password: ${{ secrets.APP_GITHUB_TOKEN }} # dependabot secret
