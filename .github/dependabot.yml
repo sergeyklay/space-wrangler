@@ -6,8 +6,6 @@ updates:
     directory: '/'
     schedule:
       interval: daily
-    registries:
-      - github
     groups:
       actions:
         patterns:
