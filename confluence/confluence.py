@@ -17,7 +17,7 @@ import os
 import random
 import time
 from dataclasses import dataclass
-from typing import Any, Dict, Generator, List, Optional, Tuple, Union
+from typing import Any, Dict, Generator, List, Optional, Tuple
 from urllib.parse import parse_qs, urlparse
 
 import requests
@@ -132,41 +132,18 @@ class Confluence:
             raise ValueError('jitter_multiplier_range must be (min, max).')
         return retry_options
 
-    def _delay(self, millis: int) -> None:
-        time.sleep(millis / 1000)
-
-    def _random_in_range(self, min_val: float, max_val: float) -> float:
-        return random.uniform(min_val, max_val)
-
-    def _initial_params(self, limit: int) -> Dict[str, Union[str, int]]:
-        """Initialize the query parameters."""
-        expand = (
-            'body.storage,'
-            'ancestors,'
-            'history.ownedBy,'
-            'history.lastUpdated,'
-            'version'
-        )
-        return {
-            'depth': 'all',
-            'start': 0,
-            'limit': limit,
-            'expand': expand,
-            'content_type': 'page',   # How about blogpost?
-        }
-
     def _update_params_with_next(
             self,
             next_url: str,
             params: Dict[str, Any],
-            ignore: Optional[List] = None
+            ignore_list: Optional[List] = None
     ) -> Dict[str, Any]:
         """Update query parameters with the next page's parameters."""
-        ignore = ignore or []
+        ignore_list = ignore_list or []
         parsed_url = urlparse(next_url)
         query_params = parse_qs(parsed_url.query)
         for key, value in query_params.items():
-            if key in ignore:
+            if key in ignore_list:
                 continue
             params[key] = value[0] if len(value) == 1 else ','.join(value)
         return params
@@ -193,7 +170,21 @@ class Confluence:
         all_pages = []
         logger.info(f'Fetch space pages ({limit} pages per request)...')
 
-        params = self._initial_params(limit)
+        expand = (
+            'body.storage,'
+            'ancestors,'
+            'history.ownedBy,'
+            'history.lastUpdated,'
+            'version'
+        )
+        params = {
+            'depth': 'all',
+            'start': 0,
+            'limit': limit,
+            'expand': expand,
+            'content_type': 'page',  # How about blogpost?
+        }
+
         while True:
             data = self.client.get_space_content(space_key, **params)
             all_pages.extend(data['results'])
@@ -287,7 +278,8 @@ class Confluence:
                         int(retry_after),
                         retry_options.max_retry_delay
                     )
-                    self._delay(delay)
+
+                    time.sleep(delay / 1000)
                     return self.fetch_page_views(
                         content_id,
                         views_type,
@@ -308,7 +300,7 @@ class Confluence:
                         retry_options.last_retry_delay,
                         retry_options.max_retry_delay
                     )
-                    self._delay(delay)
+                    time.sleep(delay / 1000)
                     return self.fetch_page_views(
                         content_id,
                         views_type,
@@ -329,15 +321,6 @@ class Confluence:
             logger.error(message)
 
         return result
-
-    def _init_process_context(self, context: ProcessContext) -> None:
-        """Initialize process-specific context."""
-        logger.info('Initializing process...')
-        self.base_url = context.base_url
-        self.headers = context.headers
-        self.auth = context.auth
-        self.timeout = context.timeout
-        self.retry_options = context.retry_options
 
     def _fetch_page_views_chunk(
             self,
@@ -378,18 +361,7 @@ class Confluence:
 
         content_id_chunks = chunks(content_ids, len(content_ids) // jobs)
 
-        context = ProcessContext(
-            base_url=CONFLUENCE_BASE_URL,
-            headers=self.headers,
-            auth=self.auth,
-            timeout=self.timeout,
-            retry_options=self.retry_options
-        )
-
-        with multiprocessing.Pool(
-                processes=jobs,
-                initializer=self._init_process_context,
-                initargs=(context,)) as pool:
+        with multiprocessing.Pool(processes=jobs) as pool:
             results = pool.starmap(
                 self._fetch_page_views_chunk,
                 [(chunk, views_type) for chunk in content_id_chunks],
