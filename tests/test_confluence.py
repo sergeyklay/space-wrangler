@@ -7,6 +7,7 @@
 
 import pytest
 
+from confluence.confluence import Confluence, DefaultRetryOptions
 from confluence.exceptions import ConfigurationError
 
 
@@ -68,3 +69,22 @@ def test_http_client_initialization_error(monkeypatch):
         from confluence.confluence import Confluence
         Confluence()
     assert 'Confluence API user and token are not set' in str(excinfo.value)
+
+
+def test_sanitise_retry_options_valid():
+    """Test _sanitise_retry_options with valid retry options."""
+    confluence = Confluence()
+
+    valid_options = DefaultRetryOptions(jitter_multiplier_range=(0.5, 1.5))
+    result = confluence._sanitise_retry_options(valid_options)
+    assert result == valid_options
+
+
+def test_sanitise_retry_options_invalid():
+    """Test _sanitise_retry_options with invalid retry options."""
+    confluence = Confluence()
+
+    invalid_options = DefaultRetryOptions(jitter_multiplier_range=(1.5, 0.5))
+    with pytest.raises(ValueError) as excinfo:
+        confluence._sanitise_retry_options(invalid_options)
+    assert str(excinfo.value) == 'jitter_multiplier_range must be (min, max).'
