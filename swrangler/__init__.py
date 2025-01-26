@@ -25,5 +25,4 @@ __license__ = 'GPL-3.0-or-later'
 __author__ = 'Serghei Iakovlev'
 __author_email__ = 'gnu@serghei.pl'
 __url__ = 'https://github.com/sergeyklay/space-wrangler'
-__description__ = 'A versatile toolkit for exporting and managing Confluence spaces, with advanced metadata capabilities.'
-
+__description__ = 'Export and manage Confluence spaces'
