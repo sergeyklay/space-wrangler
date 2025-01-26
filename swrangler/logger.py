@@ -5,7 +5,7 @@
 # For the full copyright and license information, please view
 # the LICENSE file that was distributed with this source code.
 
-"""Logging initialization for the confluence command-line tool.
+"""Logging initialization for the swrangler command-line tool.
 
 This module provides setup for a logger that directs informational messages to
 stdout and warnings/errors to stderr. It also supports a quiet mode to suppress
@@ -71,7 +71,7 @@ def setup_logger(quiet: bool = False) -> logging.Logger:
     Returns:
         logging.Logger: Configured logger instance.
     """
-    logger = logging.getLogger('confluence')
+    logger = logging.getLogger('swrangler')
     logger.setLevel(logging.DEBUG if not quiet else logging.WARNING)
 
     formatter = logging.Formatter('%(message)s')
