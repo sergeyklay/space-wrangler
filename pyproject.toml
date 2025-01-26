@@ -18,7 +18,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
-name = "space-wrangler"
+name = "swrangler"
 version = "1.7.0"
 description = "A versatile toolkit for exporting and managing Confluence spaces, with advanced metadata capabilities."
 authors = ["Serghei Iakovlev <gnu@serghei.pl>"]
@@ -37,7 +37,6 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
