@@ -20,63 +20,62 @@ from swrangler.exceptions import ConfigurationError
 
 
 def test_get_all_pages_in_space(mock_response, mocker, confluence):
-    mock_get = mocker.patch('atlassian.Confluence.get_space_content')
+    mock_get = mocker.patch("atlassian.Confluence.get_space_content")
     mock_get.return_value = mock_response.json()
-    pages = confluence.get_all_pages_in_space('TEST')
+    pages = confluence.get_all_pages_in_space("TEST")
     assert len(pages) == 1
-    assert pages[0]['title'] == 'Test Page'
+    assert pages[0]["title"] == "Test Page"
 
 
 def test_get_all_pages_in_space_with_next(
-        mock_response_with_next,
-        mocker,
-        confluence,
+    mock_response_with_next,
+    mocker,
+    confluence,
 ):
     mock_get = mocker.patch(
-        'atlassian.Confluence.get_space_content',
+        "atlassian.Confluence.get_space_content",
         side_effect=[
             mock_response_with_next[0].json(),
             mock_response_with_next[1].json(),
-        ]
+        ],
     )
-    pages = confluence.get_all_pages_in_space('TEST')
+    pages = confluence.get_all_pages_in_space("TEST")
 
     assert mock_get.call_count == 2
     assert len(pages) == 2
-    assert pages[0]['title'] == 'Test Page 1'
-    assert pages[1]['title'] == 'Test Page 2'
+    assert pages[0]["title"] == "Test Page 1"
+    assert pages[1]["title"] == "Test Page 2"
 
 
 def test_get_all_pages_in_space_with_next_2(
-        mock_response_with_next_2,
-        mocker,
-        confluence
+    mock_response_with_next_2, mocker, confluence
 ):
     mock_get = mocker.patch(
-        'atlassian.Confluence.get_space_content',
+        "atlassian.Confluence.get_space_content",
         side_effect=[
             mock_response_with_next_2[0].json(),
             mock_response_with_next_2[1].json(),
-        ]
+        ],
     )
-    pages = confluence.get_all_pages_in_space('TEST')
+    pages = confluence.get_all_pages_in_space("TEST")
 
     assert mock_get.call_count == 2
     assert len(pages) == 2
-    assert pages[0]['title'] == 'Test Page 1'
-    assert pages[1]['title'] == 'Test Page 2'
+    assert pages[0]["title"] == "Test Page 1"
+    assert pages[1]["title"] == "Test Page 2"
     params = mock_get.call_args_list[1][1]
-    assert params['key'] == 'value1,value2'
+    assert params["key"] == "value1,value2"
 
 
 def test_http_client_initialization_error(monkeypatch):
-    monkeypatch.delenv('CONFLUENCE_API_USER', raising=False)
-    monkeypatch.delenv('CONFLUENCE_API_TOKEN', raising=False)
+    monkeypatch.delenv("CONFLUENCE_API_USER", raising=False)
+    monkeypatch.delenv("CONFLUENCE_API_TOKEN", raising=False)
 
     with pytest.raises(ConfigurationError) as excinfo:
         from swrangler.confluence import Confluence
+
         Confluence()
-    assert 'Confluence API user and token are not set' in str(excinfo.value)
+    assert "Confluence API user and token are not set" in str(excinfo.value)
 
 
 def test_sanitise_retry_options_valid():
@@ -95,4 +94,4 @@ def test_sanitise_retry_options_invalid():
     invalid_options = DefaultRetryOptions(jitter_multiplier_range=(1.5, 0.5))
     with pytest.raises(ValueError) as excinfo:
         confluence._sanitise_retry_options(invalid_options)
-    assert str(excinfo.value) == 'jitter_multiplier_range must be (min, max).'
+    assert str(excinfo.value) == "jitter_multiplier_range must be (min, max)."

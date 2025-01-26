@@ -15,7 +15,7 @@
 
 import logging
 
-from swrangler.logger import setup_logger, StdErrFilter, StdOutFilter
+from swrangler.logger import StdErrFilter, StdOutFilter, setup_logger
 
 
 def test_stdout_filter():
@@ -23,37 +23,41 @@ def test_stdout_filter():
     stdout_filter = StdOutFilter()
 
     debug_record = logging.LogRecord(
-        name='test',
+        name="test",
         level=logging.DEBUG,
-        pathname='',
+        pathname="",
         lineno=0,
-        msg='debug',
+        msg="debug",
         args=(),
-        exc_info=None)
+        exc_info=None,
+    )
     info_record = logging.LogRecord(
-        name='test',
+        name="test",
         level=logging.INFO,
-        pathname='',
+        pathname="",
         lineno=0,
-        msg='info',
+        msg="info",
         args=(),
-        exc_info=None)
+        exc_info=None,
+    )
     warning_record = logging.LogRecord(
-        name='test',
+        name="test",
         level=logging.WARNING,
-        pathname='',
+        pathname="",
         lineno=0,
-        msg='warning',
+        msg="warning",
         args=(),
-        exc_info=None)
+        exc_info=None,
+    )
     error_record = logging.LogRecord(
-        name='test',
+        name="test",
         level=logging.ERROR,
-        pathname='',
+        pathname="",
         lineno=0,
-        msg='error',
+        msg="error",
         args=(),
-        exc_info=None)
+        exc_info=None,
+    )
 
     assert stdout_filter.filter(debug_record) is True
     assert stdout_filter.filter(info_record) is True
@@ -66,37 +70,41 @@ def test_stderr_filter():
     stderr_filter = StdErrFilter()
 
     debug_record = logging.LogRecord(
-        name='test',
+        name="test",
         level=logging.DEBUG,
-        pathname='',
+        pathname="",
         lineno=0,
-        msg='debug',
+        msg="debug",
         args=(),
-        exc_info=None)
+        exc_info=None,
+    )
     info_record = logging.LogRecord(
-        name='test',
+        name="test",
         level=logging.INFO,
-        pathname='',
+        pathname="",
         lineno=0,
-        msg='info',
+        msg="info",
         args=(),
-        exc_info=None)
+        exc_info=None,
+    )
     warning_record = logging.LogRecord(
-        name='test',
+        name="test",
         level=logging.WARNING,
-        pathname='',
+        pathname="",
         lineno=0,
-        msg='warning',
+        msg="warning",
         args=(),
-        exc_info=None)
+        exc_info=None,
+    )
     error_record = logging.LogRecord(
-        name='test',
+        name="test",
         level=logging.ERROR,
-        pathname='',
+        pathname="",
         lineno=0,
-        msg='error',
+        msg="error",
         args=(),
-        exc_info=None)
+        exc_info=None,
+    )
 
     assert stderr_filter.filter(debug_record) is False
     assert stderr_filter.filter(info_record) is False
@@ -108,32 +116,32 @@ def test_setup_logger_default(capsys):
     """Test setup_logger with default settings (quiet=False)."""
     logger = setup_logger()
 
-    logger.debug('This is a debug message')
-    logger.info('This is an info message')
-    logger.warning('This is a warning message')
-    logger.error('This is an error message')
+    logger.debug("This is a debug message")
+    logger.info("This is an info message")
+    logger.warning("This is a warning message")
+    logger.error("This is an error message")
 
     captured = capsys.readouterr()
-    assert 'This is a debug message' in captured.out
-    assert 'This is an info message' in captured.out
-    assert 'This is a warning message' in captured.err
-    assert 'This is an error message' in captured.err
+    assert "This is a debug message" in captured.out
+    assert "This is an info message" in captured.out
+    assert "This is a warning message" in captured.err
+    assert "This is an error message" in captured.err
 
 
 def test_setup_logger_quiet(capsys):
     """Test setup_logger with quiet=True setting."""
     logger = setup_logger(quiet=True)
 
-    logger.debug('This is a debug message')
-    logger.info('This is an info message')
-    logger.warning('This is a warning message')
-    logger.error('This is an error message')
+    logger.debug("This is a debug message")
+    logger.info("This is an info message")
+    logger.warning("This is a warning message")
+    logger.error("This is an error message")
 
     captured = capsys.readouterr()
-    assert 'This is a debug message' not in captured.out
-    assert 'This is an info message' not in captured.out
-    assert 'This is a warning message' in captured.err
-    assert 'This is an error message' in captured.err
+    assert "This is a debug message" not in captured.out
+    assert "This is an info message" not in captured.out
+    assert "This is a warning message" in captured.err
+    assert "This is an error message" in captured.err
 
 
 def test_logger_handlers_count():
@@ -148,24 +156,24 @@ def test_logger_handlers_count():
 def test_logger_stdout_level_change(capsys):
     """Test logger stdout level changes with quiet setting."""
     logger = setup_logger()
-    logger.debug('This should appear')
+    logger.debug("This should appear")
     captured = capsys.readouterr()
-    assert 'This should appear' in captured.out
+    assert "This should appear" in captured.out
 
     logger = setup_logger(quiet=True)
-    logger.debug('This should not appear')
+    logger.debug("This should not appear")
     captured = capsys.readouterr()
-    assert 'This should not appear' not in captured.out
+    assert "This should not appear" not in captured.out
 
 
 def test_logger_stderr_level_unchanged(capsys):
     """Test logger stderr level remains consistent."""
     logger = setup_logger()
-    logger.error('This should appear in stderr')
+    logger.error("This should appear in stderr")
     captured = capsys.readouterr()
-    assert 'This should appear in stderr' in captured.err
+    assert "This should appear in stderr" in captured.err
 
     logger = setup_logger(quiet=True)
-    logger.error('This should still appear in stderr')
+    logger.error("This should still appear in stderr")
     captured = capsys.readouterr()
-    assert 'This should still appear in stderr' in captured.err
+    assert "This should still appear in stderr" in captured.err

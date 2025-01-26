@@ -23,10 +23,14 @@ from swrangler.env_loader import EnvLoader
 def test_load_from_current_console_session(monkeypatch):
     """Test loading variables from the current console session."""
 
-    with mock.patch.dict(os.environ, {
-        "CONFLUENCE_API_USER": "session_user",
-        "CONFLUENCE_API_TOKEN": "session_token"
-    }, clear=True):
+    with mock.patch.dict(
+        os.environ,
+        {
+            "CONFLUENCE_API_USER": "session_user",
+            "CONFLUENCE_API_TOKEN": "session_token",
+        },
+        clear=True,
+    ):
         EnvLoader.load_env_variables()
 
         assert os.getenv("CONFLUENCE_API_USER") == "session_user"
@@ -94,10 +98,14 @@ def test_priority_of_env_loading(tmpdir, monkeypatch):
     monkeypatch.setattr(Path, "home", lambda: Path(tmpdir) / "home")
 
     # Mock environment to test priority
-    with mock.patch.dict(os.environ, {
-        "CONFLUENCE_API_USER": "session_user",
-        "CONFLUENCE_API_TOKEN": "session_token"
-    }, clear=True):
+    with mock.patch.dict(
+        os.environ,
+        {
+            "CONFLUENCE_API_USER": "session_user",
+            "CONFLUENCE_API_TOKEN": "session_token",
+        },
+        clear=True,
+    ):
         EnvLoader.load_env_variables()
 
         # Verify that session variables have the highest priority

@@ -42,8 +42,7 @@ application-import-names =
     swrangler,
     tests
 
-# Set the import order style to follow Smarkets' style
-import-order-style = smarkets
+extend-ignore = E203,E701
 
 # Local Variables:
 # mode: conf-toml

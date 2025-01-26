@@ -35,12 +35,12 @@ class EnvLoader:
         # (already loaded by default)
 
         # 2. Load from .confluence in current working directory
-        cwd_confluence = Path.cwd() / '.confluence'
+        cwd_confluence = Path.cwd() / ".confluence"
         if cwd_confluence.exists():
             load_dotenv(dotenv_path=cwd_confluence, override=False)
             return  # Stop loading from other sources
 
         # 3. Load from .confluence in the user's home directory
-        home_confluence = Path.home() / '.confluence'
+        home_confluence = Path.home() / ".confluence"
         if home_confluence.exists():
             load_dotenv(dotenv_path=home_confluence, override=False)

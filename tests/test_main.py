@@ -28,8 +28,9 @@ def test_init():
     time and, therefore, is run at test time.
     """
     from swrangler import __main__ as module
-    with mock.patch.object(module, 'main', return_value=42):
-        with mock.patch.object(module, '__name__', '__main__'):
-            with mock.patch.object(module.sys, 'exit') as mock_exit:
+
+    with mock.patch.object(module, "main", return_value=42):
+        with mock.patch.object(module, "__name__", "__main__"):
+            with mock.patch.object(module.sys, "exit") as mock_exit:
                 module.init()
                 assert mock_exit.call_args[0][0] == 42

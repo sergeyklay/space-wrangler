@@ -36,7 +36,7 @@ from requests.auth import HTTPBasicAuth
 from .common import CONFLUENCE_BASE_URL, CONFLUENCE_DOMAIN, path
 from .exceptions import ConfigurationError, Error
 
-logger = logging.getLogger('swrangler')
+logger = logging.getLogger("swrangler")
 
 
 @dataclass(frozen=True)
@@ -93,9 +93,9 @@ class Confluence:
     """
 
     def __init__(
-            self,
-            timeout: int = 75,
-            retry_options: Optional[DefaultRetryOptions] = None
+        self,
+        timeout: int = 75,
+        retry_options: Optional[DefaultRetryOptions] = None,
     ) -> None:
         """Initialize the Confluence with authentication and base URL.
 
@@ -109,8 +109,8 @@ class Confluence:
             ValueError: If the Confluence API user or token is not set in
                 environment variables.
         """
-        user = os.getenv('CONFLUENCE_API_USER')
-        token = os.getenv('CONFLUENCE_API_TOKEN')
+        user = os.getenv("CONFLUENCE_API_USER")
+        token = os.getenv("CONFLUENCE_API_TOKEN")
 
         if user is None or token is None:
             raise ConfigurationError(user, token)
@@ -120,32 +120,31 @@ class Confluence:
             username=user,
             password=token,
             timeout=timeout,
-            cloud=True
+            cloud=True,
         )
 
         # We use the following for requests that are not covered by
         # the atlassian library. These variables are used exclusively for
         # our own requests.
         self.auth = HTTPBasicAuth(user, token)
-        self.headers = {'Accept': 'application/json'}
+        self.headers = {"Accept": "application/json"}
         self.timeout = timeout
         self.base_url = CONFLUENCE_BASE_URL
         self.retry_options = retry_options or DefaultRetryOptions()
 
     def _sanitise_retry_options(
-            self,
-            retry_options: DefaultRetryOptions
+        self, retry_options: DefaultRetryOptions
     ) -> DefaultRetryOptions:
         min_jitter, max_jitter = retry_options.jitter_multiplier_range
         if max_jitter <= min_jitter:
-            raise ValueError('jitter_multiplier_range must be (min, max).')
+            raise ValueError("jitter_multiplier_range must be (min, max).")
         return retry_options
 
     def _update_params_with_next(
-            self,
-            next_url: str,
-            params: Dict[str, Any],
-            ignore_list: Optional[List] = None
+        self,
+        next_url: str,
+        params: Dict[str, Any],
+        ignore_list: Optional[List] = None,
     ) -> Dict[str, Any]:
         """Update query parameters with the next page's parameters."""
         ignore_list = ignore_list or []
@@ -154,17 +153,15 @@ class Confluence:
         for key, value in query_params.items():
             if key in ignore_list:
                 continue
-            params[key] = value[0] if len(value) == 1 else ','.join(value)
+            params[key] = value[0] if len(value) == 1 else ",".join(value)
         return params
 
     def _has_next_page(self, data: Dict[str, Any]) -> bool:
         """Check if there is a next page."""
-        return 'next' in data['_links']
+        return "next" in data["_links"]
 
     def get_all_pages_in_space(
-            self,
-            space_key: str,
-            limit: int = 100
+        self, space_key: str, limit: int = 100
     ) -> List[Dict[str, Any]]:
         """Retrieve all pages for a given space key from Confluence.
 
@@ -178,22 +175,22 @@ class Confluence:
         """
         all_pages = []
         logger.info(
-            f'Fetch {space_key} space pages ({limit} pages per request)...'
+            f"Fetch {space_key} space pages ({limit} pages per request)..."
         )
 
         expand = (
-            'body.storage,'
-            'ancestors,'
-            'history.ownedBy,'
-            'history.lastUpdated,'
-            'version'
+            "body.storage,"
+            "ancestors,"
+            "history.ownedBy,"
+            "history.lastUpdated,"
+            "version"
         )
         params = {
-            'depth': 'all',
-            'start': 0,
-            'limit': limit,
-            'expand': expand,
-            'content_type': 'page',  # How about blogpost?
+            "depth": "all",
+            "start": 0,
+            "limit": limit,
+            "expand": expand,
+            "content_type": "page",  # How about blogpost?
         }
 
         while True:
@@ -201,16 +198,14 @@ class Confluence:
                 data = self.client.get_space_content(space_key, **params)
             except ApiError as exc:
                 raise Error(
-                    f'Failed to fetch pages for {space_key}: {exc}'
+                    f"Failed to fetch pages for {space_key}: {exc}"
                 ) from exc
 
-            all_pages.extend(data['results'])
+            all_pages.extend(data["results"])
             if not self._has_next_page(data):
                 break
             params = self._update_params_with_next(
-                path(data, '_links.next'),
-                params,
-                ['next']
+                path(data, "_links.next"), params, ["next"]
             )
 
         return all_pages
@@ -222,51 +217,46 @@ class Confluence:
             list: List of spaces in Confluence.
         """
         all_spaces = []
-        logger.info(f'Fetch spaces ({limit} spaces per request)...')
+        logger.info(f"Fetch spaces ({limit} spaces per request)...")
 
         params = {
-            'start': 0,
-            'limit': limit,
-            'space_status': 'current',
-            'expand': 'history',
+            "start": 0,
+            "limit": limit,
+            "space_status": "current",
+            "expand": "history",
         }
 
         while True:
             data = self.client.get_all_spaces(**params)
-            all_spaces.extend(data['results'])
+            all_spaces.extend(data["results"])
             if not self._has_next_page(data):
                 break
             params = self._update_params_with_next(
-                path(data, '_links.next'),
-                params,
-                ['next', 'type', 'status']
+                path(data, "_links.next"), params, ["next", "type", "status"]
             )
 
         return all_spaces
 
     def exponential_backoff(
-            self,
-            retry_count: int,
-            base_delay: int,
-            max_retry_delay: int,
+        self,
+        retry_count: int,
+        base_delay: int,
+        max_retry_delay: int,
     ) -> int:
         """Calculate the backoff delay with jitter."""
-        delay = min((2 ** retry_count) * base_delay, max_retry_delay)
+        delay = min((2**retry_count) * base_delay, max_retry_delay)
         jitter = delay * random.uniform(
             *self.retry_options.jitter_multiplier_range
         )
         return int(delay + jitter)
 
     def fetch_page_views(
-            self,
-            content_id: str,
-            views_type: str,
-            retry_count: int = 0
+        self, content_id: str, views_type: str, retry_count: int = 0
     ) -> Tuple[str, Optional[int]]:
         """Fetch the number of views for the specified page."""
         url = (
-            f'{self.base_url}'
-            f'/rest/api/analytics/content/{content_id}/{views_type}'
+            f"{self.base_url}"
+            f"/rest/api/analytics/content/{content_id}/{views_type}"
         )
         retry_options = self._sanitise_retry_options(self.retry_options)
         result = (content_id, None)
@@ -280,11 +270,10 @@ class Confluence:
             )
             if response.status_code == 200:
                 data = response.json()
-                result = (content_id, data['count'])
+                result = (content_id, data["count"])
             elif response.status_code == 429:
                 retry_after = response.headers.get(
-                    'Retry-After',
-                    retry_options.last_retry_delay / 1000
+                    "Retry-After", retry_options.last_retry_delay / 1000
                 )
 
                 # Rate limited. Retry after the specified delay.
@@ -293,7 +282,7 @@ class Confluence:
                     delay = self.exponential_backoff(
                         retry_count,
                         int(retry_after),
-                        retry_options.max_retry_delay
+                        retry_options.max_retry_delay,
                     )
 
                     time.sleep(delay / 1000)
@@ -305,8 +294,8 @@ class Confluence:
 
                 # Exceeded max retries.
                 message = (
-                    f'Exceeded max retries for content ID {content_id} '
-                    'after being rate limited.'
+                    f"Exceeded max retries for content ID {content_id} "
+                    "after being rate limited."
                 )
                 logger.error(message)
             elif response.status_code == 500:
@@ -315,7 +304,7 @@ class Confluence:
                     delay = self.exponential_backoff(
                         retry_count,
                         retry_options.last_retry_delay,
-                        retry_options.max_retry_delay
+                        retry_options.max_retry_delay,
                     )
                     time.sleep(delay / 1000)
                     return self.fetch_page_views(
@@ -326,23 +315,21 @@ class Confluence:
 
                 # Exceeded max retries.
                 message = (
-                    f'Exceeded max retries for content ID {content_id} '
-                    'after server error.'
+                    f"Exceeded max retries for content ID {content_id} "
+                    "after server error."
                 )
                 logger.error(message)
             else:
                 # Other errors.
                 response.raise_for_status()
         except requests.RequestException as e:
-            message = f'Failed to fetch data for content ID {content_id}: {e}'
+            message = f"Failed to fetch data for content ID {content_id}: {e}"
             logger.error(message)
 
         return result
 
     def _fetch_page_views_chunk(
-            self,
-            content_ids: List[str],
-            views_type: str
+        self, content_ids: List[str], views_type: str
     ) -> Dict[str, Optional[int]]:
         """Fetch page views for a chunk of content IDs."""
         chunk_results = {}
@@ -352,9 +339,7 @@ class Confluence:
         return chunk_results
 
     def get_page_analytics(
-            self,
-            content_ids: List[str],
-            views_type: str
+        self, content_ids: List[str], views_type: str
     ) -> Dict[str, Optional[int]]:
         """Get analytics for the specified Confluence pages.
 
@@ -366,15 +351,15 @@ class Confluence:
             dict: Dictionary with page IDs as keys and list of viewers as
                values.
         """
-        logger.info(f'Fetch {views_type} for the specified pages...')
+        logger.info(f"Fetch {views_type} for the specified pages...")
 
         jobs = multiprocessing.cpu_count() or 1
-        logger.info(f'Select the number of jobs: {jobs}')
+        logger.info(f"Select the number of jobs: {jobs}")
 
         def chunks(lst: List, n: int) -> Generator:
             """Yield successive n-sized chunks from lst."""
             for i in range(0, len(lst), n or 1):  # 1 for tests
-                yield lst[i:i + n]
+                yield lst[i : i + n]
 
         content_id_chunks = chunks(content_ids, len(content_ids) // jobs)
 
