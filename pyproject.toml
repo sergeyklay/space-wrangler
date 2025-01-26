@@ -1,18 +1,29 @@
-[build-system]
-requires = [
-    "setuptools >= 61.0",
-    "wheel",
-    "build>=1.2.0",
-]
-build-backend = "setuptools.build_meta"
+# Copyright (C) 2024-2025 Serghei Iakovlev <gnu@serghei.pl>
+#
+# This file is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
+#
+# This file is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this file.  If not, see <https://www.gnu.org/licenses/>.
 
-[project]
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
 name = "confluence"
-dynamic = ["version"]
-authors = [{name = "Serghei Iakovlev", email = "serghei@airslate.com"}]
-maintainers = [{name = "Serghei Iakovlev", email = "serghei@airslate.com"}]
-license = {text = "MIT License"}
+version = "1.7.0"
 description = "Confluence Space Management Toolkit."
+authors = ["Serghei Iakovlev <gnu@serghei.pl>"]
+maintainers = ["Serghei Iakovlev <gnu@serghei.pl>"]
+license = "GPL-3.0-or-later"
 readme = "README.md"
 keywords = ["confluence", "cli", "atlassian", "maintenance", "documentation-management"]
 classifiers = [
@@ -38,52 +49,51 @@ classifiers = [
     "Topic :: Text Processing",
     "Topic :: Utilities",
 ]
-requires-python = ">=3.9, <4"
-# It is not considered best practice to use install_requires to pin dependencies
-# to specific versions. For more se:
-# https://packaging.python.org/en/latest/discussions/install-requires-vs-requirements/#install-requires
-dependencies = [
-    "pip",
-    "atlassian-python-api",
-    "beautifulsoup4",
-    "click",
-    "python-dotenv",
-    "requests",
-    "types-requests",
+repository = "https://github.com/sergeyklay/confluence-maintenance-tools"
+homepage = "https://github.com/sergeyklay/confluence-maintenance-tools"
+documentation = "https://github.com/sergeyklay/confluence-maintenance-tools?tab=readme-ov-file"
+packages = [
+    { include = "confluence" }
+]
+include = [
+    { path = "tests", format = "sdist" },
+    "CONTRIBUTING.md",
+    "LICENSE",
+    "README.md",
+    "SECURITY.md"
 ]
 
-[project.optional-dependencies]
-testing = [
-    "Flake8-pyproject",
-    "check-manifest",
-    "coverage[toml]",
-    "flake8",
-    "flake8-blind-except",
-    "flake8-import-order",
-    "mypy",
-    "pylint",
-    "pytest",
-    "pytest-mock",
-]
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/sergeyklay/confluence-maintenance-tools/issues"
+Changelog = "https://github.com/sergeyklay/confluence-maintenance-tools/releases"
 
-[project.urls]
-Homepage = "https://github.com/airslateinc/confluence-maintenance-tools"
-Documentation = "https://github.com/airslateinc/confluence-maintenance-tools?tab=readme-ov-file"
-Repository = "https://github.com/airslateinc/confluence-maintenance-tools"
-Issues = "https://github.com/airslateinc/confluence-maintenance-tools/issues"
-Changelog = "https://github.com/airslateinc/confluence-maintenance-tools/releases"
-
-[project.scripts]
+[tool.poetry.scripts]
 confluence = "confluence.cli:main"
 
-[tool.setuptools]
-platforms = ["any"]
+[tool.poetry.dependencies]
+python = ">=3.10, <4"
+atlassian-python-api = "^3.41.19"
+beautifulsoup4 = "^4.12.3"
+click = "^8.1.8"
+python-dotenv = "^1.0.1"
+requests = "^2.32.3"
+types-requests = "^2.32.0.20241016"
 
-[tool.setuptools.packages.find]
-exclude = ["tests", "tests*"]
+[tool.poetry.group.testing.dependencies]
+coverage = {version = "^7.6.10", extras = ["toml"]}
+pytest = "^8.3.4"
+pytest-mock = "^3.14.0"
+pylint = "^3.3.3"
+flake8 = "^7.1.1"
+flake8-import-order = "^0.18.2"
+flake8-blind-except = "^0.2.1"
+mypy = "^1.14.1"
+
+[tool.poetry.group.dev.dependencies]
+debugpy = "^1.8.9"
 
 [tool.pytest.ini_options]
-addopts = "--verbose --durations=25 --color=no"
+addopts = "--verbose --durations=25"
 
 [tool.pylint.main]
 # Use multiple processes to speed up Pylint. Specifying 0 will auto-detect the
@@ -108,42 +118,6 @@ disable = [
 # builtins.
 redefining-builtins-modules = "requests.exceptions"
 
-[tool.flake8]
-# Set the maximum allowed length for a line of code
-max-line-length = 79
-
-# Set the maximum allowed cyclomatic complexity for a function or method
-max-complexity = 10
-
-# When set to True, this option instructs Flake8 to display a summary of
-# warnings and errors grouped by type at the end of its output.
-statistics = true
-
-# When set to True, this option causes Flake8 to display the offending line
-# of code for each warning or error, providing better context for understanding
-# and fixing the issues.
-show-source = true
-
-# List of files and directories to exclude from linting
-exclude = [
-    ".eggs",
-    ".git",
-    ".pytest_cache",
-    ".venv",
-    "__pycache__",
-    "build",
-    "dist"
-]
-
-# List of modules to be considered as local
-application-import-names = [
-    "confluence",
-    "tests"
-]
-
-# Set the import order style to follow Smarkets' style
-import-order-style = "smarkets"
-
 [tool.coverage.report]
 # Set the number of decimal places in coverage percentage
 precision = 2
@@ -153,11 +127,11 @@ show_missing = true
 
 [tool.coverage.html]
 # Directory for the HTML format report
-directory = "htmlcov"
+directory = "coverage/html"
 
 [tool.coverage.xml]
 # Filename for the XML format report
-output = "coverage.xml"
+output = "coverage/xml/coverage.xml"
 
 [tool.coverage.run]
 # Enable branch coverage (default: False)
@@ -167,7 +141,7 @@ branch = true
 parallel = true
 
 # Filename for storing coverage data
-data_file = "coverage.db"
+data_file = "coverage/coverage.db"
 
 # Omit specified files or directories from the report
 omit = [
