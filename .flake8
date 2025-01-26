@@ -39,7 +39,7 @@ exclude =
 
 # List of modules to be considered as local
 application-import-names =
-    confluence,
+    space-wrangler,
     tests
 
 # Set the import order style to follow Smarkets' style
