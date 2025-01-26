@@ -1,15 +1,14 @@
 # Contributing
 
-If you would like to contribute to Confluence Space Management Toolkit, please 
-take a look at the 
-[current issues](https://github.com/airslateinc/confluence-maintenance-tools/issues). 
-If there is a bug or feature that you want, but it isn't listed, make an issue 
+If you would like to contribute to Space Wrangler, please take a look at the
+[current issues](https://github.com/sergeyklay/space-wrangler/issues).
+If there is a bug or feature that you want, but it isn't listed, make an issue
 and work on it.
 
 ## Bug reports
 
-*Before raising an issue, please ensure that you are using the latest version 
-of Confluence Space Management Toolkit.*
+*Before raising an issue, please ensure that you are using the latest version
+of Space Wrangler.*
 
 Please provide the following information with your issue to enable a quick
 response:
@@ -37,7 +36,7 @@ To have your work considered for inclusion in the project:
 4. Ensure that all new code is properly type-annotated.
 5. Send a pull request.
 
-**By submitting a patch, you agree to allow the project owner to license your 
+**By submitting a patch, you agree to allow the project owner to license your
 work under the same license as that used by the project.**
 
 ## Coding Standards
@@ -91,7 +90,7 @@ correctness by:
 
 ### Docstring Style Guide
 
-All docstrings in this project should follow the Google style guide. Here are 
+All docstrings in this project should follow the Google style guide. Here are
 some examples:
 
 ### Function Example

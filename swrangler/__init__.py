@@ -21,9 +21,9 @@ package info used by various functions within swrangler.
 
 __copyright__ = 'Copyright (C) 2024-2025 Serghei Iakovlev'
 __version__ = '1.7.0'
-__license__ = 'GPLv3+'
+__license__ = 'GPL-3.0-or-later'
 __author__ = 'Serghei Iakovlev'
 __author_email__ = 'gnu@serghei.pl'
 __url__ = 'https://github.com/sergeyklay/space-wrangler'
-__description__ = 'Space Wrangler.'
+__description__ = 'A versatile toolkit for exporting and managing Confluence spaces, with advanced metadata capabilities.'
 

@@ -95,7 +95,7 @@ jobs:
       - name: Run unit tests with coverage
         run: |
           source $VENV
-          coverage run -m pytest ./space-wrangler ./tests
+          coverage run -m pytest ./swrangler ./tests
           coverage combine
           coverage xml
 

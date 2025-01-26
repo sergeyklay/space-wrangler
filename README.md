@@ -1,18 +1,4 @@
-<h1 align="center">Space Wrangler</h1>
-<p align="center">
-    <a href="https://sonarqube.infrateam.xyz/dashboard?id=airslateinc_confluence-maintenance-tools">
-        <img src="https://sonarqube.infrateam.xyz/api/project_badges/measure?project=airslateinc_confluence-maintenance-tools&metric=coverage&token=sqb_51b574060b2fa5e7fa6ac24f33e91fbbce7f2e73" alt="Coverage Status" />
-    </a>
-    <a href="https://sonarqube.infrateam.xyz/dashboard?id=airslateinc_confluence-maintenance-tools">
-        <img src="https://sonarqube.infrateam.xyz/api/project_badges/measure?project=airslateinc_confluence-maintenance-tools&metric=alert_status&token=sqb_51b574060b2fa5e7fa6ac24f33e91fbbce7f2e73" alt="Quality Gate Status" />
-    </a>
-    <a href="https://sonarqube.infrateam.xyz/dashboard?id=airslateinc_confluence-maintenance-tools">
-        <img src="https://sonarqube.infrateam.xyz/api/project_badges/measure?project=airslateinc_confluence-maintenance-tools&metric=security_rating&token=sqb_51b574060b2fa5e7fa6ac24f33e91fbbce7f2e73" alt="Security Rating" />
-    </a>
-    <a href="https://sonarqube.infrateam.xyz/dashboard?id=airslateinc_confluence-maintenance-tools">
-        <img src="https://sonarqube.infrateam.xyz/api/project_badges/measure?project=airslateinc_confluence-maintenance-tools&metric=sqale_rating&token=sqb_51b574060b2fa5e7fa6ac24f33e91fbbce7f2e73" alt="Maintainability Rating" />
-    </a>
-</p>
+# Space Wrangler
 
 Welcome to the Confluence Space Management Toolkit! This toolkit is designed to
 help you efficiently manage and maintain your Confluence spaces. Currently, it
@@ -66,19 +52,14 @@ Confluence spaces.
 
 What kind of things you need to install on your workstation to start:
 
-* [Python](https://www.python.org/) >= 3.9
+* [Python](https://www.python.org/) >= 3.10
 * [Git](https://git-scm.com/) >= 1.7.0
 
 > [!NOTE]
-> While this toolkit might hypothetically work with Python 3.8 or earlier
+> While this toolkit might hypothetically work with Python 3.9 or earlier
 > versions, I have not tested it on those versions. As such, I cannot guarantee
 > its functionality on these older versions of Python. Given the age of these
 > versions, if issues arise, I do not plan to address them.
->
-> Though Python 3.9 is also somewhat outdated, I support it because it remains
-> the default version on macOS. However, I do not recommend relying on continued
-> support for Python 3.9. It is advisable to install a more recent version of
-> Python, which is a straightforward process on both Linux and macOS.
 
 ### Installing
 
@@ -94,7 +75,7 @@ To install Confluence Space Management Toolkits, follow these steps:
 
 1. Clone the repository:
    ```shell
-   git clone git@github.com:airslateinc/confluence-maintenance-tools.git
+   git clone git@github.com:sergeyklay/space-wrangler.git
    cd confluence-maintenance-tools
    ```
 2. Set up the project:
@@ -211,11 +192,11 @@ confluence -q <command> --space-key SPACE_KEY
 ## Support
 
 Should you have any question, any remark, or if you find a bug, or if there is
-something you can't do with the Confluence Space Management Toolkit, please
-[open an issue](https://github.com/sergeyklay/confluence-maintenance-tools/issues).
+something you can't do with the Space Wrangler, please
+[open an issue](https://github.com/sergeyklay/space-wrangler/issues).
 
 ## Credits
 
-Confluence Space Management Toolkit is written and maintained by
+Space Wrangler is written and maintained by
 [Serghei Iakovlev](https://github.com/sergeyklay/). Contributors are listed on
-[GitHub's overview](https://github.com/airslateinc/confluence-maintenance-tools/graphs/contributors).
+[GitHub's overview](https://github.com/sergeyklay/space-wrangler/graphs/contributors).
