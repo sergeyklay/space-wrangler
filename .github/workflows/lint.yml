@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this file.  If not, see <https://www.gnu.org/licenses/>.
 
-name: CI
+name: CS
 
 on:
   push:
@@ -28,33 +28,10 @@ on:
     branches:
       - main
 
-env:
-  PYTHONUNBUFFERED: '1'
-
-defaults:
-  run:
-    shell: bash
-
 jobs:
-  lint-and-test:
-    name: Python ${{ matrix.python }}
+  lint:
     runs-on: ubuntu-latest
-
-    # The maximum number of minutes to let a workflow run
-    # before GitHub automatically cancels it. Default: 360
-    timeout-minutes: 30
-
-    strategy:
-      # When set to true, GitHub cancels
-      # all in-progress jobs if any matrix job fails.
-      fail-fast: false
-
-      matrix:
-        python:
-          - '3.10'
-          - '3.11'
-          - '3.12'
-          - '3.13'
+    name: Code linting
 
     steps:
       - name: Checkout code
@@ -62,11 +39,11 @@ jobs:
         with:
           fetch-depth: 5
 
-      - name: Set up Python ${{ matrix.python }}
+      - name: Set up Python 3.12
         id: setup-python
         uses: actions/setup-python@v5.3.0
         with:
-          python-version: ${{ matrix.python }}
+          python-version: '3.13'
 
       - name: Install and configure Poetry
         uses: snok/install-poetry@v1
@@ -81,40 +58,33 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .venv
-          key: testing-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+          key: linting-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
           restore-keys: |
-            testing-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-
-
-      - name: Validates the content of the pyproject.toml
-        run: poetry check
+            linting-${{ steps.setup-python.outputs.python-version }}-
 
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction --with=testing --without=linting --without=dev --no-root
+        run: poetry install --no-interaction --with=linting --without=testing --without=dev --no-root
 
-      - name: Install project
-        run: poetry install --no-interaction
+      - name: Setup pylint cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pylint
+          key: ${{ runner.os }}-pylint-${{ hashFiles('**/*.py') }}
+          restore-keys: |
+            ${{ runner.os }}-pylint-
 
-      - name: Run unit tests with coverage
+      - name: Code linting with flake8
         run: |
           source $VENV
-          coverage run -m pytest ./swrangler ./tests
-          coverage combine
-          coverage xml
-        env:
-          CONFLUENCE_API_TOKEN: fake-token
-          CONFLUENCE_API_USER: fake-user@site.com
+          flake8 ./
 
-      - uses: codecov/codecov-action@v5.3.1
-        if: success()
-        with:
-          fail_ci_if_error: false
-          name: codecov-umbrella
-          flags: unittests
-          env_vars: OS,PYTHON
-          files: ./coverage/xml/coverage.xml
-          token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Code linting with pylint
+        run: |
+          source $VENV
+          pylint ./swrangler
 
-      - name: Success Reporting
-        if: success()
-        run: git log --format=fuller -5
+      - name: Code linting with mypy
+        run: |
+          source $VENV
+          mypy ./swrangler
