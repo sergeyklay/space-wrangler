@@ -20,7 +20,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "space-wrangler"
 version = "1.7.0"
-description = "Confluence Space Management Toolkit."
+description = "A versatile toolkit for exporting and managing Confluence spaces, with advanced metadata capabilities."
 authors = ["Serghei Iakovlev <gnu@serghei.pl>"]
 maintainers = ["Serghei Iakovlev <gnu@serghei.pl>"]
 license = "GPL-3.0-or-later"
