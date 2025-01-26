@@ -74,7 +74,7 @@ def test_http_client_initialization_error(monkeypatch):
     monkeypatch.delenv('CONFLUENCE_API_TOKEN', raising=False)
 
     with pytest.raises(ConfigurationError) as excinfo:
-        from confluence.confluence import Confluence
+        from swrangler.confluence import Confluence
         Confluence()
     assert 'Confluence API user and token are not set' in str(excinfo.value)
 
