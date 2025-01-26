@@ -25,7 +25,7 @@ def test_save_pages_to_csv(tmpdir, mock_response):
 
 
 def test_export_pages_metadata(mocker, tmpdir, mock_response):
-    mock_object = 'confluence.confluence.Confluence.get_all_pages_in_space'
+    mock_object = 'swrangler.confluence.Confluence.get_all_pages_in_space'
     mock_get_all_pages_in_space = mocker.patch(mock_object)
     mock_get_all_pages_in_space.return_value = mock_response.json()['results']
 
