@@ -1,15 +1,23 @@
-# This file is part of the confluence.
+# Copyright (C) 2024-2025 Serghei Iakovlev <gnu@serghei.pl>
 #
-# Copyright (c) 2024 airSlate, Inc.
+# This file is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
 #
-# For the full copyright and license information, please view
-# the LICENSE file that был distributed with this source code.
+# This file is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this file.  If not, see <https://www.gnu.org/licenses/>.
 
-from confluence.space_metadata import export_spaces_metadata
+from swrangler.space_metadata import export_spaces_metadata
 
 
 def test_export_spaces_metadata(tmpdir, mocker, spaces_response_with_next):
-    mock_object = 'confluence.confluence.Confluence.get_all_spaces'
+    mock_object = 'swrangler.confluence.Confluence.get_all_spaces'
     mock_get_all_spaces = mocker.patch(mock_object)
     response = spaces_response_with_next.json()
     mock_get_all_spaces.return_value = response['results']
