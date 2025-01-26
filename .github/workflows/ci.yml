@@ -98,6 +98,9 @@ jobs:
           coverage run -m pytest ./swrangler ./tests
           coverage combine
           coverage xml
+        env:
+          CONFLUENCE_API_TOKEN: fake-token
+          CONFLUENCE_API_USER: fake-user@site.com
 
       # - name: Setup pylint cache
       #   uses: actions/cache@v4
@@ -112,15 +115,6 @@ jobs:
 
       # - name: Type check with mypy
       #   run: make typecheck
-
-      # - name: Check MANIFEST.in in a source package
-      #   run: make manifest
-
-      # - name: Run unit tests with coverage
-      #   run: make test
-      #   env:
-      #     CONFLUENCE_API_TOKEN: fake-token
-      #     CONFLUENCE_API_USER: fake-user@site.com
 
       # - name: Combine coverage reports
       #   run: make ccov
