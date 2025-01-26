@@ -122,7 +122,7 @@ jobs:
       # - name: Build package distribution (sdist and wheel)
       #   run: make build
 
-      - uses: codecov/codecov-action@v5.1.1
+      - uses: codecov/codecov-action@v5.3.1
         if: success()
         with:
           fail_ci_if_error: false
