@@ -20,7 +20,7 @@ from typing import Any, Dict, List, Optional
 
 from bs4 import BeautifulSoup
 
-logger = logging.getLogger('confluence')
+logger = logging.getLogger('swrangler')
 
 CONFLUENCE_DOMAIN = 'https://pdffiller.atlassian.net'
 CONFLUENCE_BASE_URL = f'{CONFLUENCE_DOMAIN}/wiki'

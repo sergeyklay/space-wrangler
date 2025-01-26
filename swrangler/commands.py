@@ -5,7 +5,7 @@
 # For the full copyright and license information, please view
 # the LICENSE file that was distributed with this source code.
 
-"""CLI commands for the Confluence application."""
+"""CLI commands for the swrangler application."""
 
 from typing import Any, Optional
 

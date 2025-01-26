@@ -27,7 +27,7 @@ from .common import (
 )
 from .confluence import Confluence
 
-logger = logging.getLogger('confluence')
+logger = logging.getLogger('swrangler')
 
 
 class OwnerMetadata:

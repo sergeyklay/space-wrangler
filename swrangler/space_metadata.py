@@ -20,7 +20,7 @@ from .common import CONFLUENCE_BASE_URL, format_date, path
 from .confluence import Confluence
 
 
-logger = logging.getLogger('confluence')
+logger = logging.getLogger('swrangler')
 
 
 class SpaceMetadata:

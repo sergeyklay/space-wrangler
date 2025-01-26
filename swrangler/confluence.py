@@ -28,7 +28,7 @@ from requests.auth import HTTPBasicAuth
 from .common import CONFLUENCE_BASE_URL, CONFLUENCE_DOMAIN, path
 from .exceptions import ConfigurationError, Error
 
-logger = logging.getLogger('confluence')
+logger = logging.getLogger('swrangler')
 
 
 @dataclass(frozen=True)

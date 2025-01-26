@@ -1,4 +1,4 @@
-# This file is part of the confluence.
+# This file is part of the swrangler.
 #
 # Copyright (c) 2024 airSlate, Inc.
 #
@@ -11,7 +11,7 @@ from typing import Optional
 
 
 class Error(Exception):
-    """Base class for exceptions in confluence module."""
+    """Base class for exceptions in swrangler module."""
 
 
 class ConfigurationError(Error):

@@ -19,7 +19,7 @@ from .common import format_text, mk_path, path
 from .confluence import Confluence
 from .template import html_template
 
-logger = logging.getLogger('confluence')
+logger = logging.getLogger('swrangler')
 
 
 def save_pages_to_files(
