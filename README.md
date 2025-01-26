@@ -1,4 +1,4 @@
-<h1 align="center">Confluence Space Management Toolkit</h1>
+<h1 align="center">Space Wrangler</h1>
 <p align="center">
     <a href="https://sonarqube.infrateam.xyz/dashboard?id=airslateinc_confluence-maintenance-tools">
         <img src="https://sonarqube.infrateam.xyz/api/project_badges/measure?project=airslateinc_confluence-maintenance-tools&metric=coverage&token=sqb_51b574060b2fa5e7fa6ac24f33e91fbbce7f2e73" alt="Coverage Status" />
@@ -112,7 +112,7 @@ To install Confluence Space Management Toolkits, follow these steps:
 5. Verify the installation:
    ```shell
    confluence --version
-   ```   
+   ```
 
 > [!IMPORTANT]
 > The command `source .venv/bin/activate` activates the virtual

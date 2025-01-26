@@ -18,7 +18,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
-name = "confluence"
+name = "space-wrangler"
 version = "1.7.0"
 description = "Confluence Space Management Toolkit."
 authors = ["Serghei Iakovlev <gnu@serghei.pl>"]
@@ -49,11 +49,11 @@ classifiers = [
     "Topic :: Text Processing",
     "Topic :: Utilities",
 ]
-repository = "https://github.com/sergeyklay/confluence-maintenance-tools"
-homepage = "https://github.com/sergeyklay/confluence-maintenance-tools"
-documentation = "https://github.com/sergeyklay/confluence-maintenance-tools?tab=readme-ov-file"
+repository = "https://github.com/sergeyklay/space-wrangler"
+homepage = "https://github.com/sergeyklay/space-wrangler"
+documentation = "https://github.com/sergeyklay/space-wrangler?tab=readme-ov-file"
 packages = [
-    { include = "confluence" }
+    { include = "space-wrangler" }
 ]
 include = [
     { path = "tests", format = "sdist" },
@@ -64,11 +64,11 @@ include = [
 ]
 
 [tool.poetry.urls]
-"Bug Tracker" = "https://github.com/sergeyklay/confluence-maintenance-tools/issues"
-Changelog = "https://github.com/sergeyklay/confluence-maintenance-tools/releases"
+"Bug Tracker" = "https://github.com/sergeyklay/space-wrangler/issues"
+Changelog = "https://github.com/sergeyklay/space-wrangler/releases"
 
 [tool.poetry.scripts]
-confluence = "confluence.cli:main"
+space-wrangler = "space-wrangler.cli:main"
 
 [tool.poetry.dependencies]
 python = ">=3.10, <4"

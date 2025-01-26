@@ -72,7 +72,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction --with=testing --without=docs --without=build --no-root
+        run: poetry install --no-interaction --with=testing --no-root
 
       - name: Install project
         run: poetry install --no-interaction
@@ -80,7 +80,7 @@ jobs:
       - name: Run unit tests with coverage
         run: |
           source $VENV
-          coverage run -m pytest ./confluence ./tests
+          coverage run -m pytest ./space-wrangler ./tests
           coverage combine
           coverage xml
 
