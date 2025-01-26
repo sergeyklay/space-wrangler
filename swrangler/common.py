@@ -28,10 +28,10 @@ from typing import Any, Dict, List, Optional
 
 from bs4 import BeautifulSoup
 
-logger = logging.getLogger('swrangler')
+logger = logging.getLogger("swrangler")
 
-CONFLUENCE_DOMAIN = 'https://pdffiller.atlassian.net'
-CONFLUENCE_BASE_URL = f'{CONFLUENCE_DOMAIN}/wiki'
+CONFLUENCE_DOMAIN = "https://pdffiller.atlassian.net"
+CONFLUENCE_BASE_URL = f"{CONFLUENCE_DOMAIN}/wiki"
 
 
 def people_url(people_id: str) -> str:
@@ -43,7 +43,7 @@ def people_url(people_id: str) -> str:
     Returns:
         str: URL to the user's Confluence profile.
     """
-    return f'{CONFLUENCE_BASE_URL}/people/{people_id}'
+    return f"{CONFLUENCE_BASE_URL}/people/{people_id}"
 
 
 def check_unlicensed_or_deleted(owner_name: str) -> str:
@@ -55,9 +55,9 @@ def check_unlicensed_or_deleted(owner_name: str) -> str:
     Returns:
         str: 'TRUE' if the owner is unlicensed or deleted, 'FALSE' otherwise.
     """
-    if re.search(r'\((Unlicensed|Deleted)\)$', owner_name):
-        return 'TRUE'
-    return 'FALSE'
+    if re.search(r"\((Unlicensed|Deleted)\)$", owner_name):
+        return "TRUE"
+    return "FALSE"
 
 
 def get_page_path(base_dir: str, page: Dict[str, Any]) -> str:
@@ -70,19 +70,19 @@ def get_page_path(base_dir: str, page: Dict[str, Any]) -> str:
     Returns:
         str: Full file path for the given page.
     """
-    ancestors = page['ancestors']
-    path_parts = [parent['title'].replace('/', '-') for parent in ancestors]
-    path_parts.append(page['title'].replace('/', '-'))
+    ancestors = page["ancestors"]
+    path_parts = [parent["title"].replace("/", "-") for parent in ancestors]
+    path_parts.append(page["title"].replace("/", "-"))
 
     full_path = os.path.join(base_dir, *path_parts)
     return full_path
 
 
 def mk_path(
-        parent_dir: str,
-        space_key: str,
-        output_dir: str,
-        page: Optional[Dict[str, Any]] = None
+    parent_dir: str,
+    space_key: str,
+    output_dir: str,
+    page: Optional[Dict[str, Any]] = None,
 ) -> str:
     """Create and return the full directory path.
 
@@ -118,8 +118,8 @@ def format_date(date_str: str) -> str:
     Returns:
         str: Formatted date string.
     """
-    date_obj = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S.%fZ')
-    return date_obj.strftime('%m/%d/%Y')
+    date_obj = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S.%fZ")
+    return date_obj.strftime("%m/%d/%Y")
 
 
 def contains_cyrillic(text: str) -> bool:
@@ -131,7 +131,7 @@ def contains_cyrillic(text: str) -> bool:
     Returns:
         bool: True if the text contains Cyrillic characters, False otherwise.
     """
-    return bool(re.search('[\u0400-\u04FF]', text))
+    return bool(re.search("[\u0400-\u04FF]", text))
 
 
 def get_structured_title(page: Dict[str, Any]) -> str:
@@ -143,15 +143,15 @@ def get_structured_title(page: Dict[str, Any]) -> str:
     Returns:
         str: Structured title for the page.
     """
-    ancestors = page['ancestors']
+    ancestors = page["ancestors"]
     path_parts = []
 
     for parent in ancestors:
-        path_parts.append('/' + parent['title'].replace('/', '-'))
+        path_parts.append("/" + parent["title"].replace("/", "-"))
 
-    path_parts.append('/' + page['title'].replace('/', '-'))
+    path_parts.append("/" + page["title"].replace("/", "-"))
 
-    return ''.join(path_parts)
+    return "".join(path_parts)
 
 
 def format_text(html_content: str) -> str:
@@ -163,37 +163,36 @@ def format_text(html_content: str) -> str:
     Returns:
         str: Formatted plain text.
     """
-    soup = BeautifulSoup(html_content, 'html.parser')
+    soup = BeautifulSoup(html_content, "html.parser")
 
     # Remove all <ac:parameter> tags
-    for param in soup.find_all('ac:parameter'):
+    for param in soup.find_all("ac:parameter"):
         param.decompose()
 
     # Find all code blocks and add double newlines before and after them
     for code_block in soup.find_all(
-            'ac:structured-macro',
-            {'ac:name': 'code'}
+        "ac:structured-macro", {"ac:name": "code"}
     ):
         code_text = code_block.get_text()
-        formatted_code_text = f'\n\n{code_text}\n\n'
+        formatted_code_text = f"\n\n{code_text}\n\n"
         code_block.replace_with(formatted_code_text)
 
-    text = soup.get_text().replace('\xa0', ' ')
+    text = soup.get_text().replace("\xa0", " ")
     lines = text.splitlines()
     new_lines: List[str] = []
     empty_line = False
 
     for line in lines:
-        if line.strip() == '':
+        if line.strip() == "":
             if not empty_line and new_lines:
-                new_lines.append('')
+                new_lines.append("")
             empty_line = True
         else:
             wrapped_lines = textwrap.wrap(line, width=80)
             new_lines.extend(wrapped_lines)
             empty_line = False
 
-    formatted_text = '\n'.join(new_lines).strip()
+    formatted_text = "\n".join(new_lines).strip()
     return formatted_text
 
 
@@ -209,6 +208,7 @@ def path(data: dict, item: str, default: Any = None) -> Any:
         default (Any, optional): Default value to return if path
             does not exist.
     """
+
     def getitem(obj: Any, name: str) -> Any:
         if obj is None:
             return default
@@ -218,4 +218,4 @@ def path(data: dict, item: str, default: Any = None) -> Any:
         except (KeyError, TypeError):
             return default
 
-    return reduce(getitem, item.split('.'), data)
+    return reduce(getitem, item.split("."), data)

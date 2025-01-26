@@ -79,10 +79,10 @@ def setup_logger(quiet: bool = False) -> logging.Logger:
     Returns:
         logging.Logger: Configured logger instance.
     """
-    logger = logging.getLogger('swrangler')
+    logger = logging.getLogger("swrangler")
     logger.setLevel(logging.DEBUG if not quiet else logging.WARNING)
 
-    formatter = logging.Formatter('%(message)s')
+    formatter = logging.Formatter("%(message)s")
 
     stdout_handler = logging.StreamHandler(sys.stdout)
     stdout_handler.setLevel(logging.DEBUG if not quiet else logging.WARNING)

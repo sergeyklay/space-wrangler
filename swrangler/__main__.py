@@ -30,7 +30,7 @@ def init() -> None:
     not automatically execute. The sys.exit() function is called with a return
     value of swrangler.cli.main(), as all good UNIX programs do.
     """
-    if __name__ == '__main__':
+    if __name__ == "__main__":
         sys.exit(main())
 
 

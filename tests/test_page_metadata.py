@@ -17,21 +17,21 @@ from swrangler.page_metadata import export_pages_metadata, save_pages_to_csv
 
 
 def test_save_pages_to_csv(tmpdir, mock_response):
-    pages = mock_response.json()['results']
-    output_dir = tmpdir.mkdir('output')
-    save_pages_to_csv(pages, 'AIR', str(output_dir))
-    csv_file = output_dir.join('AIR/csv/pages-metadata.csv')
+    pages = mock_response.json()["results"]
+    output_dir = tmpdir.mkdir("output")
+    save_pages_to_csv(pages, "AIR", str(output_dir))
+    csv_file = output_dir.join("AIR/csv/pages-metadata.csv")
     assert csv_file.exists()
 
 
 def test_export_pages_metadata(mocker, tmpdir, mock_response):
-    mock_object = 'swrangler.confluence.Confluence.get_all_pages_in_space'
+    mock_object = "swrangler.confluence.Confluence.get_all_pages_in_space"
     mock_get_all_pages_in_space = mocker.patch(mock_object)
-    mock_get_all_pages_in_space.return_value = mock_response.json()['results']
+    mock_get_all_pages_in_space.return_value = mock_response.json()["results"]
 
-    output_dir = tmpdir.mkdir('output')
-    export_pages_metadata('AIR', str(output_dir))
-    csv_file = output_dir.join('AIR/csv/pages-metadata.csv')
+    output_dir = tmpdir.mkdir("output")
+    export_pages_metadata("AIR", str(output_dir))
+    csv_file = output_dir.join("AIR/csv/pages-metadata.csv")
 
     assert csv_file.exists()
     assert mock_get_all_pages_in_space.call_count == 1

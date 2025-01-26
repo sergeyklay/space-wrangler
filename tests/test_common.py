@@ -16,8 +16,8 @@
 import pytest
 
 from swrangler.common import (
-    check_unlicensed_or_deleted,
     CONFLUENCE_BASE_URL,
+    check_unlicensed_or_deleted,
     format_text,
     get_page_path,
     path,
@@ -37,7 +37,7 @@ def test_format_text():
 def test_format_text_line_length():
     html_content = "<p>" + "a" * 100 + "</p>"
     output = format_text(html_content)
-    lines = output.split('\n')
+    lines = output.split("\n")
     assert all(len(line) <= 80 for line in lines)
 
 
@@ -114,40 +114,38 @@ Sed eu iaculis nisi."""
 
 
 def test_people_url():
-    people_id = '5b8e8643632a6b2c8f80b883'
-    expected_url = f'{CONFLUENCE_BASE_URL}/people/{people_id}'
+    people_id = "5b8e8643632a6b2c8f80b883"
+    expected_url = f"{CONFLUENCE_BASE_URL}/people/{people_id}"
     assert people_url(people_id) == expected_url
 
 
 def test_get_page_path():
-    page = {
-        'ancestors': [{'title': 'Parent Page'}],
-        'title': 'Test Page'
-    }
-    path = get_page_path('/base/dir', page)
-    assert path == '/base/dir/Parent Page/Test Page'
+    page = {"ancestors": [{"title": "Parent Page"}], "title": "Test Page"}
+    path = get_page_path("/base/dir", page)
+    assert path == "/base/dir/Parent Page/Test Page"
 
 
 def test_check_unlicensed_or_deleted():
-    assert check_unlicensed_or_deleted('John Doe (Unlicensed)') == 'TRUE'
-    assert check_unlicensed_or_deleted('Jane Doe (Deleted)') == 'TRUE'
-    assert check_unlicensed_or_deleted('John Doe') == 'FALSE'
+    assert check_unlicensed_or_deleted("John Doe (Unlicensed)") == "TRUE"
+    assert check_unlicensed_or_deleted("Jane Doe (Deleted)") == "TRUE"
+    assert check_unlicensed_or_deleted("John Doe") == "FALSE"
 
 
 @pytest.mark.parametrize(
-    'search,expected',
+    "search,expected",
     [
-        ('a', {'b': {'c': {'d': 42}}}),
-        ('a.b', {'c': {'d': 42}}),
-        ('a.b.c', {'d': 42}),
-        ('a.b.c.d', 42),
-        ('a.z.c.d', None),
-        ('a.b.c.z', None),
-        ('z.y.z', None),
-        ('42', None),
-    ])
+        ("a", {"b": {"c": {"d": 42}}}),
+        ("a.b", {"c": {"d": 42}}),
+        ("a.b.c", {"d": 42}),
+        ("a.b.c.d", 42),
+        ("a.z.c.d", None),
+        ("a.b.c.z", None),
+        ("z.y.z", None),
+        ("42", None),
+    ],
+)
 def test_path(search, expected):
-    my_dict = {'a': {'b': {'c': {'d': 42}}}}
+    my_dict = {"a": {"b": {"c": {"d": 42}}}}
 
     if expected is None:
         assert path(my_dict, search) is expected

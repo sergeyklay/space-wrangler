@@ -21,7 +21,7 @@ import signal
 import click
 
 from swrangler.env_loader import EnvLoader
-from .exceptions import Error
+from swrangler.exceptions import Error
 
 
 def main() -> int:
@@ -36,20 +36,21 @@ def main() -> int:
 
     try:
         from .commands import app
+
         # pylint: disable=no-value-for-parameter
         retval = app(standalone_mode=False)
     except click.exceptions.Abort:  # The user hit control-C
-        message = 'Received keyboard interrupt, terminating.'
-        logging.getLogger('swrangler').error(message)
+        message = "Received keyboard interrupt, terminating."
+        logging.getLogger("swrangler").error(message)
         # Control-C is fatal error signal 2, for more see
         # https://tldp.org/LDP/abs/html/exitcodes.html
         retval = 128 + signal.SIGINT
     except click.exceptions.ClickException as click_err:  # Handle click errors
         message = click_err.format_message()
-        logging.getLogger('swrangler').error(message)
+        logging.getLogger("swrangler").error(message)
         retval = click_err.exit_code
     except Error as err:  # Handle custom application errors
-        logging.getLogger('swrangler').error(str(err))
+        logging.getLogger("swrangler").error(str(err))
         retval = 1
 
     return retval

@@ -23,21 +23,21 @@ from . import __copyright__, __description__, __version__
 from .logger import setup_logger
 
 CONTEXT_SETTINGS = {
-    'show_default': True,
-    'help_option_names': ['-h', '--help'],
+    "show_default": True,
+    "help_option_names": ["-h", "--help"],
 }
 
 
 class CommaSeparatedList(click.ParamType):
     """A custom Click parameter type for comma-separated lists."""
 
-    name = 'list'
+    name = "list"
 
     def convert(
-            self,
-            value: Any,
-            param: Optional[click.core.Parameter],
-            ctx: Optional[click.core.Context]
+        self,
+        value: Any,
+        param: Optional[click.core.Parameter],
+        ctx: Optional[click.core.Context],
     ) -> Any:
         """Convert the value to the correct type.
 
@@ -51,15 +51,15 @@ class CommaSeparatedList(click.ParamType):
         if isinstance(value, list):
             return value
 
-        if value is None or str(value).strip() == '':
+        if value is None or str(value).strip() == "":
             raise click.BadParameter(
                 message="Option '--space-key' requires an argument.",
                 ctx=ctx,
                 param=param,
-                param_hint='--space-key',
+                param_hint="--space-key",
             )
 
-        return value.split(',')
+        return value.split(",")
 
 
 class ExportCommand(click.core.Command):
@@ -75,22 +75,30 @@ class ExportCommand(click.core.Command):
         self.params.insert(
             0,
             click.core.Option(
-                ('-o', '--output-dir',),
-                help='Directory to save the data.',
+                (
+                    "-o",
+                    "--output-dir",
+                ),
+                help="Directory to save the data.",
                 type=click.Path(),
-                default='output',
-            )
+                default="output",
+            ),
         )
 
         self.params.insert(
             0,
             click.core.Option(
-                ('-s', '--space-key',),
-                help=('Confluence space key(s) to work with. '
-                      'Separate multiple keys with commas.'),
+                (
+                    "-s",
+                    "--space-key",
+                ),
+                help=(
+                    "Confluence space key(s) to work with. "
+                    "Separate multiple keys with commas."
+                ),
                 required=True,
                 type=CommaSeparatedList(),
-            )
+            ),
         )
 
 
@@ -101,10 +109,10 @@ def get_version_str() -> str:
         str: Formatted version information.
     """
     return (
-        f'''\n%(prog)s %(version)s\n{__copyright__}\n'''
-        'This is free software; see the source for copying conditions.  '
-        'There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR '
-        'A PARTICULAR PURPOSE.'
+        f"""\n%(prog)s %(version)s\n{__copyright__}\n"""
+        "This is free software; see the source for copying conditions.  "
+        "There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR "
+        "A PARTICULAR PURPOSE."
     )
 
 
@@ -115,17 +123,19 @@ def get_version_str() -> str:
 )
 @click.version_option(
     __version__,
-    '-V', '--version',
+    "-V",
+    "--version",
     message=get_version_str(),
 )
 @click.option(
-    '-q', '--quiet',
-    help='Suppress all output except warnings and errors.',
+    "-q",
+    "--quiet",
+    help="Suppress all output except warnings and errors.",
     is_flag=True,
 )
 @click.option(
-    '--silent',
-    help='Synonym for --quiet.',
+    "--silent",
+    help="Synonym for --quiet.",
     is_flag=True,
 )
 @click.pass_context
@@ -149,56 +159,61 @@ def app(ctx: click.core.Context, quiet: bool, silent: bool) -> int:
 
 
 @app.command(
-    'spaces-metadata',
-    short_help='Export metadata of all spaces.',
-    help='Export metadata of all Confluence spaces.',
+    "spaces-metadata",
+    short_help="Export metadata of all spaces.",
+    help="Export metadata of all Confluence spaces.",
 )
 @click.option(
-    '-o', '--output-dir',
-    help='Directory to save the data.',
+    "-o",
+    "--output-dir",
+    help="Directory to save the data.",
     type=click.Path(),
-    default='output',
+    default="output",
 )
 def spaces_metadata(**kwargs: str) -> None:
     """Export metadata of all spaces."""
     from .space_metadata import export_spaces_metadata
-    export_spaces_metadata(kwargs['output_dir'])
+
+    export_spaces_metadata(kwargs["output_dir"])
 
 
 @app.command(
-    'export-space',
-    short_help='Export all pages from the specified space.',
-    help='Export all pages from the specified Confluence space.',
+    "export-space",
+    short_help="Export all pages from the specified space.",
+    help="Export all pages from the specified Confluence space.",
     cls=ExportCommand,
 )
 def export_space_command(**kwargs: str) -> None:
     """Export all pages from the specified space."""
     from .space_exporter import export_space
-    for space_key in kwargs['space_key']:
-        export_space(space_key, kwargs['output_dir'])
+
+    for space_key in kwargs["space_key"]:
+        export_space(space_key, kwargs["output_dir"])
 
 
 @app.command(
-    'pages-metadata',
-    short_help='Export metadata of pages from the specified space.',
-    help='Export metadata of pages from the specified Confluence space.',
+    "pages-metadata",
+    short_help="Export metadata of pages from the specified space.",
+    help="Export metadata of pages from the specified Confluence space.",
     cls=ExportCommand,
 )
 def pages_metadata(**kwargs: str) -> None:
     """Export metadata of pages from the specified space."""
     from .page_metadata import export_pages_metadata
-    for space_key in kwargs['space_key']:
-        export_pages_metadata(space_key, kwargs['output_dir'])
+
+    for space_key in kwargs["space_key"]:
+        export_pages_metadata(space_key, kwargs["output_dir"])
 
 
 @app.command(
-    'owners-metadata',
-    short_help='Export metadata of owners from the specified space.',
-    help='Export metadata of page owners from the specified Confluence space.',
+    "owners-metadata",
+    short_help="Export metadata of owners from the specified space.",
+    help="Export metadata of page owners from the specified Confluence space.",
     cls=ExportCommand,
 )
 def owners_metadata(**kwargs: str) -> None:
     """Export metadata of owners from the specified space."""
     from .owner_metadata import export_owners_metadata
-    for space_key in kwargs['space_key']:
-        export_owners_metadata(space_key, kwargs['output_dir'])
+
+    for space_key in kwargs["space_key"]:
+        export_owners_metadata(space_key, kwargs["output_dir"])

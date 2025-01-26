@@ -86,12 +86,20 @@ pytest-mock = "^3.14.0"
 [tool.poetry.group.linting.dependencies]
 pylint = "^3.3.3"
 flake8 = "^7.1.1"
-flake8-import-order = "^0.18.2"
-flake8-blind-except = "^0.2.1"
 mypy = "^1.14.1"
 
 [tool.poetry.group.dev.dependencies]
-debugpy = "^1.8.9"
+debugpy = "^1.8.12"
+isort = "^5.13.2"
+black = "^24.10.0"
+
+[tool.black]
+line-length = 79
+target-version = ["py310"]
+
+[tool.isort]
+profile = "black"
+py_version = 310
 
 [tool.pytest.ini_options]
 addopts = "--verbose --durations=25"

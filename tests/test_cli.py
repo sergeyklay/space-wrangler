@@ -21,9 +21,9 @@ from swrangler.exceptions import Error
 
 def test_main_no_args(monkeypatch):
     """Test calling main with no arguments."""
-    monkeypatch.setattr('sys.argv', ['swrangler'])
-    with mock.patch('click.core.Context.get_help') as mock_help:
-        with mock.patch('sys.stderr', new_callable=mock.MagicMock):
+    monkeypatch.setattr("sys.argv", ["swrangler"])
+    with mock.patch("click.core.Context.get_help") as mock_help:
+        with mock.patch("sys.stderr", new_callable=mock.MagicMock):
             assert main() == 1
             mock_help.assert_called_once()
 
@@ -31,52 +31,49 @@ def test_main_no_args(monkeypatch):
 def test_main_export(monkeypatch, mocker):
     """Test calling main with export command."""
     monkeypatch.setattr(
-        'sys.argv',
-        ['swrangler', 'export-space', '-s', 'TEST', '-o', 'output']
+        "sys.argv", ["swrangler", "export-space", "-s", "TEST", "-o", "output"]
     )
 
-    with mock.patch('swrangler.space_exporter.export_space') as command_mock:
+    with mock.patch("swrangler.space_exporter.export_space") as command_mock:
         command_mock.return_value = None
         main()
-        command_mock.assert_called_once_with('TEST', 'output')
+        command_mock.assert_called_once_with("TEST", "output")
 
 
 def test_main_pages_metadata(monkeypatch, mocker):
     """Test calling main with pages-metadata command."""
     monkeypatch.setattr(
-        'sys.argv',
-        ['swrangler', 'pages-metadata', '-s', 'TEST', '-o', 'output']
+        "sys.argv",
+        ["swrangler", "pages-metadata", "-s", "TEST", "-o", "output"],
     )
 
-    with mock.patch('swrangler.page_metadata.export_pages_metadata') as mck:
+    with mock.patch("swrangler.page_metadata.export_pages_metadata") as mck:
         mck.return_value = None
         main()
-        mck.assert_called_once_with('TEST', 'output')
+        mck.assert_called_once_with("TEST", "output")
 
 
 def test_main_owners_metadata(monkeypatch, mocker):
     """Test calling main with owners-metadata command."""
     monkeypatch.setattr(
-        'sys.argv',
-        ['swrangler', 'owners-metadata', '-s', 'TEST', '-o', 'output']
+        "sys.argv",
+        ["swrangler", "owners-metadata", "-s", "TEST", "-o", "output"],
     )
 
-    with mock.patch('swrangler.owner_metadata.export_owners_metadata') as mck:
+    with mock.patch("swrangler.owner_metadata.export_owners_metadata") as mck:
         mck.return_value = None
         main()
-        mck.assert_called_once_with('TEST', 'output')
+        mck.assert_called_once_with("TEST", "output")
 
 
 def test_main_keyboard_interrupt(monkeypatch, mocker):
     """Test handling of KeyboardInterrupt."""
     monkeypatch.setattr(
-        'sys.argv',
-        ['swrangler', 'export-space', '-s', 'TEST', '-o', 'output']
+        "sys.argv", ["swrangler", "export-space", "-s", "TEST", "-o", "output"]
     )
 
     with mock.patch(
-            'swrangler.space_exporter.export_space',
-            side_effect=KeyboardInterrupt
+        "swrangler.space_exporter.export_space", side_effect=KeyboardInterrupt
     ):
         exit_code = main()
         assert exit_code == 130  # 128 + signal.SIGINT
@@ -85,13 +82,12 @@ def test_main_keyboard_interrupt(monkeypatch, mocker):
 def test_main_error(monkeypatch, mocker):
     """Test handling of custom Error exception."""
     monkeypatch.setattr(
-        'sys.argv',
-        ['swrangler', 'export-space', '-s', 'TEST', '-o', 'output']
+        "sys.argv", ["swrangler", "export-space", "-s", "TEST", "-o", "output"]
     )
 
     with mock.patch(
-            'swrangler.space_exporter.export_space',
-            side_effect=Error('Test error')
+        "swrangler.space_exporter.export_space",
+        side_effect=Error("Test error"),
     ):
         exit_code = main()
         assert exit_code == 1

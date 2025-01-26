@@ -69,7 +69,7 @@ jobs:
           python-version: ${{ matrix.python }}
 
       - name: Install and configure Poetry
-        uses: snok/install-poetry@v1
+        uses: snok/install-poetry@v1.4.1
         with:
           version: 2.0.1
           virtualenvs-create: true
