@@ -23,9 +23,7 @@
 # Directories to ignore (do not add trailing '/'s, they skip symlinks).
 /.pytest_cache
 /*.egg-info
-/htmlcov
 /build
-/dist
 /output
 /.venv
 
@@ -34,10 +32,10 @@
 __pycache__
 
 # Ignore codecoverage stuff.
-coverage.*
+/coverage
 
 # Mutations testing cache.
-.mutmut-cache
+/.mutmut-cache
 
 # Application configuration.
 .confluence
