@@ -128,16 +128,15 @@ jobs:
       # - name: Build package distribution (sdist and wheel)
       #   run: make build
 
-      # TODO: Implement me
-      # - uses: codecov/codecov-action@v5.1.1
-      #   if: success()
-      #   with:
-      #     fail_ci_if_error: false
-      #     name: codecov-umbrella
-      #     flags: unittests
-      #     env_vars: OS,PYTHON
-      #     files: ./coverage/xml/coverage.xml
-      #     token: ${{ secrets.CODECOV_TOKEN }}
+      - uses: codecov/codecov-action@v5.1.1
+        if: success()
+        with:
+          fail_ci_if_error: false
+          name: codecov-umbrella
+          flags: unittests
+          env_vars: OS,PYTHON
+          files: ./coverage/xml/coverage.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Success Reporting
         if: success()
