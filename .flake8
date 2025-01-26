@@ -39,7 +39,7 @@ exclude =
 
 # List of modules to be considered as local
 application-import-names =
-    space-wrangler,
+    swrangler,
     tests
 
 # Set the import order style to follow Smarkets' style
