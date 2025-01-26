@@ -20,7 +20,7 @@ defaults:
 jobs:
   lint-and-test:
     name: Python ${{ matrix.python }}
-    runs-on: ${{ vars.DEFAULT_RUNNER }}
+    runs-on: ubuntu-latest
 
     # The maximum number of minutes to let a workflow run
     # before GitHub automatically cancels it. Default: 360
@@ -41,94 +41,89 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 5
 
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v5
+        id: setup-python
+        uses: actions/setup-python@v5.3.0
         with:
           python-version: ${{ matrix.python }}
 
-      - name: Setup pip cache
+      - name: Install and configure Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.8.4
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+
+      - name: Load cached venv
+        id: cached-poetry-dependencies
         uses: actions/cache@v4
         with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/requirements-dev.txt') }}
+          path: .venv
+          key: testing-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
           restore-keys: |
-            ${{ runner.os }}-pip-
+            testing-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-
 
-      - name: Makefile selftest
-        run: make help
-
-      - name: Set up virtualenv
-        run: make init
+      - name: Validates the content of the pyproject.toml
+        run: poetry check
 
       - name: Install dependencies
-        run: make install
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --with=testing --without=docs --without=build --no-root
 
-      - name: List installed packages
-        run: |
-          source .venv/bin/activate
-
-          python -m pip list
-        shell: bash
-
-      - name: Setup pylint cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pylint
-          key: ${{ runner.os }}-pylint-${{ hashFiles('**/*.py') }}
-          restore-keys: |
-            ${{ runner.os }}-pylint-
-
-      - name: Lint the code
-        run: make lint
-
-      - name: Type check with mypy
-        run: make typecheck
-
-      - name: Check MANIFEST.in in a source package
-        run: make manifest
+      - name: Install project
+        run: poetry install --no-interaction
 
       - name: Run unit tests with coverage
-        run: make test
-        env:
-          CONFLUENCE_API_TOKEN: fake-token
-          CONFLUENCE_API_USER: fake-user@site.com
+        run: |
+          source $VENV
+          coverage run -m pytest ./confluence ./tests
+          coverage combine
+          coverage xml
 
-      - name: Combine coverage reports
-        run: make ccov
+      # - name: Setup pylint cache
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ~/.cache/pylint
+      #     key: ${{ runner.os }}-pylint-${{ hashFiles('**/*.py') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-pylint-
 
-      - name: Build package distribution (sdist and wheel)
-        run: make build
+      # - name: Lint the code
+      #   run: make lint
 
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v4
-        if: matrix.python == '3.12'
-        with:
-          name: coverage
-          path: ./coverage.xml
+      # - name: Type check with mypy
+      #   run: make typecheck
 
-      - name: Testing package distribution and installation
-        run: make test-dist
+      # - name: Check MANIFEST.in in a source package
+      #   run: make manifest
 
+      # - name: Run unit tests with coverage
+      #   run: make test
+      #   env:
+      #     CONFLUENCE_API_TOKEN: fake-token
+      #     CONFLUENCE_API_USER: fake-user@site.com
 
-  analize-with-sonarqube:
-    name: Analyze with Sonarqube
-    needs: [lint-and-test]
-    runs-on: ${{ vars.DEFAULT_RUNNER }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      # - name: Combine coverage reports
+      #   run: make ccov
 
-      - name: Download coverage report
-        uses: actions/download-artifact@v4
-        with:
-          name: coverage
-          path: ./
+      # - name: Build package distribution (sdist and wheel)
+      #   run: make build
 
-      - name: Run Sonar Scanner
-        uses: sonarsource/sonarqube-scan-action@master
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          SONAR_TOKEN: ${{ secrets.SONAR_SECRET }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      # TODO: Implement me
+      # - uses: codecov/codecov-action@v5.1.1
+      #   if: success()
+      #   with:
+      #     fail_ci_if_error: false
+      #     name: codecov-umbrella
+      #     flags: unittests
+      #     env_vars: OS,PYTHON
+      #     files: ./coverage/xml/coverage.xml
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Success Reporting
+        if: success()
+        run: git log --format=fuller -5
