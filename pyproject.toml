@@ -53,7 +53,7 @@ repository = "https://github.com/sergeyklay/space-wrangler"
 homepage = "https://github.com/sergeyklay/space-wrangler"
 documentation = "https://github.com/sergeyklay/space-wrangler?tab=readme-ov-file"
 packages = [
-    { include = "space-wrangler" }
+    { include = "swrangler" }
 ]
 include = [
     { path = "tests", format = "sdist" },
@@ -68,7 +68,7 @@ include = [
 Changelog = "https://github.com/sergeyklay/space-wrangler/releases"
 
 [tool.poetry.scripts]
-space-wrangler = "space-wrangler.cli:main"
+swrangler = "swrangler.cli:main"
 
 [tool.poetry.dependencies]
 python = ">=3.10, <4"
