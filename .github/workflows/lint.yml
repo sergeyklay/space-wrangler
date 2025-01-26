@@ -58,9 +58,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .venv
-          key: linting-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
+          key: cs-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
           restore-keys: |
-            linting-${{ steps.setup-python.outputs.python-version }}-
+            cs-${{ steps.setup-python.outputs.python-version }}-
 
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'

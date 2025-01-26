@@ -81,9 +81,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .venv
-          key: testing-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
+          key: ci-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
           restore-keys: |
-            testing-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-
+            ci-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-
 
       - name: Validates the content of the pyproject.toml
         run: poetry check
