@@ -58,7 +58,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .venv
-          key: linting-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+          key: linting-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
           restore-keys: |
             linting-${{ steps.setup-python.outputs.python-version }}-
 
