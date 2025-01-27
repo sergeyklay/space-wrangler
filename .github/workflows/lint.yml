@@ -28,6 +28,10 @@ on:
     branches:
       - main
 
+# Only needs read access for linting
+permissions:
+  contents: read
+
 jobs:
   lint:
     runs-on: ubuntu-latest
