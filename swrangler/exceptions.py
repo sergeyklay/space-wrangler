@@ -25,26 +25,31 @@ class Error(Exception):
 class ConfigurationError(Error):
     """Exception raised for errors in the configuration of the app.
 
-    This exception is used to indicate that one or both of the required
-    environment variables (CONFLUENCE_API_USER and CONFLUENCE_API_TOKEN)
-    are not set.
+    This exception is used to indicate that one of the required
+    environment variables (CONFLUENCE_API_USER, CONFLUENCE_API_TOKEN,
+    and CONFLUENCE_DOMAIN) are not set.
 
     Attributes:
         user (Optional[str]): The Confluence API user.
         token (Optional[str]): The Confluence API token.
+        url (Optional[str]): The Confluence domain.
         message (str): The error message indicating the missing configuration.
     """
 
-    def __init__(self, user: Optional[str], token: Optional[str]) -> None:
+    def __init__(
+        self, user: Optional[str], token: Optional[str], url: Optional[str]
+    ) -> None:
         """
         Initialize the ConfigurationError with the given user and token.
 
         Args:
             user (Optional[str]): The Confluence API user.
             token (Optional[str]): The Confluence API token.
+            url (Optional[str]): The Confluence domain.
         """
         self.user = user
         self.token = token
+        self.url = url
         self.message = self._generate_message()
         super().__init__(self.message)
 
@@ -60,20 +65,31 @@ class ConfigurationError(Error):
             """Check if the value is set and not empty."""
             return value is not None and len(str(value)) > 0
 
-        if not is_set(self.user) and is_set(self.token):
+        # Create a list of missing configurations
+        missing = []
+        if not is_set(self.user):
+            missing.append("CONFLUENCE_API_USER")
+        if not is_set(self.token):
+            missing.append("CONFLUENCE_API_TOKEN")
+        if not is_set(self.url):
+            missing.append("CONFLUENCE_DOMAIN")
+
+        # Handle single missing configuration
+        if len(missing) == 1:
+            config = missing[0]
             return (
-                "Confluence API user is not set in environment variables. "
-                "Please set CONFLUENCE_API_USER."
+                f"{config} is not set. Please set it in the .confluence file "
+                f"or directly in the environment."
             )
 
-        if not is_set(self.token) and is_set(self.user):
+        # Handle multiple missing configurations
+        if missing:
+            configs = ", ".join(missing)
             return (
-                "Confluence API token is not set in environment variables. "
-                "Please set CONFLUENCE_API_TOKEN."
+                f"The following environment variables are not set: {configs}."
+                f"Please set them in the .confluence file or directly in the "
+                f"environment."
             )
 
-        return (
-            "Confluence API user and token are not set in environment "
-            "variables. Please set both CONFLUENCE_API_USER and "
-            "CONFLUENCE_API_TOKEN."
-        )
+        # This should never happen since we check for missing configs above
+        return "Unknown configuration error occurred."

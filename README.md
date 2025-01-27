@@ -114,6 +114,7 @@ Set the following environment variables:
 
 - `CONFLUENCE_API_USER`: Your Confluence email address.
 - `CONFLUENCE_API_TOKEN`: Your Confluence API token.
+- `CONFLUENCE_DOMAIN`: Your Confluence domain.
 
 You can obtain an API token from
 [Confluence API Tokens section](https://id.atlassian.com/manage-profile/security/api-tokens).
@@ -127,6 +128,7 @@ directory or home directory:
 ```shell
 echo CONFLUENCE_API_USER="your-confluence-email" > .confluence
 echo CONFLUENCE_API_TOKEN="your-confluence-api-token" >> .confluence
+echo CONFLUENCE_DOMAIN="your-confluence-domain" >> .confluence
 ```
 
 ### Quick Start
@@ -200,3 +202,15 @@ something you can't do with the Space Wrangler, please
 Space Wrangler is written and maintained by
 [Serghei Iakovlev](https://github.com/sergeyklay/). Contributors are listed on
 [GitHub's overview](https://github.com/sergeyklay/space-wrangler/graphs/contributors).
+
+## License
+
+Space Wrangler is free software licensed under the
+[GNU General Public Licence version 3]([LICENSE](https://choosealicense.com/licenses/gpl-3.0/)).
+Copyright © 2024 Serghei Iakovlev.
+
+### Note On Copyright Years
+
+In copyright notices where the copyright holder is Serghei Iakovlev, then where
+a range of years appears, this is an inclusive range that applies to every year
+in the range.  For example: 2023-2025 represents the years 2023, 2024 and 2025.

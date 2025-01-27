@@ -30,9 +30,6 @@ from bs4 import BeautifulSoup
 
 logger = logging.getLogger("swrangler")
 
-CONFLUENCE_DOMAIN = "https://pdffiller.atlassian.net"
-CONFLUENCE_BASE_URL = f"{CONFLUENCE_DOMAIN}/wiki"
-
 
 def people_url(people_id: str) -> str:
     """Generate a Confluence profile URL for a given user ID.
@@ -43,7 +40,7 @@ def people_url(people_id: str) -> str:
     Returns:
         str: URL to the user's Confluence profile.
     """
-    return f"{CONFLUENCE_BASE_URL}/people/{people_id}"
+    return f"{os.getenv('CONFLUENCE_DOMAIN')}/wiki/people/{people_id}"
 
 
 def check_unlicensed_or_deleted(owner_name: str) -> str:

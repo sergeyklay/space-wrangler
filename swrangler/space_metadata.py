@@ -24,7 +24,7 @@ import logging
 import os
 from typing import Tuple
 
-from swrangler.common import CONFLUENCE_BASE_URL, format_date, path
+from swrangler.common import format_date, path
 from swrangler.confluence import Confluence
 
 logger = logging.getLogger("swrangler")
@@ -82,7 +82,7 @@ def export_spaces_metadata(output_dir: str) -> None:
             )
 
             created_date = format_date(path(space, "history.createdDate"))
-            space_url = CONFLUENCE_BASE_URL + path(space, "_links.webui")
+            space_url = client.base_url + path(space, "_links.webui")
 
             writer.writerow(
                 {

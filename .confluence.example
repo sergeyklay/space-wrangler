@@ -25,3 +25,6 @@ CONFLUENCE_API_TOKEN="secret token"
 
 # Confluence API User (usually your email)
 CONFLUENCE_API_USER="your email"
+
+# Confluence domain
+CONFLUENCE_DOMAIN="https://acme.atlassian.net"

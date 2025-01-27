@@ -104,6 +104,7 @@ jobs:
         env:
           CONFLUENCE_API_TOKEN: fake-token
           CONFLUENCE_API_USER: fake-user@site.com
+          CONFLUENCE_DOMAIN: https://acme.atlassian.net
 
       - uses: codecov/codecov-action@v5.3.1
         if: success()

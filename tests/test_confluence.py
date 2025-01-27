@@ -70,12 +70,18 @@ def test_get_all_pages_in_space_with_next_2(
 def test_http_client_initialization_error(monkeypatch):
     monkeypatch.delenv("CONFLUENCE_API_USER", raising=False)
     monkeypatch.delenv("CONFLUENCE_API_TOKEN", raising=False)
+    monkeypatch.delenv("CONFLUENCE_DOMAIN", raising=False)
 
     with pytest.raises(ConfigurationError) as excinfo:
         from swrangler.confluence import Confluence
 
         Confluence()
-    assert "Confluence API user and token are not set" in str(excinfo.value)
+    assert "The following environment variables are not set" in str(
+        excinfo.value
+    )
+    assert "CONFLUENCE_API_USER" in str(excinfo.value)
+    assert "CONFLUENCE_API_TOKEN" in str(excinfo.value)
+    assert "CONFLUENCE_DOMAIN" in str(excinfo.value)
 
 
 def test_sanitise_retry_options_valid():
