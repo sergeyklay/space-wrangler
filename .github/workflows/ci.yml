@@ -35,6 +35,10 @@ defaults:
   run:
     shell: bash
 
+# Only needs read access for testing
+permissions:
+  contents: read
+
 jobs:
   lint-and-test:
     name: Python ${{ matrix.python }}
