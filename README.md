@@ -1,8 +1,8 @@
 # Space Wrangler
 
-Welcome to the Confluence Space Management Toolkit! This toolkit is designed to
-help you efficiently manage and maintain your Confluence spaces. Currently, it
-includes tools for exporting spaces its metadata, with more features planned.
+Welcome to the Space Wrangler! This toolkit is designed to help you efficiently
+manage and maintain your Confluence spaces. Currently, it includes tools for
+exporting spaces its metadata, with more features planned.
 
 ## Tools
 
@@ -76,7 +76,7 @@ To install Confluence Space Management Toolkits, follow these steps:
 1. Clone the repository:
    ```shell
    git clone git@github.com:sergeyklay/space-wrangler.git
-   cd confluence-maintenance-tools
+   cd space-wrangler
    ```
 2. Set up the project:
    ```shell
@@ -92,7 +92,7 @@ To install Confluence Space Management Toolkits, follow these steps:
    ```
 5. Verify the installation:
    ```shell
-   confluence --version
+   swrangler --version
    ```
 
 > [!IMPORTANT]
@@ -134,7 +134,7 @@ echo CONFLUENCE_DOMAIN="your-confluence-domain" >> .confluence
 ### Quick Start
 
 ```shell
-confluence --help
+swrangler --help
 ```
 
 ### Exporting Confluence Space
@@ -142,7 +142,7 @@ confluence --help
 To export all pages from specified Confluence spaces:
 
 ```shell
-confluence export-space --space-key SPACE_KEY1,SPACE_KEY2
+swrangler export-space --space-key SPACE_KEY1,SPACE_KEY2
 ```
 
 ### Exporting Spaces Metadata
@@ -150,7 +150,7 @@ confluence export-space --space-key SPACE_KEY1,SPACE_KEY2
 To generate a CSV file with metadata about all Confluence spaces:
 
 ```shell
-confluence spaces-metadata
+swrangler spaces-metadata
 ```
 
 ### Exporting Page Metadata
@@ -159,7 +159,7 @@ To generate a CSV file with metadata about each page in specified Confluence
 spaces:
 
 ```shell
-confluence pages-metadata --space-key SPACE_KEY1,SPACE_KEY2
+swrangler pages-metadata --space-key SPACE_KEY1,SPACE_KEY2
 ```
 
 ### Exporting Owner Metadata
@@ -168,7 +168,7 @@ To generate a CSV file with metadata about the owners of pages in specified
 Confluence spaces:
 
 ```shell
-confluence owners-metadata --space-key SPACE_KEY1,SPACE_KEY2
+swrangler owners-metadata --space-key SPACE_KEY1,SPACE_KEY2
 ```
 
 ## Common Options
@@ -178,7 +178,7 @@ There are common options that can be used with all commands.
 To specify the output directory:
 
 ```shell
-confluence COMMAND --space-key SPACE_KEY --output-dir OUTPUT_DIR
+swrangler COMMAND --space-key SPACE_KEY --output-dir OUTPUT_DIR
 ```
 
 If the `--output-dir` option is not specified, the `output` directory in the
@@ -188,7 +188,7 @@ To suppress informational messages, use the `-q`, `--quiet` or `--silent`
 option:
 
 ```shell
-confluence -q <command> --space-key SPACE_KEY
+swrangler -q <command> --space-key SPACE_KEY
 ```
 
 ## Support
