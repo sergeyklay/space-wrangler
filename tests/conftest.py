@@ -152,7 +152,7 @@ def spaces_response_with_next():
         "limit": 100,
         "size": 100,
         "_links": {
-            "base": "https://pdffiller.atlassian.net/wiki",
+            "base": "https://acme.atlassian.net/wiki",
             "context": "/wiki",
             "next": (
                 "/rest/api/space"
@@ -192,7 +192,7 @@ def mock_response_with_next():
         ],
         "_links": {
             "next": (
-                "https://pdffiller.atlassian.net"
+                "https://acme.atlassian.net"
                 "/wiki/rest/api/content?nextPageStart=2"
             )
         },
@@ -256,7 +256,7 @@ def mock_response_with_next_2():
         ],
         "_links": {
             "next": (
-                "https://pdffiller.atlassian.net"
+                "https://acme.atlassian.net"
                 "/wiki/rest/api/content?key=value1&key=value2"
             )
         },

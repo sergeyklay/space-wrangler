@@ -25,7 +25,6 @@ import os
 from typing import Any, Dict, List, Tuple
 
 from swrangler.common import (
-    CONFLUENCE_BASE_URL,
     contains_cyrillic,
     format_date,
     get_structured_title,
@@ -110,7 +109,7 @@ def save_pages_to_csv(
                 ),
                 PageMetadata.LAST_EDITOR: path(last_updated, "by.displayName"),
                 PageMetadata.CURRENT_OWNER: owner_name,
-                PageMetadata.PAGE_URL: CONFLUENCE_BASE_URL
+                PageMetadata.PAGE_URL: f"{os.getenv('CONFLUENCE_DOMAIN')}/wiki"
                 + path(page, "_links.webui"),
             }
         )

@@ -18,23 +18,24 @@ import pytest
 from swrangler.exceptions import ConfigurationError
 
 
-def test_configuration_error_both_missing():
+def test_configuration_error_all_missing():
     with pytest.raises(ConfigurationError) as excinfo:
-        raise ConfigurationError(None, None)
-    assert "Confluence API user and token are not set" in str(excinfo.value)
-    message = "Please set both CONFLUENCE_API_USER and CONFLUENCE_API_TOKEN"
-    assert message in str(excinfo.value)
+        raise ConfigurationError(None, None, None)
+    assert "The following environment variables are not set:" in str(
+        excinfo.value
+    )
+    assert "CONFLUENCE_API_USER" in str(excinfo.value)
+    assert "CONFLUENCE_API_TOKEN" in str(excinfo.value)
+    assert "CONFLUENCE_DOMAIN" in str(excinfo.value)
 
 
 def test_configuration_error_user_missing():
     with pytest.raises(ConfigurationError) as excinfo:
-        raise ConfigurationError(None, "token")
-    assert "Confluence API user is not set" in str(excinfo.value)
-    assert "Please set CONFLUENCE_API_USER" in str(excinfo.value)
+        raise ConfigurationError(None, "token", "https://acme.atlassian.net")
+    assert "CONFLUENCE_API_USER is not set" in str(excinfo.value)
 
 
 def test_configuration_error_token_missing():
     with pytest.raises(ConfigurationError) as excinfo:
-        raise ConfigurationError("user", None)
-    assert "Confluence API token is not set" in str(excinfo.value)
-    assert "Please set CONFLUENCE_API_TOKEN" in str(excinfo.value)
+        raise ConfigurationError("user", None, "https://acme.atlassian.net")
+    assert "CONFLUENCE_API_TOKEN is not set" in str(excinfo.value)

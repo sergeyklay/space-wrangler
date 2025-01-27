@@ -13,10 +13,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this file.  If not, see <https://www.gnu.org/licenses/>.
 
+import os
+
 import pytest
 
 from swrangler.common import (
-    CONFLUENCE_BASE_URL,
     check_unlicensed_or_deleted,
     format_text,
     get_page_path,
@@ -115,7 +116,7 @@ Sed eu iaculis nisi."""
 
 def test_people_url():
     people_id = "5b8e8643632a6b2c8f80b883"
-    expected_url = f"{CONFLUENCE_BASE_URL}/people/{people_id}"
+    expected_url = f"{os.getenv('CONFLUENCE_DOMAIN')}/wiki/people/{people_id}"
     assert people_url(people_id) == expected_url
 
 

@@ -19,8 +19,8 @@ from typing import Any, Optional
 
 import click
 
-from . import __copyright__, __description__, __version__
-from .logger import setup_logger
+from swrangler import __copyright__, __description__, __version__
+from swrangler.logger import setup_logger
 
 CONTEXT_SETTINGS = {
     "show_default": True,

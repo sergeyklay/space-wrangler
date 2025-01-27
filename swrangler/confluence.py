@@ -33,8 +33,8 @@ from atlassian import Confluence as Client
 from atlassian.errors import ApiError
 from requests.auth import HTTPBasicAuth
 
-from .common import CONFLUENCE_BASE_URL, CONFLUENCE_DOMAIN, path
-from .exceptions import ConfigurationError, Error
+from swrangler.common import path
+from swrangler.exceptions import ConfigurationError, Error
 
 logger = logging.getLogger("swrangler")
 
@@ -111,12 +111,13 @@ class Confluence:
         """
         user = os.getenv("CONFLUENCE_API_USER")
         token = os.getenv("CONFLUENCE_API_TOKEN")
+        url = os.getenv("CONFLUENCE_DOMAIN")
 
-        if user is None or token is None:
-            raise ConfigurationError(user, token)
+        if user is None or token is None or url is None:
+            raise ConfigurationError(user, token, url)
 
         self.client = Client(
-            url=CONFLUENCE_DOMAIN,
+            url=url,
             username=user,
             password=token,
             timeout=timeout,
@@ -129,7 +130,7 @@ class Confluence:
         self.auth = HTTPBasicAuth(user, token)
         self.headers = {"Accept": "application/json"}
         self.timeout = timeout
-        self.base_url = CONFLUENCE_BASE_URL
+        self.base_url = f"{url}/wiki"
         self.retry_options = retry_options or DefaultRetryOptions()
 
     def _sanitise_retry_options(
