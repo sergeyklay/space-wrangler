@@ -54,6 +54,7 @@ What kind of things you need to install on your workstation to start:
 
 * [Python](https://www.python.org/) >= 3.10
 * [Git](https://git-scm.com/) >= 1.7.0
+* [Poetry](https://python-poetry.org/) >= 1.8.1
 
 > [!NOTE]
 > While this toolkit might hypothetically work with Python 3.9 or earlier
@@ -78,9 +79,9 @@ To install Confluence Space Management Toolkits, follow these steps:
    git clone git@github.com:sergeyklay/space-wrangler.git
    cd space-wrangler
    ```
-2. Set up the project:
+2. Set up virtual environment:
    ```shell
-   make init
+   python -m venv .venv
    ```
 3. Activate the virtual environment:
    ```shell
@@ -88,7 +89,7 @@ To install Confluence Space Management Toolkits, follow these steps:
    ```
 4. Install the toolkit and dependencies:
    ```shell
-   make install
+   poetry install
    ```
 5. Verify the installation:
    ```shell
