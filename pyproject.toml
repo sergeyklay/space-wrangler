@@ -94,7 +94,7 @@ isort = "^5.13.2"
 black = "^24.10.0"
 
 [tool.black]
-line-length = 79
+line-length = 88
 target-version = ["py310"]
 
 [tool.isort]

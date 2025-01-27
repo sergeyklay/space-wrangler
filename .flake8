@@ -15,7 +15,7 @@
 
 [flake8]
 # Set the maximum allowed length for a line of code
-max-line-length = 79
+max-line-length = 88
 
 # Set the maximum allowed cyclomatic complexity for a function or method
 max-complexity = 10
