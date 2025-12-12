@@ -39,13 +39,13 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 5
 
       - name: Set up Python 3.12
         id: setup-python
-        uses: actions/setup-python@v5.6.0
+        uses: actions/setup-python@v6.1.0
         with:
           python-version: '3.13'
 
@@ -59,7 +59,7 @@ jobs:
 
       - name: Load cached venv
         id: cached-poetry-dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .venv
           key: cs-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
@@ -71,7 +71,7 @@ jobs:
         run: poetry install --no-interaction --with=linting --without=testing --without=dev --no-root
 
       - name: Setup pylint cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/pylint
           key: ${{ runner.os }}-pylint-${{ hashFiles('**/*.py') }}
