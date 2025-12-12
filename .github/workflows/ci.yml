@@ -62,13 +62,13 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 5
 
       - name: Set up Python ${{ matrix.python }}
         id: setup-python
-        uses: actions/setup-python@v5.6.0
+        uses: actions/setup-python@v6.1.0
         with:
           python-version: ${{ matrix.python }}
 
@@ -82,7 +82,7 @@ jobs:
 
       - name: Load cached venv
         id: cached-poetry-dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .venv
           key: ci-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
@@ -110,7 +110,7 @@ jobs:
           CONFLUENCE_API_USER: fake-user@site.com
           CONFLUENCE_DOMAIN: https://acme.atlassian.net
 
-      - uses: codecov/codecov-action@v5.4.3
+      - uses: codecov/codecov-action@v5.5.2
         if: success()
         with:
           fail_ci_if_error: false
